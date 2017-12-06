@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="coming-soon.jpg" />
+  <img src="https://user-images.githubusercontent.com/19170080/33643181-7bdcf3da-da0b-11e7-9463-a627a53ff25f.png" />
 </div>
 
 # ReactToPrint - Print React components in the browser
@@ -8,7 +8,7 @@
 [![dependencies Status](https://david-dm.org/gregnb/react-to-print/status.svg)](https://david-dm.org/gregnb/react-to-print)
 [![npm version](https://badge.fury.io/js/jsonreactor.svg)](https://badge.fury.io/js/react-to-print)
 
-Print React components in the browser
+So you've created a React component but would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a new print window with CSS styles copied over as well.  
 
 ## Install
 
@@ -16,26 +16,61 @@ Print React components in the browser
 
 ## Demo
 
+[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/6n0mo326mz)
+
 ## Usage
 
 
 ```js
 
-class Example extends React.Component {
+import React from "react";
+import ReactToPrint from "react-to-print";
+import PropTypes from "prop-types";
 
+class ComponentToPrint extends React.Component {
+  render() {
+    return (
+      <table>
+        <thead>
+          <th>column 1</th>
+          <th>column 2</th>
+          <th>column 3</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+}
+
+class Example extends React.Component {
   render() {
     return (
       <div>
-         <ReactToPrint
-          trigger={() => (
-            <a href="#">Print this out!</a>
-          )}
+        <ReactToPrint
+          trigger={() => <a href="#">Print this out!</a>}
           content={() => this.componentRef}
-         />               
-        <ComponentToPrint ref={(el) => this.componentRef = el} />
+        />
+        <ComponentToPrint ref={el => (this.componentRef = el)} />
       </div>
     );
-
   }
 }
+
+
 ```
