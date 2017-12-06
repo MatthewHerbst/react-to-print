@@ -74,3 +74,16 @@ class Example extends React.Component {
 
 
 ```
+
+
+## API
+
+#### &lt;ReactToPrint />
+
+The component accepts the following props:
+
+|Name|Type|Description
+|:--:|:-----|:-----|
+|**`trigger`**|function|A callback function that returns a React Component or HTML element
+|**`content`**|function|A callback function that returns a component reference value. The content of this reference value is then used for print
+|**`copyStyles`**|boolean|Copies all &lt;style> and &lt;link type="stylesheet" /> from <head> inside the parent window into the print window. (default: true)
