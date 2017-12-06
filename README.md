@@ -25,7 +25,6 @@ So you've created a React component but would love to give end users the ability
 
 import React from "react";
 import ReactToPrint from "react-to-print";
-import PropTypes from "prop-types";
 
 class ComponentToPrint extends React.Component {
   render() {
