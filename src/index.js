@@ -27,7 +27,7 @@ class ReactToPrint extends React.Component {
     const contentEl = content();
     const contentHTML = findDOMNode(contentEl).outerHTML;
     
-    let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+    let printWindow = window.open("/", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
 
     if (copyStyles !== false) {
       const headEls = document.head.querySelectorAll('link, style');
@@ -40,9 +40,12 @@ class ReactToPrint extends React.Component {
 
     printWindow.document.head.appendChild(style);
     printWindow.document.body.innerHTML = contentHTML;
+    console.log(contentHTML);
 
-    printWindow.print();
-    printWindow.close();
+    setTimeout(function() {
+      printWindow.print();
+      printWindow.close();
+    }, 2250);
 
   }
 

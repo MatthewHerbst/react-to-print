@@ -5,28 +5,31 @@ import ReactToPrint from "../src/";
 class ComponentToPrint extends React.Component {
   render() {
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Column One</th>
-            <th>Column Two</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>6</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <img src="example/test_image.png" border="0" />
+        <table>
+          <thead>
+            <tr>
+              <th>Column One</th>
+              <th>Column Two</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     );    
   }
 }

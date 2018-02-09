@@ -1,16 +1,17 @@
 {
+  "env": {
+  },
   "presets": [
     "react",
     ["env", {
       "targets": {
-        "browsers": ["last 2 versions", "ie >= 10"]
+        "browsers": ["> 1%", "iOS >= 8", "Android >= 4"],
+        "node": "6.10"
       },
-      "debug": false,
-      "modules": false
+      "debug": false
     }]
   ],
   "plugins": [
-    "external-helpers",
-    "babel-plugin-transform-class-properties"
+    "babel-plugin-transform-class-properties",
   ]
 }

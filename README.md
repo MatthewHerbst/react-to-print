@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/19170080/33643181-7bdcf3da-da0b-11e7-9463-a627a53ff25f.png" />
+  <img src="https://user-images.githubusercontent.com/19170080/33672781-14f1b03e-da79-11e7-95fe-4ce15f170230.png" />
 </div>
 
 # ReactToPrint - Print React components in the browser
