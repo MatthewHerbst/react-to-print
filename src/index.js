@@ -17,6 +17,12 @@ class ReactToPrint extends React.Component {
     copyStyles: true
   };
 
+  constructor() {
+    super();
+    this.imageTotal = 0;
+    this.imageLoaded = 0;
+  }
+
   handlePrint = () => {
   
     const {
@@ -24,10 +30,30 @@ class ReactToPrint extends React.Component {
       copyStyles
     } = this.props;
 
+    let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+
     const contentEl = content();
-    const contentHTML = findDOMNode(contentEl).outerHTML;
-    
-    let printWindow = window.open("/", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+    const contentNodes = findDOMNode(contentEl);
+    const imageNodes = [...contentNodes.getElementsByTagName("img")];
+
+    this.imageTotal = imageNodes.length;
+    this.imageLoaded = 0;
+
+    const markLoaded = () => {
+      this.imageLoaded++;
+      if (this.imageLoaded === this.imageTotal) {
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 200);
+      }
+    };
+
+    imageNodes.forEach((child) => {
+      child.setAttribute('src', child.src);
+      child.onload = markLoaded;
+      child.onerror = markLoaded;
+    });
 
     if (copyStyles !== false) {
       const headEls = document.head.querySelectorAll('link, style');
@@ -39,13 +65,7 @@ class ReactToPrint extends React.Component {
     style.appendChild(document.createTextNode("@page { size: auto;  margin: 0mm; }"));
 
     printWindow.document.head.appendChild(style);
-    printWindow.document.body.innerHTML = contentHTML;
-    console.log(contentHTML);
-
-    setTimeout(function() {
-      printWindow.print();
-      printWindow.close();
-    }, 2250);
+    printWindow.document.body.innerHTML = contentNodes.outerHTML;
 
   }
 
