@@ -49,7 +49,7 @@ class ReactToPrint extends React.Component {
       }
     };
 
-    imageNodes.forEach((child) => {
+    [...imageNodes].forEach((child) => {
       child.setAttribute('src', child.src);
       child.onload = markLoaded;
       child.onerror = markLoaded;
@@ -57,7 +57,7 @@ class ReactToPrint extends React.Component {
 
     if (copyStyles !== false) {
       const headEls = document.head.querySelectorAll('link, style');
-      headEls.forEach(node => printWindow.document.head.appendChild(node.cloneNode(true)));
+      [...headEls].forEach(node => printWindow.document.head.appendChild(node.cloneNode(true)));
     }
 
     /* remove date/time from top */
