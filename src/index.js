@@ -23,6 +23,11 @@ class ReactToPrint extends React.Component {
     this.imageLoaded = 0;
   }
 
+  triggerPrint(target) {
+    target.print();
+    target.close();
+  }
+
   handlePrint = () => {
   
     const {
@@ -43,8 +48,7 @@ class ReactToPrint extends React.Component {
       this.imageLoaded++;
       if (this.imageLoaded === this.imageTotal) {
         setTimeout(() => {
-          printWindow.print();
-          printWindow.close();
+          this.triggerPrint(printWindow);
         }, 200);
       }
     };
@@ -61,11 +65,15 @@ class ReactToPrint extends React.Component {
     }
 
     /* remove date/time from top */
-    let style = document.createElement('style');
-    style.appendChild(document.createTextNode("@page { size: auto;  margin: 0mm; }"));
+    let styleEl = printWindow.document.createElement('style');
+    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; }"));
 
-    printWindow.document.head.appendChild(style);
-    printWindow.document.body.innerHTML = contentNodes.outerHTML;
+    printWindow.document.head.appendChild(styleEl);
+    printWindow.document.write(contentNodes.outerHTML);
+
+    if (this.imageTotal === 0) {
+      this.triggerPrint(printWindow);
+    }
 
   }
 
