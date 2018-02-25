@@ -24,8 +24,10 @@ class ReactToPrint extends React.Component {
   }
 
   triggerPrint(target) {
-    target.print();
-    target.close();
+    setTimeout(() => {
+      target.print();
+      target.close();
+    }, 500);
   }
 
   handlePrint = () => {
@@ -47,9 +49,7 @@ class ReactToPrint extends React.Component {
     const markLoaded = () => {
       this.imageLoaded++;
       if (this.imageLoaded === this.imageTotal) {
-        setTimeout(() => {
-          this.triggerPrint(printWindow);
-        }, 200);
+        this.triggerPrint(printWindow);
       }
     };
 
@@ -59,17 +59,52 @@ class ReactToPrint extends React.Component {
       child.onerror = markLoaded;
     });
 
+    /*
+     * IE does not seem to allow appendChild from different window contexts correctly.  They seem to come back
+     * as plain objects. In order to get around this each tag is re-created into the printWindow
+     * https://stackoverflow.com/questions/38708840/calling-adoptnode-and-importnode-on-a-child-window-fails-in-ie-and-edge
+     */
     if (copyStyles !== false) {
-      const headEls = document.head.querySelectorAll('link, style');
-      [...headEls].forEach(node => printWindow.document.head.appendChild(node.cloneNode(true)));
+
+      const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
+      [...headEls].forEach(node => { 
+      
+        let newHeadEl = printWindow.document.createElement(node.tagName);
+
+        if (node.textContent)
+          newHeadEl.textContent = node.textContent;
+        else if (node.innerText)
+          newHeadEl.innerText = node.innerText;
+  
+        let attributes = [...node.attributes];
+        attributes.forEach(attr => {
+
+          let nodeValue = attr.nodeValue;
+
+          if (attr.nodeName === 'href' && /^http:\/\//.test(attr.nodeValue) === false) {
+            nodeValue = document.location.protocol + '//' + document.location.host + nodeValue;
+          }
+
+          newHeadEl.setAttribute(attr.nodeName, nodeValue);
+        });
+
+        printWindow.document.head.appendChild(newHeadEl);
+
+      });
+
+    }
+
+    if (document.body.className) {
+      const bodyClasses = document.body.className.split(" ");
+      bodyClasses.map(item => printWindow.document.body.classList.add(item));
     }
 
     /* remove date/time from top */
     let styleEl = printWindow.document.createElement('style');
-    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; }"));
+    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
 
     printWindow.document.head.appendChild(styleEl);
-    printWindow.document.write(contentNodes.outerHTML);
+    printWindow.document.body.innerHTML = contentNodes.outerHTML;
 
     if (this.imageTotal === 0) {
       this.triggerPrint(printWindow);

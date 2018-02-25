@@ -7,11 +7,11 @@ class ComponentToPrint extends React.Component {
     return (
       <div>
         <img src="example/test_image.png" border="0" />
-        <table>
+        <table className="testclass">
           <thead>
             <tr>
-              <th>Column One</th>
-              <th>Column Two</th>
+              <th style={{ color: "#FF0000"}}>Column One</th>
+              <th className="testth">Column Two</th>
             </tr>
           </thead>
           <tbody>
