@@ -16,7 +16,7 @@ So you've created a React component but would love to give end users the ability
 
 ## Demo
 
-[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/6n0mo326mz)
+[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/kmmw7l39y7)
 
 ## Usage
 
