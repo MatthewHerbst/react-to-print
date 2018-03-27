@@ -81,7 +81,7 @@ class ReactToPrint extends React.Component {
 
           let nodeValue = attr.nodeValue;
 
-          if (attr.nodeName === 'href' && /^http:\/\//.test(attr.nodeValue) === false) {
+          if (attr.nodeName === 'href' && /^https?:\/\//.test(attr.nodeValue) === false) {
             nodeValue = document.location.protocol + '//' + document.location.host + nodeValue;
           }
 
