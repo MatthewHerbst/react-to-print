@@ -10,7 +10,11 @@ class ReactToPrint extends React.Component {
     /** Trigger action used to open browser print */
     trigger: PropTypes.func.isRequired,
     /** Content to be printed */
-    content: PropTypes.func.isRequired
+    content: PropTypes.func.isRequired,
+    /** Callback function to trigger before print */
+    onBeforePrint: PropTypes.func,
+    /** Callback function to trigger after print */
+    onAfterPrint: PropTypes.func
   };
 
   static defaultProps = {
@@ -25,6 +29,11 @@ class ReactToPrint extends React.Component {
 
   triggerPrint(target) {
     setTimeout(() => {
+
+      if (this.props.onBeforePrint) {
+        this.props.onBeforePrint();
+      }
+
       target.print();
       target.close();
     }, 500);
@@ -34,10 +43,16 @@ class ReactToPrint extends React.Component {
   
     const {
       content,
-      copyStyles
+      copyStyles,
+      onBeforePrint,
+      onAfterPrint
     } = this.props;
 
     let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+    
+    if (onAfterPrint) {
+      printWindow.onbeforeunload = onAfterPrint;
+    }
 
     const contentEl = content();
     const contentNodes = findDOMNode(contentEl);

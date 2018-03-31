@@ -44,6 +44,12 @@ class Example extends React.Component {
             <a href="#">Print this out!</a>
           )}
           content={() => this.componentRef}
+          onBeforePrint={() => {
+            console.log("before print!");
+          }}
+          onAfterPrint={() => {
+            console.log("after print!");
+          }}
          />               
         <ComponentToPrint ref={(el) => this.componentRef = el} />
       </div>
