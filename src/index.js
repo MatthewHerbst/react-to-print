@@ -74,9 +74,14 @@ class ReactToPrint extends React.Component {
     };
 
     [...imageNodes].forEach((child) => {
+      /** Workaround for Safari if the image has base64 data as a source */
+      if (/^data:/.test(child.src)) {
+        child.crossOrigin = 'anonymous';
+      }
       child.setAttribute('src', child.src);
       child.onload = markLoaded.bind(null, 'image');
       child.onerror = markLoaded.bind(null, 'image');
+      child.crossOrigin = 'use-credentials';
     });
 
     /*
