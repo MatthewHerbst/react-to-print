@@ -21,12 +21,6 @@ class ReactToPrint extends React.Component {
     copyStyles: true
   };
 
-  constructor() {
-    super();
-    this.imageTotal = 0;
-    this.imageLoaded = 0;
-  }
-
   triggerPrint(target) {
     setTimeout(() => {
 
@@ -56,22 +50,33 @@ class ReactToPrint extends React.Component {
 
     const contentEl = content();
     const contentNodes = findDOMNode(contentEl);
+
     const imageNodes = [...contentNodes.getElementsByTagName("img")];
+    const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
     this.imageTotal = imageNodes.length;
     this.imageLoaded = 0;
 
-    const markLoaded = () => {
-      this.imageLoaded++;
-      if (this.imageLoaded === this.imageTotal) {
+    this.linkTotal = linkNodes.length;
+    this.linkLoaded = 0;
+
+    const markLoaded = (type) => {
+
+      if (type === 'image')
+        this.imageLoaded++;
+      else if (type === 'link')
+        this.linkLoaded++;
+
+      if (this.imageLoaded === this.imageTotal && this.linkLoaded === this.linkTotal) {
         this.triggerPrint(printWindow);
       }
+
     };
 
     [...imageNodes].forEach((child) => {
       child.setAttribute('src', child.src);
-      child.onload = markLoaded;
-      child.onerror = markLoaded;
+      child.onload = markLoaded.bind(null, 'image');
+      child.onerror = markLoaded.bind(null, 'image');
     });
 
     /*
@@ -103,6 +108,11 @@ class ReactToPrint extends React.Component {
           newHeadEl.setAttribute(attr.nodeName, nodeValue);
         });
 
+        if (node.tagName === 'LINK') {
+          newHeadEl.onload = markLoaded.bind(null, 'link');
+          newHeadEl.onerror = markLoaded.bind(null, 'link');          
+        }
+
         printWindow.document.head.appendChild(newHeadEl);
 
       });
@@ -121,7 +131,7 @@ class ReactToPrint extends React.Component {
     printWindow.document.head.appendChild(styleEl);
     printWindow.document.body.innerHTML = contentNodes.outerHTML;
 
-    if (this.imageTotal === 0) {
+    if (this.imageTotal === 0 || copyStyles === false) {
       this.triggerPrint(printWindow);
     }
 
