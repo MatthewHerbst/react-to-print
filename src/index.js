@@ -23,14 +23,17 @@ class ReactToPrint extends React.Component {
 
   triggerPrint(target) {
     setTimeout(() => {
-
-      if (this.props.onBeforePrint) {
-        this.props.onBeforePrint();
-      }
-
       target.print();
       target.close();
     }, 500);
+  }
+
+  onClick = () => {
+    if (this.props.onBeforePrint) {
+      this.props.onBeforePrint();
+    }
+    /* We need to defer handlePrint in the callstack because it gives React time to rerender the DOM with a new data */
+    setTimeout(this.handlePrint, 1);
   }
 
   handlePrint = () => {
@@ -38,7 +41,6 @@ class ReactToPrint extends React.Component {
     const {
       content,
       copyStyles,
-      onBeforePrint,
       onAfterPrint
     } = this.props;
 
@@ -146,7 +148,7 @@ class ReactToPrint extends React.Component {
 
     return React.cloneElement(this.props.trigger(), {
      ref: (el) => this.triggerRef = el,
-     onClick: this.handlePrint
+     onClick: this.onCLick
     });
 
   }
