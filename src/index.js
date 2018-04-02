@@ -22,12 +22,10 @@ class ReactToPrint extends React.Component {
   };
 
   triggerPrint(target) {
+    if (this.props.onBeforePrint) {
+      this.props.onBeforePrint();
+    }
     setTimeout(() => {
-
-      if (this.props.onBeforePrint) {
-        this.props.onBeforePrint();
-      }
-
       target.print();
       target.close();
     }, 500);
