@@ -36,7 +36,6 @@ class ReactToPrint extends React.Component {
     const {
       content,
       copyStyles,
-      onBeforePrint,
       onAfterPrint
     } = this.props;
 
