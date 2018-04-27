@@ -5,7 +5,8 @@ import ReactToPrint from "../src/";
 class ComponentToPrint extends React.Component {
   render() {
     return (
-      <div>
+      <div className={"relativeCSS"}>
+        <div className={"flash"}></div>
         <img src="example/test_image.png" border="0" />
         <table className="testclass">
           <thead>
