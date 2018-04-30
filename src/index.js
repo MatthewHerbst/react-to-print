@@ -104,8 +104,13 @@ class ReactToPrint extends React.Component {
           let nodeValue = attr.nodeValue;
 
           if (attr.nodeName === 'href' && /^https?:\/\//.test(attr.nodeValue) === false) {
-            const relPath = attr.nodeValue.substr(0, 3) === "../" ? document.location.pathname.replace(/[^/]*$/, '') : "";
+            
+            const relPath = attr.nodeValue.substr(0, 3) === "../" 
+              ? document.location.pathname.replace(/[^/]*$/, '') 
+              : "/";
+            
             nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
+            
           }
 
           newHeadEl.setAttribute(attr.nodeName, nodeValue);
