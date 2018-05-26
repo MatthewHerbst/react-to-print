@@ -91,7 +91,8 @@ class ReactToPrint extends React.Component {
       const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
       [...headEls].forEach(node => { 
       
-        let newHeadEl = printWindow.document.createElement(node.tagName);
+        const doc = printWindow.contentDocument || printWindow.document;
+        let newHeadEl = doc.createElement(node.tagName);
 
         if (node.textContent)
           newHeadEl.textContent = node.textContent;
@@ -103,7 +104,11 @@ class ReactToPrint extends React.Component {
 
           let nodeValue = attr.nodeValue;
 
-          if (attr.nodeName === 'href' && /^https?:\/\//.test(attr.nodeValue) === false) {
+          if (
+            attr.nodeName === 'href' && 
+            /^https?:\/\//.test(attr.nodeValue) === false && 
+            /^blob:/.test(attr.nodeValue) === false
+          ) {
             
             const relPath = attr.nodeValue.substr(0, 3) === "../" 
               ? document.location.pathname.replace(/[^/]*$/, '') 
