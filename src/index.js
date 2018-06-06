@@ -14,11 +14,14 @@ class ReactToPrint extends React.Component {
     /** Callback function to trigger before print */
     onBeforePrint: PropTypes.func,
     /** Callback function to trigger after print */
-    onAfterPrint: PropTypes.func
+    onAfterPrint: PropTypes.func,
+    /** Debug Mode */
+    debug: PropTypes.bool
   };
 
   static defaultProps = {
-    copyStyles: true
+    copyStyles: true,
+    debug: false
   };
 
   triggerPrint(target) {
@@ -26,8 +29,10 @@ class ReactToPrint extends React.Component {
       this.props.onBeforePrint();
     }
     setTimeout(() => {
-      target.print();
-      target.close();
+      if (!this.props.debug) {
+        target.print();
+        target.close();
+      }
     }, 500);
   }
 
@@ -146,6 +151,11 @@ class ReactToPrint extends React.Component {
 
     if (this.imageTotal === 0 || copyStyles === false) {
       this.triggerPrint(printWindow);
+    }
+
+    if (this.props.debug) {
+      console.log("** DEBUG MODE **");
+      console.log(printWindow.document);
     }
 
   }

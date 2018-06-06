@@ -26,7 +26,7 @@ class ComponentToPrint extends React.Component {
             </tr>
             <tr>
               <td>5</td>
-              <td>6</td>
+              <td><img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" width="50" /></td>
             </tr>
           </tbody>
         </table>
@@ -51,6 +51,7 @@ class Example extends React.Component {
           onAfterPrint={() => {
             console.log("after print!");
           }}
+          debug={true}
          />               
         <ComponentToPrint ref={(el) => this.componentRef = el} />
       </div>
