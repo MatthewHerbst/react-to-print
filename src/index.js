@@ -17,6 +17,8 @@ class ReactToPrint extends React.Component {
     onAfterPrint: PropTypes.func,
     /** Close the print window after action */
     closeAfterPrint: PropTypes.bool,
+    /** Optional class to pass to the print window body */
+    bodyClass: PropTypes.string,
     /** Debug Mode */
     debug: PropTypes.bool
   };
@@ -24,6 +26,7 @@ class ReactToPrint extends React.Component {
   static defaultProps = {
     copyStyles: true,
     closeAfterPrint: true,
+    bodyClass: '',
     debug: false
   };
 
@@ -145,6 +148,10 @@ class ReactToPrint extends React.Component {
     if (document.body.className) {
       const bodyClasses = document.body.className.split(" ");
       bodyClasses.map(item => printWindow.document.body.classList.add(item));
+    }
+    
+    if (this.props.bodyClass.length) {
+      printWindow.document.body.classList.add(this.props.bodyClass);
     }
 
     /* remove date/time from top */
