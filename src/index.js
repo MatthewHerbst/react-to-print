@@ -15,12 +15,15 @@ class ReactToPrint extends React.Component {
     onBeforePrint: PropTypes.func,
     /** Callback function to trigger after print */
     onAfterPrint: PropTypes.func,
+    /** Close the print window after action */
+    closeAfterPrint: PropTypes.bool,
     /** Debug Mode */
     debug: PropTypes.bool
   };
 
   static defaultProps = {
     copyStyles: true,
+    closeAfterPrint: true,
     debug: false
   };
 
@@ -31,7 +34,9 @@ class ReactToPrint extends React.Component {
     setTimeout(() => {
       if (!this.props.debug) {
         target.print();
-        target.close();
+        if (this.props.closeAfterPrint) {
+          target.close();
+        }
       }
     }, 500);
   }
