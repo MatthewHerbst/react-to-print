@@ -126,7 +126,8 @@ class ReactToPrint extends React.Component {
             const relPath = attr.nodeValue.substr(0, 3) === "../" 
               ? document.location.pathname.replace(/[^/]*$/, '') 
               : "/";
-            
+
+            nodeValue = nodeValue.replace(/\/+/, '');
             nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
             
           }
