@@ -148,7 +148,9 @@ class ReactToPrint extends React.Component {
 
     if (document.body.className) {
       const bodyClasses = document.body.className.split(" ");
-      bodyClasses.map(item => printWindow.document.body.classList.add(item));
+      bodyClasses
+          .filter((item) => item)
+          .map(item => printWindow.document.body.classList.add(item));
     }
     
     if (this.props.bodyClass.length) {
