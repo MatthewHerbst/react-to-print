@@ -126,7 +126,8 @@ class ReactToPrint extends React.Component {
             const relPath = attr.nodeValue.substr(0, 3) === "../" 
               ? document.location.pathname.replace(/[^/]*$/, '') 
               : "/";
-            
+
+            nodeValue = nodeValue.replace(/\/+/, '');
             nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
             
           }
@@ -147,7 +148,13 @@ class ReactToPrint extends React.Component {
 
     if (document.body.className) {
       const bodyClasses = document.body.className.split(" ");
-      bodyClasses.map(item => printWindow.document.body.classList.add(item));
+      bodyClasses
+          .filter(item => item)
+          .map(item => printWindow.document.body.classList.add(item));
+    }
+    
+    if (this.props.bodyClass.length) {
+      printWindow.document.body.classList.add(this.props.bodyClass);
     }
     
     if (this.props.bodyClass.length) {
