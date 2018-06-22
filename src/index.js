@@ -56,7 +56,8 @@ class ReactToPrint extends React.Component {
     const {
       content,
       copyStyles,
-      onAfterPrint
+      onAfterPrint,
+      printWindowOptions
     } = this.props;
     
     const mappedPrintWindowOptions = Object.keys(printWindowOptions).map(m => `${m}=${printWindowOptions[m]}`).join(', ');
