@@ -90,3 +90,4 @@ The component accepts the following props:
 |**`onAfterPrint`**|function|A callback function that triggers after print
 |**`closeAfterPrint`**|boolean|Close the print window after action
 |**`bodyClass`**|string|Optional class to pass to the print window body
+|**`printWindowOptions`**|object|Options to pass to the third argument of `window.open()`. Removes and overrides default properties. 
