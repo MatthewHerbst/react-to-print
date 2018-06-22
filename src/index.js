@@ -19,6 +19,8 @@ class ReactToPrint extends React.Component {
     closeAfterPrint: PropTypes.bool,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
+    /** Options to pass to the third argument of window.open() */
+    printWindowOptions: PropTypes.shape({}),
     /** Debug Mode */
     debug: PropTypes.bool
   };
@@ -27,6 +29,11 @@ class ReactToPrint extends React.Component {
     copyStyles: true,
     closeAfterPrint: true,
     bodyClass: '',
+    printWindowOptions: {
+      status: 'no',
+      toolbar: 'no',
+      scrollbars: 'yes',
+    },
     debug: false
   };
 
@@ -51,8 +58,10 @@ class ReactToPrint extends React.Component {
       copyStyles,
       onAfterPrint
     } = this.props;
+    
+    const mappedPrintWindowOptions = Object.keys(printWindowOptions).map(m => `${m}=${printWindowOptions[m]}`).join(', ');
 
-    let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+    let printWindow = window.open('', 'Print', mappedPrintWindowOptions, 'false');
     
     if (onAfterPrint) {
       printWindow.onbeforeunload = onAfterPrint;
