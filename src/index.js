@@ -165,10 +165,6 @@ class ReactToPrint extends React.Component {
     if (this.props.bodyClass.length) {
       printWindow.document.body.classList.add(this.props.bodyClass);
     }
-    
-    if (this.props.bodyClass.length) {
-      printWindow.document.body.classList.add(this.props.bodyClass);
-    }
 
     /* remove date/time from top */
     let styleEl = printWindow.document.createElement('style');
