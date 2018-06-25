@@ -15,8 +15,6 @@ class ReactToPrint extends React.Component {
     onBeforePrint: PropTypes.func,
     /** Callback function to trigger after print */
     onAfterPrint: PropTypes.func,
-    /** Close the print window after action */
-    closeAfterPrint: PropTypes.bool,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
     /** Debug Mode */
@@ -36,6 +34,7 @@ class ReactToPrint extends React.Component {
     }
     setTimeout(() => {
       if (!this.props.debug) {
+        target.focus();
         target.print();
         if (this.props.closeAfterPrint) {
           target.close();
@@ -52,121 +51,74 @@ class ReactToPrint extends React.Component {
       onAfterPrint
     } = this.props;
 
-    let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
-    
-    if (onAfterPrint) {
-      printWindow.onbeforeunload = onAfterPrint;
-    }
+    let printWindow = document.createElement('iframe');
+    printWindow.style.position = 'absolute';
+    printWindow.style.top = '-1000px';
+    printWindow.style.left = '-1000px';
 
     const contentEl = content();
     const contentNodes = findDOMNode(contentEl);
 
-    const imageNodes = [...contentNodes.getElementsByTagName("img")];
     const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
-
-    this.imageTotal = imageNodes.length;
-    this.imageLoaded = 0;
 
     this.linkTotal = linkNodes.length;
     this.linkLoaded = 0;
 
     const markLoaded = (type) => {
 
-      if (type === 'image')
-        this.imageLoaded++;
-      else if (type === 'link')
-        this.linkLoaded++;
+      this.linkLoaded++;
 
-      if (this.imageLoaded === this.imageTotal && this.linkLoaded === this.linkTotal) {
-        this.triggerPrint(printWindow);
+      if (this.linkLoaded === this.linkTotal) {       
+        this.triggerPrint(printWindow.contentWindow);
       }
 
     };
 
-    [...imageNodes].forEach((child) => {
-      /** Workaround for Safari if the image has base64 data as a source */
-      if (/^data:/.test(child.src)) {
-        child.crossOrigin = 'anonymous';
-      }
-      child.setAttribute('src', child.src);
-      child.onload = markLoaded.bind(null, 'image');
-      child.onerror = markLoaded.bind(null, 'image');
-      child.crossOrigin = 'use-credentials';
-    });
+    printWindow.onload = function() {
 
-    /*
-     * IE does not seem to allow appendChild from different window contexts correctly.  They seem to come back
-     * as plain objects. In order to get around this each tag is re-created into the printWindow
-     * https://stackoverflow.com/questions/38708840/calling-adoptnode-and-importnode-on-a-child-window-fails-in-ie-and-edge
-     */
-    if (copyStyles !== false) {
+      let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
 
-      const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
-      [...headEls].forEach(node => { 
-      
-        const doc = printWindow.contentDocument || printWindow.document;
-        let newHeadEl = doc.createElement(node.tagName);
+      domDoc.open();
+      domDoc.write(contentNodes.outerHTML);
+      domDoc.close();
 
-        if (node.textContent)
-          newHeadEl.textContent = node.textContent;
-        else if (node.innerText)
-          newHeadEl.innerText = node.innerText;
-  
-        let attributes = [...node.attributes];
-        attributes.forEach(attr => {
+      let styleEl = domDoc.createElement('style');
+      styleEl.appendChild(domDoc.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
+      domDoc.head.appendChild(styleEl);
 
-          let nodeValue = attr.nodeValue;
+      if (copyStyles !== false) {
 
-          if (
-            attr.nodeName === 'href' && 
-            /^https?:\/\//.test(attr.nodeValue) === false && 
-            /^blob:/.test(attr.nodeValue) === false
-          ) {
-            
-            const relPath = attr.nodeValue.substr(0, 3) === "../" 
-              ? document.location.pathname.replace(/[^/]*$/, '') 
-              : "/";
+        const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
 
-            nodeValue = nodeValue.replace(/\/+/, '');
-            nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
-            
+        [...headEls].forEach(node => { 
+        
+          const doc = printWindow.contentDocument || printWindow.document;
+          let newHeadEl = doc.createElement(node.tagName);
+
+          if (node.textContent)
+            newHeadEl.textContent = node.textContent;
+          else if (node.innerText)
+            newHeadEl.innerText = node.innerText;
+    
+          let attributes = [...node.attributes];
+          attributes.forEach(attr => {
+            newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
+          });
+
+          if (node.tagName === 'LINK') {
+            newHeadEl.onload = markLoaded.bind(null, 'link');
+            newHeadEl.onerror = markLoaded.bind(null, 'link');          
           }
 
-          newHeadEl.setAttribute(attr.nodeName, nodeValue);
+          domDoc.head.appendChild(newHeadEl);
+
         });
 
-        if (node.tagName === 'LINK') {
-          newHeadEl.onload = markLoaded.bind(null, 'link');
-          newHeadEl.onerror = markLoaded.bind(null, 'link');          
-        }
-
-        printWindow.document.head.appendChild(newHeadEl);
-
-      });
+      }
 
     }
 
-    if (document.body.className) {
-      const bodyClasses = document.body.className.split(" ");
-      bodyClasses
-          .filter(item => item)
-          .map(item => printWindow.document.body.classList.add(item));
-    }
-    
-    if (this.props.bodyClass.length) {
-      printWindow.document.body.classList.add(this.props.bodyClass);
-    }
-
-    /* remove date/time from top */
-    let styleEl = printWindow.document.createElement('style');
-    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
-
-    printWindow.document.head.appendChild(styleEl);
-    printWindow.document.body.innerHTML = contentNodes.outerHTML;
-
-    if (this.imageTotal === 0 || copyStyles === false) {
-      this.triggerPrint(printWindow);
-    }
+    document.body.appendChild(printWindow);
 
     if (this.props.debug) {
       console.log("** DEBUG MODE **");
