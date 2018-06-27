@@ -20,14 +20,17 @@ class ReactToPrint extends React.Component {
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
     /** Debug Mode */
-    debug: PropTypes.bool
+    debug: PropTypes.bool,
+    /** Async */
+    async: PropTypes.func,
   };
 
   static defaultProps = {
     copyStyles: true,
     closeAfterPrint: true,
     bodyClass: '',
-    debug: false
+    debug: false,
+    async: () => Promise.resolve(),
   };
 
   triggerPrint(target) {
@@ -53,125 +56,130 @@ class ReactToPrint extends React.Component {
     } = this.props;
 
     let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
+
+    // Add async function
+    this.props.async().then(() => {
+
+      if (onAfterPrint) {
+        printWindow.onbeforeunload = onAfterPrint;
+      }
+
+      const contentEl = content();
+      const contentNodes = findDOMNode(contentEl);
+
+      const imageNodes = [...contentNodes.getElementsByTagName("img")];
+      const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
+
+      this.imageTotal = imageNodes.length;
+      this.imageLoaded = 0;
+
+      this.linkTotal = linkNodes.length;
+      this.linkLoaded = 0;
+
+      const markLoaded = (type) => {
+
+        if (type === 'image')
+          this.imageLoaded++;
+        else if (type === 'link')
+          this.linkLoaded++;
+
+        if (this.imageLoaded === this.imageTotal && this.linkLoaded === this.linkTotal) {
+          this.triggerPrint(printWindow);
+        }
+
+      };
+
+      [...imageNodes].forEach((child) => {
+        /** Workaround for Safari if the image has base64 data as a source */
+        if (/^data:/.test(child.src)) {
+          child.crossOrigin = 'anonymous';
+        }
+        child.setAttribute('src', child.src);
+        child.onload = markLoaded.bind(null, 'image');
+        child.onerror = markLoaded.bind(null, 'image');
+        child.crossOrigin = 'use-credentials';
+      });
+
+      /*
+       * IE does not seem to allow appendChild from different window contexts correctly.  They seem to come back
+       * as plain objects. In order to get around this each tag is re-created into the printWindow
+       * https://stackoverflow.com/questions/38708840/calling-adoptnode-and-importnode-on-a-child-window-fails-in-ie-and-edge
+       */
+      if (copyStyles !== false) {
+
+        const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
+        [...headEls].forEach(node => { 
+        
+          const doc = printWindow.contentDocument || printWindow.document;
+          let newHeadEl = doc.createElement(node.tagName);
+
+          if (node.textContent)
+            newHeadEl.textContent = node.textContent;
+          else if (node.innerText)
+            newHeadEl.innerText = node.innerText;
     
-    if (onAfterPrint) {
-      printWindow.onbeforeunload = onAfterPrint;
-    }
+          let attributes = [...node.attributes];
+          attributes.forEach(attr => {
 
-    const contentEl = content();
-    const contentNodes = findDOMNode(contentEl);
+            let nodeValue = attr.nodeValue;
 
-    const imageNodes = [...contentNodes.getElementsByTagName("img")];
-    const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
+            if (
+              attr.nodeName === 'href' && 
+              /^https?:\/\//.test(attr.nodeValue) === false && 
+              /^blob:/.test(attr.nodeValue) === false
+            ) {
+              
+              const relPath = attr.nodeValue.substr(0, 3) === "../" 
+                ? document.location.pathname.replace(/[^/]*$/, '') 
+                : "/";
 
-    this.imageTotal = imageNodes.length;
-    this.imageLoaded = 0;
+              nodeValue = nodeValue.replace(/\/+/, '');
+              nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
+              
+            }
 
-    this.linkTotal = linkNodes.length;
-    this.linkLoaded = 0;
+            newHeadEl.setAttribute(attr.nodeName, nodeValue);
+          });
 
-    const markLoaded = (type) => {
+          if (node.tagName === 'LINK') {
+            newHeadEl.onload = markLoaded.bind(null, 'link');
+            newHeadEl.onerror = markLoaded.bind(null, 'link');          
+          }
 
-      if (type === 'image')
-        this.imageLoaded++;
-      else if (type === 'link')
-        this.linkLoaded++;
+          printWindow.document.head.appendChild(newHeadEl);
 
-      if (this.imageLoaded === this.imageTotal && this.linkLoaded === this.linkTotal) {
+        });
+
+      }
+
+      if (document.body.className) {
+        const bodyClasses = document.body.className.split(" ");
+        bodyClasses
+            .filter(item => item)
+            .map(item => printWindow.document.body.classList.add(item));
+      }
+      
+      if (this.props.bodyClass.length) {
+        printWindow.document.body.classList.add(this.props.bodyClass);
+      }
+
+      /* remove date/time from top */
+      let styleEl = printWindow.document.createElement('style');
+      styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
+
+      printWindow.document.head.appendChild(styleEl);
+      printWindow.document.body.innerHTML = contentNodes.outerHTML;
+
+      if (this.imageTotal === 0 || copyStyles === false) {
         this.triggerPrint(printWindow);
       }
 
-    };
-
-    [...imageNodes].forEach((child) => {
-      /** Workaround for Safari if the image has base64 data as a source */
-      if (/^data:/.test(child.src)) {
-        child.crossOrigin = 'anonymous';
+      if (this.props.debug) {
+        console.log("** DEBUG MODE **");
+        console.log(printWindow.document);
       }
-      child.setAttribute('src', child.src);
-      child.onload = markLoaded.bind(null, 'image');
-      child.onerror = markLoaded.bind(null, 'image');
-      child.crossOrigin = 'use-credentials';
+
     });
-
-    /*
-     * IE does not seem to allow appendChild from different window contexts correctly.  They seem to come back
-     * as plain objects. In order to get around this each tag is re-created into the printWindow
-     * https://stackoverflow.com/questions/38708840/calling-adoptnode-and-importnode-on-a-child-window-fails-in-ie-and-edge
-     */
-    if (copyStyles !== false) {
-
-      const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
-      [...headEls].forEach(node => { 
-      
-        const doc = printWindow.contentDocument || printWindow.document;
-        let newHeadEl = doc.createElement(node.tagName);
-
-        if (node.textContent)
-          newHeadEl.textContent = node.textContent;
-        else if (node.innerText)
-          newHeadEl.innerText = node.innerText;
-  
-        let attributes = [...node.attributes];
-        attributes.forEach(attr => {
-
-          let nodeValue = attr.nodeValue;
-
-          if (
-            attr.nodeName === 'href' && 
-            /^https?:\/\//.test(attr.nodeValue) === false && 
-            /^blob:/.test(attr.nodeValue) === false
-          ) {
-            
-            const relPath = attr.nodeValue.substr(0, 3) === "../" 
-              ? document.location.pathname.replace(/[^/]*$/, '') 
-              : "/";
-
-            nodeValue = nodeValue.replace(/\/+/, '');
-            nodeValue = document.location.protocol + '//' + document.location.host + relPath + nodeValue;
-            
-          }
-
-          newHeadEl.setAttribute(attr.nodeName, nodeValue);
-        });
-
-        if (node.tagName === 'LINK') {
-          newHeadEl.onload = markLoaded.bind(null, 'link');
-          newHeadEl.onerror = markLoaded.bind(null, 'link');          
-        }
-
-        printWindow.document.head.appendChild(newHeadEl);
-
-      });
-
-    }
-
-    if (document.body.className) {
-      const bodyClasses = document.body.className.split(" ");
-      bodyClasses
-          .filter(item => item)
-          .map(item => printWindow.document.body.classList.add(item));
-    }
-    
-    if (this.props.bodyClass.length) {
-      printWindow.document.body.classList.add(this.props.bodyClass);
-    }
-
-    /* remove date/time from top */
-    let styleEl = printWindow.document.createElement('style');
-    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
-
-    printWindow.document.head.appendChild(styleEl);
-    printWindow.document.body.innerHTML = contentNodes.outerHTML;
-
-    if (this.imageTotal === 0 || copyStyles === false) {
-      this.triggerPrint(printWindow);
-    }
-
-    if (this.props.debug) {
-      console.log("** DEBUG MODE **");
-      console.log(printWindow.document);
-    }
 
   }
 
