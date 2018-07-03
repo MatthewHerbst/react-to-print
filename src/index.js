@@ -19,6 +19,8 @@ class ReactToPrint extends React.Component {
     closeAfterPrint: PropTypes.bool,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
+    /** Optional margin values to pass to the page */
+    pageMargins: PropTypes.string,
     /** Debug Mode */
     debug: PropTypes.bool
   };
@@ -27,6 +29,7 @@ class ReactToPrint extends React.Component {
     copyStyles: true,
     closeAfterPrint: true,
     bodyClass: '',
+    pageMargins: '0mm',
     debug: false
   };
 
@@ -159,7 +162,7 @@ class ReactToPrint extends React.Component {
 
     /* remove date/time from top */
     let styleEl = printWindow.document.createElement('style');
-    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
+    styleEl.appendChild(printWindow.document.createTextNode(`@page { size: auto;  margin: ${pageMargins} } @media print { body { -webkit-print-color-adjust: exact; } }`));
 
     printWindow.document.head.appendChild(styleEl);
     printWindow.document.body.innerHTML = contentNodes.outerHTML;
