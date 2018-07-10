@@ -17,6 +17,8 @@ class ReactToPrint extends React.Component {
     onAfterPrint: PropTypes.func,
     /** Close the print window after action */
     closeAfterPrint: PropTypes.bool,
+    /** Override default print window styling */
+    pageStyle: PropTypes.string,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
     /** Debug Mode */
@@ -49,8 +51,10 @@ class ReactToPrint extends React.Component {
     const {
       content,
       copyStyles,
-      onAfterPrint
+      onAfterPrint,
+      pageStyle
     } = this.props;
+    console.log(pageStyle);
 
     let printWindow = window.open("", "Print", "status=no, toolbar=no, scrollbars=yes", "false");
     
@@ -158,8 +162,12 @@ class ReactToPrint extends React.Component {
     }
 
     /* remove date/time from top */
+    const defaultPageStyle = pageStyle === undefined
+      ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"
+      : pageStyle;
+
     let styleEl = printWindow.document.createElement('style');
-    styleEl.appendChild(printWindow.document.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
+    styleEl.appendChild(printWindow.document.createTextNode(defaultPageStyle));
 
     printWindow.document.head.appendChild(styleEl);
     printWindow.document.body.innerHTML = contentNodes.outerHTML;

@@ -51,7 +51,6 @@ class Example extends React.Component {
           onAfterPrint={() => {
             console.log("after print!");
           }}
-          debug={true}
          />               
         <ComponentToPrint ref={(el) => this.componentRef = el} />
       </div>
