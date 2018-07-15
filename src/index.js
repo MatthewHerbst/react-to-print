@@ -13,8 +13,6 @@ class ReactToPrint extends React.Component {
     content: PropTypes.func.isRequired,
     /** Callback function to trigger before print */
     onBeforePrint: PropTypes.func,
-    /** Callback function to trigger after print */
-    onAfterPrint: PropTypes.func,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
   };
@@ -30,12 +28,16 @@ class ReactToPrint extends React.Component {
       this.props.onBeforePrint();
     }
     setTimeout(() => {
-      target.focus();
-      target.print();
-      if (this.props.closeAfterPrint) {
-        target.close();
-      }
+      target.contentWindow.focus();
+      target.contentWindow.print();
+      this.removeWindow(target);
     }, 500);
+  }
+
+  removeWindow(target) { 
+    setTimeout(() => {
+      target.parentNode.removeChild(target);
+    }, 1500);
   }
 
   handlePrint = () => {
@@ -64,7 +66,7 @@ class ReactToPrint extends React.Component {
       this.linkLoaded++;
 
       if (this.linkLoaded === this.linkTotal) {       
-        this.triggerPrint(printWindow.contentWindow);
+        this.triggerPrint(printWindow);
       }
 
     };
@@ -84,30 +86,43 @@ class ReactToPrint extends React.Component {
       if (copyStyles !== false) {
 
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
+        let styleCSS = "";
 
         [...headEls].forEach(node => { 
         
-          const doc = printWindow.contentDocument || printWindow.document;
-          let newHeadEl = doc.createElement(node.tagName);
+          if (node.tagName === 'STYLE') {
 
-          if (node.textContent)
-            newHeadEl.textContent = node.textContent;
-          else if (node.innerText)
-            newHeadEl.innerText = node.innerText;
-    
-          let attributes = [...node.attributes];
-          attributes.forEach(attr => {
-            newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
-          });
+            if (node.sheet) {
+              for (let i = 0; i < node.sheet.cssRules.length; i++) {
+                styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
+              }
 
-          if (node.tagName === 'LINK') {
+            }
+
+          } else {
+
+            let newHeadEl = domDoc.createElement(node.tagName);
+      
+            let attributes = [...node.attributes];
+            attributes.forEach(attr => {
+              newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
+            });
+
             newHeadEl.onload = markLoaded.bind(null, 'link');
             newHeadEl.onerror = markLoaded.bind(null, 'link');          
+            domDoc.head.appendChild(newHeadEl);
+
           }
 
-          domDoc.head.appendChild(newHeadEl);
 
         });
+
+        if (styleCSS.length) {
+          let newHeadEl = domDoc.createElement('style');
+          newHeadEl.setAttribute('id', 'react-to-print');
+          newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
+          domDoc.head.appendChild(newHeadEl);
+        }
 
       }
 
