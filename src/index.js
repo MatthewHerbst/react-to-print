@@ -17,15 +17,12 @@ class ReactToPrint extends React.Component {
     onAfterPrint: PropTypes.func,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
-    /** Debug Mode */
-    debug: PropTypes.bool
   };
 
   static defaultProps = {
     copyStyles: true,
     closeAfterPrint: true,
     bodyClass: '',
-    debug: false
   };
 
   triggerPrint(target) {
@@ -33,12 +30,10 @@ class ReactToPrint extends React.Component {
       this.props.onBeforePrint();
     }
     setTimeout(() => {
-      if (!this.props.debug) {
-        target.focus();
-        target.print();
-        if (this.props.closeAfterPrint) {
-          target.close();
-        }
+      target.focus();
+      target.print();
+      if (this.props.closeAfterPrint) {
+        target.close();
       }
     }, 500);
   }
@@ -119,11 +114,6 @@ class ReactToPrint extends React.Component {
     }
 
     document.body.appendChild(printWindow);
-
-    if (this.props.debug) {
-      console.log("** DEBUG MODE **");
-      console.log(printWindow.document);
-    }
 
   }
 
