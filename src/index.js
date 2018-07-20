@@ -58,7 +58,7 @@ class ReactToPrint extends React.Component {
 
     const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
-    this.linkTotal = linkNodes.length;
+    this.linkTotal = linkNodes.length || 0;
     this.linkLoaded = 0;
 
     const markLoaded = (type) => {
@@ -71,7 +71,7 @@ class ReactToPrint extends React.Component {
 
     };
 
-    printWindow.onload = function() {
+    printWindow.onload = () => {
 
       let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
 
@@ -126,7 +126,11 @@ class ReactToPrint extends React.Component {
 
       }
 
-    }
+      if (this.linkTotal === 0 || copyStyles === false) {
+        this.triggerPrint(printWindow);
+      }
+
+    };
 
     document.body.appendChild(printWindow);
 
