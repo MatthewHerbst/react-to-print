@@ -88,6 +88,7 @@ class ReactToPrint extends React.Component {
     printWindow.onload = () => {
 
       let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
+      const srcCanvasEls = [...contentNodes.querySelectorAll('canvas')];
 
       domDoc.open();
       domDoc.write(contentNodes.outerHTML);
@@ -106,13 +107,20 @@ class ReactToPrint extends React.Component {
         domDoc.body.classList.add(bodyClass);
       }
 
+      const canvasEls = domDoc.querySelectorAll('canvas');
+      [...canvasEls].forEach((node, index) => {     
+        node.getContext('2d').drawImage(srcCanvasEls[index], 0, 0);
+      });
+
       if (copyStyles !== false) {
 
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
         let styleCSS = "";
 
-        [...headEls].forEach(node => { 
+        [...headEls].forEach((node, index) => { 
         
+          let newHeadEl = domDoc.createElement(node.tagName);
+
           if (node.tagName === 'STYLE') {
 
             if (node.sheet) {
@@ -120,12 +128,13 @@ class ReactToPrint extends React.Component {
                 styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
               }
 
+              newHeadEl.setAttribute('id', `react-to-print-${index}`);
+              newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
+
             }
 
           } else {
 
-            let newHeadEl = domDoc.createElement(node.tagName);
-      
             let attributes = [...node.attributes];
             attributes.forEach(attr => {
               newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
@@ -133,19 +142,13 @@ class ReactToPrint extends React.Component {
 
             newHeadEl.onload = markLoaded.bind(null, 'link');
             newHeadEl.onerror = markLoaded.bind(null, 'link');          
-            domDoc.head.appendChild(newHeadEl);
 
           }
 
+          domDoc.head.appendChild(newHeadEl);
 
         });
 
-        if (styleCSS.length) {
-          let newHeadEl = domDoc.createElement('style');
-          newHeadEl.setAttribute('id', 'react-to-print');
-          newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
-          domDoc.head.appendChild(newHeadEl);
-        }
 
       }
 

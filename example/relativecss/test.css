@@ -1,3 +1,7 @@
 .relativeCSS {
  border: solid 1px #FF0000;
 }
+
+.testclass {
+  background: rgba(76, 175, 80, 0.3);
+}
