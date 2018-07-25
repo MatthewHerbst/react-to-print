@@ -13,6 +13,10 @@ class ReactToPrint extends React.Component {
     content: PropTypes.func.isRequired,
     /** Callback function to trigger before print */
     onBeforePrint: PropTypes.func,
+    /** Callback function to trigger after print */
+    onAfterPrint: PropTypes.func,
+    /** Override default print window styling */    
+    pageStyle: PropTypes.string,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
   };
@@ -24,27 +28,37 @@ class ReactToPrint extends React.Component {
   };
 
   triggerPrint(target) {
-    if (this.props.onBeforePrint) {
-      this.props.onBeforePrint();
+    const { onBeforePrint, onAfterPrint } = this.props;
+
+    if (onBeforePrint) {
+      onBeforePrint();
     }
+
     setTimeout(() => {
       target.contentWindow.focus();
       target.contentWindow.print();
       this.removeWindow(target);
+
+      if (onAfterPrint) {
+        onAfterPrint();
+      }
+
     }, 500);
   }
 
   removeWindow(target) { 
     setTimeout(() => {
       target.parentNode.removeChild(target);
-    }, 1500);
+    }, 500);
   }
 
   handlePrint = () => {
   
     const {
+      bodyClass,
       content,
       copyStyles,
+      pageStyle,
       onAfterPrint
     } = this.props;
 
@@ -79,9 +93,18 @@ class ReactToPrint extends React.Component {
       domDoc.write(contentNodes.outerHTML);
       domDoc.close();
 
+      /* remove date/time from top */
+      const defaultPageStyle = pageStyle === undefined
+        ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"
+        : pageStyle;
+
       let styleEl = domDoc.createElement('style');
-      styleEl.appendChild(domDoc.createTextNode("@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"));
+      styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
       domDoc.head.appendChild(styleEl);
+
+      if (bodyClass.length) {
+        domDoc.body.classList.add(bodyClass);
+      }
 
       if (copyStyles !== false) {
 
