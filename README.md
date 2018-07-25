@@ -87,4 +87,7 @@ The component accepts the following props:
 |**`content`**|function|A function that returns a component reference value. The content of this reference value is then used for print
 |**`copyStyles`**|boolean|Copies all &lt;style> and &lt;link type="stylesheet" /> from <head> inside the parent window into the print window. (default: true)
 |**`onBeforePrint`**|function|A callback function that triggers before print
+|**`onAfterPrint`**|function|A callback function that triggers after print
+|**`closeAfterPrint`**|boolean|Close the print window after action
+|**`pageStyle`**|string|Override default print window styling 
 |**`bodyClass`**|string|Optional class to pass to the print window body
