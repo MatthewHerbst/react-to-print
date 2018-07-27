@@ -62,14 +62,19 @@ class ReactToPrint extends React.Component {
       onAfterPrint
     } = this.props;
 
+    const contentEl = content();
+
+    if (contentEl === undefined) {
+      console.error("Refs are not available stateless components. For 'react-to-print' to work only Class based components can be printed");
+      return false;
+    }
+
     let printWindow = document.createElement('iframe');
     printWindow.style.position = 'absolute';
     printWindow.style.top = '-1000px';
     printWindow.style.left = '-1000px';
 
-    const contentEl = content();
     const contentNodes = findDOMNode(contentEl);
-
     const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
     this.linkTotal = linkNodes.length || 0;
@@ -115,11 +120,11 @@ class ReactToPrint extends React.Component {
       if (copyStyles !== false) {
 
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
-        let styleCSS = "";
 
         [...headEls].forEach((node, index) => { 
         
           let newHeadEl = domDoc.createElement(node.tagName);
+          let styleCSS = "";
 
           if (node.tagName === 'STYLE') {
 
