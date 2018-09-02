@@ -91,6 +91,10 @@ class ReactToPrint extends React.Component {
     };
 
     printWindow.onload = () => {
+      /* IE11 support */
+      if ( window.navigator && window.navigator.userAgent.includes( 'Trident/7.0' ) ) { 
+          printWindow.onload = null;
+      }
 
       let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
       const srcCanvasEls = [...contentNodes.querySelectorAll('canvas')];
