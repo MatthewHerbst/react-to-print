@@ -69,6 +69,11 @@ class ReactToPrint extends React.Component {
       return false;
     }
 
+    if (Array.isArray(contentEl) && contentEl.length > 0) {
+      this.handlePrintMultipleRefs(contentEl);
+      return;
+    }
+
     let printWindow = document.createElement('iframe');
     printWindow.style.position = 'absolute';
     printWindow.style.top = '-1000px';
@@ -119,6 +124,134 @@ class ReactToPrint extends React.Component {
       const canvasEls = domDoc.querySelectorAll('canvas');
       [...canvasEls].forEach((node, index) => {     
         node.getContext('2d').drawImage(srcCanvasEls[index], 0, 0);
+      });
+
+      if (copyStyles !== false) {
+
+        const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
+
+        [...headEls].forEach((node, index) => { 
+        
+          let newHeadEl = domDoc.createElement(node.tagName);
+          let styleCSS = "";
+
+          if (node.tagName === 'STYLE') {
+
+            if (node.sheet) {
+              for (let i = 0; i < node.sheet.cssRules.length; i++) {
+                styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
+              }
+
+              newHeadEl.setAttribute('id', `react-to-print-${index}`);
+              newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
+
+            }
+
+          } else {
+
+            let attributes = [...node.attributes];
+            attributes.forEach(attr => {
+              newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
+            });
+
+            newHeadEl.onload = markLoaded.bind(null, 'link');
+            newHeadEl.onerror = markLoaded.bind(null, 'link');          
+
+          }
+
+          domDoc.head.appendChild(newHeadEl);
+
+        });
+
+
+      }
+
+      if (this.linkTotal === 0 || copyStyles === false) {
+        this.triggerPrint(printWindow);
+      }
+
+    };
+
+    document.body.appendChild(printWindow);
+
+  }
+
+  /**
+   * Handles printing for an array of references
+   * 
+   * @param  {ref[]} refArray 
+   * 
+   */
+  handlePrintMultipleRefs = (refArray) => {
+  
+    const {
+      bodyClass,
+      content,
+      copyStyles,
+      pageStyle,
+      onAfterPrint
+    } = this.props;
+
+    const contentEl = refArray;
+    const errorMsg = "Refs are not available stateless components. For 'react-to-print' to work only Class based components can be printed";
+
+    for (let ref of contentEl) {
+      if (ref === undefined) {
+        console.error(errorMsg);
+        return false;
+      }
+    }
+
+    let printWindow = document.createElement('iframe');
+    printWindow.style.position = 'absolute';
+    printWindow.style.top = '-1000px';
+    printWindow.style.left = '-1000px';
+
+    const contentNodes = contentEl.map(node => findDOMNode(node));
+    const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
+
+    this.linkTotal = linkNodes.length || 0;
+    this.linkLoaded = 0;
+
+    const markLoaded = (type) => {
+
+      this.linkLoaded++;
+
+      if (this.linkLoaded === this.linkTotal) {       
+        this.triggerPrint(printWindow);
+      }
+
+    };
+
+    printWindow.onload = () => {
+      /* IE11 support */
+      if ( window.navigator && window.navigator.userAgent.includes( 'Trident/7.0' ) ) { 
+          printWindow.onload = null;
+      }
+
+      let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
+      const srcCanvasEls = contentNodes.map( contentNodes=> [...contentNodes.querySelectorAll('canvas')]);
+
+      domDoc.open();
+      contentNodes.forEach(node => domDoc.write(node.outerHTML));
+      domDoc.close();
+
+      /* remove date/time from top */
+      const defaultPageStyle = pageStyle === undefined
+        ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"
+        : pageStyle;
+
+      let styleEl = domDoc.createElement('style');
+      styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
+      domDoc.head.appendChild(styleEl);
+
+      if (bodyClass.length) {
+        domDoc.body.classList.add(bodyClass);
+      }
+
+      const canvasEls = domDoc.querySelectorAll('canvas');
+      [...canvasEls].forEach((node, index) => {
+        srcCanvasEls.forEach(x=> node.getContext('2d').drawImage(x[index],0,0)); 
       });
 
       if (copyStyles !== false) {
