@@ -19,7 +19,7 @@ export default {
         "react",
         ["env", {
           "targets": {
-            "browsers": ["last 2 versions", "ie >= 10"]
+            "browsers": ["> 1%", "iOS >= 8", "Android >= 4", "ie >= 10"]
           },
           "debug": false,
           "modules": false
