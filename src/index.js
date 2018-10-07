@@ -6,7 +6,7 @@ class ReactToPrint extends React.Component {
 
   static propTypes = {
     /** Copy styles over into print window. default: true */
-    copyStyles: PropTypes.bool, 
+    copyStyles: PropTypes.bool,
     /** Trigger action used to open browser print */
     trigger: PropTypes.func.isRequired,
     /** Content to be printed */
@@ -15,7 +15,7 @@ class ReactToPrint extends React.Component {
     onBeforePrint: PropTypes.func,
     /** Callback function to trigger after print */
     onAfterPrint: PropTypes.func,
-    /** Override default print window styling */    
+    /** Override default print window styling */
     pageStyle: PropTypes.string,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
@@ -46,14 +46,14 @@ class ReactToPrint extends React.Component {
     }, 500);
   }
 
-  removeWindow(target) { 
+  removeWindow(target) {
     setTimeout(() => {
       target.parentNode.removeChild(target);
     }, 500);
   }
 
   handlePrint = () => {
-  
+
     const {
       bodyClass,
       content,
@@ -65,7 +65,7 @@ class ReactToPrint extends React.Component {
     const contentEl = content();
 
     if (contentEl === undefined) {
-      console.error("Refs are not available stateless components. For 'react-to-print' to work only Class based components can be printed");
+      console.error("Refs are not available for stateless components. For 'react-to-print' to work only Class based components can be printed");
       return false;
     }
 
@@ -84,7 +84,7 @@ class ReactToPrint extends React.Component {
 
       this.linkLoaded++;
 
-      if (this.linkLoaded === this.linkTotal) {       
+      if (this.linkLoaded === this.linkTotal) {
         this.triggerPrint(printWindow);
       }
 
@@ -92,8 +92,8 @@ class ReactToPrint extends React.Component {
 
     printWindow.onload = () => {
       /* IE11 support */
-      if ( window.navigator && window.navigator.userAgent.includes( 'Trident/7.0' ) ) { 
-          printWindow.onload = null;
+      if (window.navigator && window.navigator.userAgent.indexOf('Trident/7.0') > -1) {
+        printWindow.onload = null;
       }
 
       let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
@@ -117,7 +117,7 @@ class ReactToPrint extends React.Component {
       }
 
       const canvasEls = domDoc.querySelectorAll('canvas');
-      [...canvasEls].forEach((node, index) => {     
+      [...canvasEls].forEach((node, index) => {
         node.getContext('2d').drawImage(srcCanvasEls[index], 0, 0);
       });
 
@@ -125,8 +125,8 @@ class ReactToPrint extends React.Component {
 
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
 
-        [...headEls].forEach((node, index) => { 
-        
+        [...headEls].forEach((node, index) => {
+
           let newHeadEl = domDoc.createElement(node.tagName);
           let styleCSS = "";
 
@@ -150,7 +150,7 @@ class ReactToPrint extends React.Component {
             });
 
             newHeadEl.onload = markLoaded.bind(null, 'link');
-            newHeadEl.onerror = markLoaded.bind(null, 'link');          
+            newHeadEl.onerror = markLoaded.bind(null, 'link');
 
           }
 
@@ -174,8 +174,8 @@ class ReactToPrint extends React.Component {
   render() {
 
     return React.cloneElement(this.props.trigger(), {
-     ref: (el) => this.triggerRef = el,
-     onClick: this.handlePrint
+      ref: (el) => this.triggerRef = el,
+      onClick: this.handlePrint
     });
 
   }
