@@ -27,9 +27,11 @@
     "url": "https://github.com/gregnb/react-to-print/issues"
   },
   "homepage": "https://github.com/gregnb/react-to-print#readme",
+  "peerDependencies": {
+    "react": "^15.0.0 || ^16.0.0"
+  },
   "dependencies": {
-    "prop-types": "^15.6.0",
-    "react": "^16.2.0"
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
