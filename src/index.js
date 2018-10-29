@@ -75,12 +75,20 @@ class ReactToPrint extends React.Component {
     const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
     this.linkTotal = linkNodes.length || 0;
-    this.linkLoaded = 0;
+    this.linksLoaded = [];
+    this.linksErrored = [];
 
-    const markLoaded = (type) => {
-      this.linkLoaded++;
+    const markLoaded = (linkNode, loaded) => {
+      if (loaded) {
+        this.linksLoaded.push(linkNode);
+      } else {
+        console.error("'react-to-print' was unable to load a link. It may be invalid. 'react-to-print' will continue attempting to print the page. The link the errored was:", linkNode);
+        this.linksErrored.push(linkNode);
+      }
 
-      if (this.linkLoaded === this.linkTotal) {
+      // We may have errors, but attempt to print anyways - maybe they are trivial and the user will
+      // be ok ignoring them
+      if (this.linksLoaded.length + this.linksErrored.length === this.linkTotal) {
         this.triggerPrint(printWindow);
       }
     };
@@ -138,8 +146,8 @@ class ReactToPrint extends React.Component {
               newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
             });
 
-            newHeadEl.onload = markLoaded.bind(null, 'link');
-            newHeadEl.onerror = markLoaded.bind(null, 'link');
+            newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
+            newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
           }
 
           domDoc.head.appendChild(newHeadEl);
