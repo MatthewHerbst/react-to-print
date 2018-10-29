@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 
 class ReactToPrint extends React.Component {
-
   static propTypes = {
     /** Copy styles over into print window. default: true */
     copyStyles: PropTypes.bool,
@@ -42,7 +41,6 @@ class ReactToPrint extends React.Component {
       if (onAfterPrint) {
         onAfterPrint();
       }
-
     }, 500);
   }
 
@@ -53,7 +51,6 @@ class ReactToPrint extends React.Component {
   }
 
   handlePrint = () => {
-
     const {
       bodyClass,
       content,
@@ -78,16 +75,22 @@ class ReactToPrint extends React.Component {
     const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
     this.linkTotal = linkNodes.length || 0;
-    this.linkLoaded = 0;
+    this.linksLoaded = [];
+    this.linksErrored = [];
 
-    const markLoaded = (type) => {
-
-      this.linkLoaded++;
-
-      if (this.linkLoaded === this.linkTotal) {
-        this.triggerPrint(printWindow);
+    const markLoaded = (linkNode, loaded) => {
+      if (loaded) {
+        this.linksLoaded.push(linkNode);
+      } else {
+        console.error("'react-to-print' was unable to load a link. It may be invalid. 'react-to-print' will continue attempting to print the page. The link the errored was:", linkNode);
+        this.linksErrored.push(linkNode);
       }
 
+      // We may have errors, but attempt to print anyways - maybe they are trivial and the user will
+      // be ok ignoring them
+      if (this.linksLoaded.length + this.linksErrored.length === this.linkTotal) {
+        this.triggerPrint(printWindow);
+      }
     };
 
     printWindow.onload = () => {
@@ -122,64 +125,66 @@ class ReactToPrint extends React.Component {
       });
 
       if (copyStyles !== false) {
-
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
 
         [...headEls].forEach((node, index) => {
-
-          let newHeadEl = domDoc.createElement(node.tagName);
-          let styleCSS = "";
-
           if (node.tagName === 'STYLE') {
+            const newHeadEl = domDoc.createElement(node.tagName);
 
             if (node.sheet) {
+              let styleCSS = "";
+
               for (let i = 0; i < node.sheet.cssRules.length; i++) {
                 styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
               }
 
               newHeadEl.setAttribute('id', `react-to-print-${index}`);
               newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
-
+              domDoc.head.appendChild(newHeadEl);
             }
-
           } else {
-
             let attributes = [...node.attributes];
-            attributes.forEach(attr => {
-              newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
-            });
 
-            newHeadEl.onload = markLoaded.bind(null, 'link');
-            newHeadEl.onerror = markLoaded.bind(null, 'link');
+            const hrefAttr = attributes.filter(attr => attr.nodeName === 'href');
+            let hasHref = hrefAttr.length ? !!hrefAttr[0].nodeValue : false;
 
+            // Many browsers will do all sorts of weird things if they encounter an empty `href`
+            // tag (which is invalid HTML). Some will attempt to load the current page. Some will
+            // attempt to load the page's parent directory. These problems can cause
+            // `react-to-print` to stop  without any error being thrown. To avoid such problems we
+            // simply do not attempt to load these links.
+            if (hasHref) {
+              const newHeadEl = domDoc.createElement(node.tagName);
+
+              attributes.forEach(attr => {
+                newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
+              });
+
+              newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
+              newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
+              domDoc.head.appendChild(newHeadEl);
+            } else {
+              console.warn("'react-to-print' encountered a <link> tag with an empty 'href' attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:", node);
+              markLoaded(node, true); // We've already shown a warning for this, we don't need to mark it as an error as well
+            }
           }
-
-          domDoc.head.appendChild(newHeadEl);
-
         });
-
-
       }
 
       if (this.linkTotal === 0 || copyStyles === false) {
         this.triggerPrint(printWindow);
       }
-
     };
 
     document.body.appendChild(printWindow);
-
   }
 
   render() {
-
     return React.cloneElement(this.props.trigger(), {
       ref: (el) => this.triggerRef = el,
       onClick: this.handlePrint
     });
-
   }
-
 }
 
 export default ReactToPrint;
