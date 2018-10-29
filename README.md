@@ -8,7 +8,7 @@
 [![dependencies Status](https://david-dm.org/gregnb/react-to-print/status.svg)](https://david-dm.org/gregnb/react-to-print)
 [![npm version](https://badge.fury.io/js/react-to-print.svg)](https://badge.fury.io/js/react-to-print)
 
-So you've created a React component but would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a new print window with CSS styles copied over as well.  
+So you've created a React component but would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a new print window with CSS styles copied over as well.
 
 ## Install
 
@@ -89,5 +89,10 @@ The component accepts the following props:
 |**`onBeforePrint`**|function|A callback function that triggers before print
 |**`onAfterPrint`**|function|A callback function that triggers after print
 |**`closeAfterPrint`**|boolean|Close the print window after action
-|**`pageStyle`**|string|Override default print window styling 
+|**`pageStyle`**|string|Override default print window styling
 |**`bodyClass`**|string|Optional class to pass to the print window body
+
+## FAQ
+
+**Why does `react-to-print` skip `<link rel="stylesheet" href="">` tags?**
+`<link>`s with empty `href` attributes are [INVALID HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
