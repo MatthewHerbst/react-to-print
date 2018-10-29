@@ -15,23 +15,7 @@ export default {
       ]
     }),
     babel({
-      "presets": [
-        "react",
-        ["env", {
-          "targets": {
-            "browsers": ["> 1%", "iOS >= 8", "Android >= 4", "ie >= 10"]
-          },
-          "debug": false,
-          "modules": false
-        }]
-      ],
-      "plugins": [
-        "external-helpers",
-        "transform-object-rest-spread",
-        "babel-plugin-transform-class-properties",
-        "transform-react-remove-prop-types"
-      ],
-      babelrc: false
+      exclude: 'node_modules/**' // only transpile our source code
     }),
     uglify({
       compress: {
