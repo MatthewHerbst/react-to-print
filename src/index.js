@@ -3,7 +3,6 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 
 class ReactToPrint extends React.Component {
-
   static propTypes = {
     /** Copy styles over into print window. default: true */
     copyStyles: PropTypes.bool,
@@ -42,7 +41,6 @@ class ReactToPrint extends React.Component {
       if (onAfterPrint) {
         onAfterPrint();
       }
-
     }, 500);
   }
 
@@ -53,7 +51,6 @@ class ReactToPrint extends React.Component {
   }
 
   handlePrint = () => {
-
     const {
       bodyClass,
       content,
@@ -81,13 +78,11 @@ class ReactToPrint extends React.Component {
     this.linkLoaded = 0;
 
     const markLoaded = (type) => {
-
       this.linkLoaded++;
 
       if (this.linkLoaded === this.linkTotal) {
         this.triggerPrint(printWindow);
       }
-
     };
 
     printWindow.onload = () => {
@@ -122,16 +117,13 @@ class ReactToPrint extends React.Component {
       });
 
       if (copyStyles !== false) {
-
         const headEls = document.querySelectorAll('style, link[rel="stylesheet"]');
 
         [...headEls].forEach((node, index) => {
-
           let newHeadEl = domDoc.createElement(node.tagName);
           let styleCSS = "";
 
           if (node.tagName === 'STYLE') {
-
             if (node.sheet) {
               for (let i = 0; i < node.sheet.cssRules.length; i++) {
                 styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
@@ -139,11 +131,8 @@ class ReactToPrint extends React.Component {
 
               newHeadEl.setAttribute('id', `react-to-print-${index}`);
               newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
-
             }
-
           } else {
-
             let attributes = [...node.attributes];
             attributes.forEach(attr => {
               newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
@@ -151,35 +140,26 @@ class ReactToPrint extends React.Component {
 
             newHeadEl.onload = markLoaded.bind(null, 'link');
             newHeadEl.onerror = markLoaded.bind(null, 'link');
-
           }
 
           domDoc.head.appendChild(newHeadEl);
-
         });
-
-
       }
 
       if (this.linkTotal === 0 || copyStyles === false) {
         this.triggerPrint(printWindow);
       }
-
     };
 
     document.body.appendChild(printWindow);
-
   }
 
   render() {
-
     return React.cloneElement(this.props.trigger(), {
       ref: (el) => this.triggerRef = el,
       onClick: this.handlePrint
     });
-
   }
-
 }
 
 export default ReactToPrint;
