@@ -1,6 +1,6 @@
-import React from "react";
-import { findDOMNode } from "react-dom";
-import PropTypes from "prop-types";
+import React from 'react';
+import { findDOMNode } from 'react-dom';
+import PropTypes from 'prop-types';
 
 class ReactToPrint extends React.Component {
   static propTypes = {
@@ -21,12 +21,20 @@ class ReactToPrint extends React.Component {
   };
 
   static defaultProps = {
-    copyStyles: true,
-    closeAfterPrint: true,
     bodyClass: '',
+    copyStyles: true,
+    onAfterPrint: false,
+    onBeforePrint: false,
+    pageStyle: undefined,
   };
 
-  triggerPrint(target) {
+  removeWindow = (target) => {
+    setTimeout(() => {
+      target.parentNode.removeChild(target);
+    }, 500);
+  }
+
+  triggerPrint = (target) => {
     const { onBeforePrint, onAfterPrint } = this.props;
 
     if (onBeforePrint) {
@@ -44,29 +52,22 @@ class ReactToPrint extends React.Component {
     }, 500);
   }
 
-  removeWindow(target) {
-    setTimeout(() => {
-      target.parentNode.removeChild(target);
-    }, 500);
-  }
-
   handlePrint = () => {
     const {
       bodyClass,
       content,
       copyStyles,
       pageStyle,
-      onAfterPrint
     } = this.props;
 
     const contentEl = content();
 
     if (contentEl === undefined) {
-      console.error("Refs are not available for stateless components. For 'react-to-print' to work only Class based components can be printed");
-      return false;
+      console.error("Refs are not available for stateless components. For 'react-to-print' to work only Class based components can be printed"); // eslint-disable-line no-console
+      return;
     }
 
-    let printWindow = document.createElement('iframe');
+    const printWindow = document.createElement('iframe');
     printWindow.style.position = 'absolute';
     printWindow.style.top = '-1000px';
     printWindow.style.left = '-1000px';
@@ -82,7 +83,7 @@ class ReactToPrint extends React.Component {
       if (loaded) {
         this.linksLoaded.push(linkNode);
       } else {
-        console.error("'react-to-print' was unable to load a link. It may be invalid. 'react-to-print' will continue attempting to print the page. The link the errored was:", linkNode);
+        console.error("'react-to-print' was unable to load a link. It may be invalid. 'react-to-print' will continue attempting to print the page. The link the errored was:", linkNode); // eslint-disable-line no-console
         this.linksErrored.push(linkNode);
       }
 
@@ -99,7 +100,7 @@ class ReactToPrint extends React.Component {
         printWindow.onload = null;
       }
 
-      let domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
+      const domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
       const srcCanvasEls = [...contentNodes.querySelectorAll('canvas')];
 
       domDoc.open();
@@ -108,10 +109,10 @@ class ReactToPrint extends React.Component {
 
       /* remove date/time from top */
       const defaultPageStyle = pageStyle === undefined
-        ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"
+        ? '@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }'
         : pageStyle;
 
-      let styleEl = domDoc.createElement('style');
+      const styleEl = domDoc.createElement('style');
       styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
       domDoc.head.appendChild(styleEl);
 
@@ -132,10 +133,10 @@ class ReactToPrint extends React.Component {
             const newHeadEl = domDoc.createElement(node.tagName);
 
             if (node.sheet) {
-              let styleCSS = "";
+              let styleCSS = '';
 
               for (let i = 0; i < node.sheet.cssRules.length; i++) {
-                styleCSS += node.sheet.cssRules[i].cssText + "\r\n";
+                styleCSS += `${node.sheet.cssRules[i].cssText}\r\n`;
               }
 
               newHeadEl.setAttribute('id', `react-to-print-${index}`);
@@ -143,10 +144,10 @@ class ReactToPrint extends React.Component {
               domDoc.head.appendChild(newHeadEl);
             }
           } else {
-            let attributes = [...node.attributes];
+            const attributes = [...node.attributes];
 
             const hrefAttr = attributes.filter(attr => attr.nodeName === 'href');
-            let hasHref = hrefAttr.length ? !!hrefAttr[0].nodeValue : false;
+            const hasHref = hrefAttr.length ? !!hrefAttr[0].nodeValue : false;
 
             // Many browsers will do all sorts of weird things if they encounter an empty `href`
             // tag (which is invalid HTML). Some will attempt to load the current page. Some will
@@ -156,7 +157,7 @@ class ReactToPrint extends React.Component {
             if (hasHref) {
               const newHeadEl = domDoc.createElement(node.tagName);
 
-              attributes.forEach(attr => {
+              attributes.forEach((attr) => {
                 newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
               });
 
@@ -164,8 +165,8 @@ class ReactToPrint extends React.Component {
               newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
               domDoc.head.appendChild(newHeadEl);
             } else {
-              console.warn("'react-to-print' encountered a <link> tag with an empty 'href' attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:", node);
-              markLoaded(node, true); // We've already shown a warning for this, we don't need to mark it as an error as well
+              console.warn("'react-to-print' encountered a <link> tag with an empty 'href' attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:", node); // eslint-disable-line no-console
+              markLoaded(node, true); // `true` because we've already shown a warning for this
             }
           }
         });
@@ -179,10 +180,18 @@ class ReactToPrint extends React.Component {
     document.body.appendChild(printWindow);
   }
 
+  setRef = (ref) => {
+    this.triggerRef = ref;
+  }
+
   render() {
-    return React.cloneElement(this.props.trigger(), {
-      ref: (el) => this.triggerRef = el,
-      onClick: this.handlePrint
+    const {
+      trigger,
+    } = this.props;
+
+    return React.cloneElement(trigger(), {
+      onClick: this.handlePrint,
+      ref: this.setRef,
     });
   }
 }
