@@ -3,19 +3,9 @@ module.exports = {
     "extends": "airbnb",
     "env": {
         "browser": true,
-        // "es6": true
     },
-    // "parserOptions": {
-    //     "ecmaFeatures": {
-    //         "jsx": true
-    //     },
-    //     "ecmaVersion": 2018,
-        // "sourceType": "module"
-    // },
-    // "plugins": [
-    //     "react"
-    // ],
     "rules": {
+        "import/import/no-unresolved": ["off"],
         "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
         "react/no-find-dom-node": ["warning"],
         "react/sort-comp": ["error", {
@@ -25,21 +15,5 @@ module.exports = {
                 'render',
             ],
         }]
-    //     "indent": [
-    //         "error",
-    //         "tab"
-    //     ],
-    //     "linebreak-style": [
-    //         "error",
-    //         "unix"
-    //     ],
-    //     "quotes": [
-    //         "error",
-    //         "single"
-    //     ],
-    //     "semi": [
-    //         "error",
-    //         "always"
-    //     ]
     }
 };
