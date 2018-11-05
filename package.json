@@ -50,6 +50,8 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "rollup": "^0.52.0",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^8.2.6",
