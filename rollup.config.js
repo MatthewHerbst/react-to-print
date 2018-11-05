@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.jsx',
   plugins: [
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
