@@ -1,5 +1,5 @@
 import babel from 'rollup-plugin-babel';
-import replace from "rollup-plugin-replace";
+import replace from 'rollup-plugin-replace';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 
@@ -7,15 +7,15 @@ export default {
   input: 'src/index.js',
   plugins: [
     replace({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     commonjs({
       include: [
-        'node_modules/**'
-      ]
+        'node_modules/**',
+      ],
     }),
     babel({
-      exclude: 'node_modules/**' // only transpile our source code
+      exclude: 'node_modules/**', // only transpile our source code
     }),
     uglify({
       compress: {
@@ -31,12 +31,12 @@ export default {
       },
       output: {
         comments: false,
-      }
-    })
+      },
+    }),
   ],
   output: {
     file: 'lib/index.js',
-    format: 'cjs'
+    format: 'cjs',
   },
-  sourcemap: true
+  sourcemap: true,
 };
