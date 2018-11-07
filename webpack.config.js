@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    app: './example/index.jsx',
+    app: './example/index.js',
   },
   stats: 'verbose',
   context: __dirname,
@@ -20,14 +20,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.js?$/,
         exclude: /(node_modules)/,
         use: 'babel-loader',
       },
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js'],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint . --color --ext .js,.jsx",
+    "lint": "eslint . --color",
     "webpack": "webpack --progress",
     "webpack-dev-server": "webpack-dev-server --colors --progress"
   },
