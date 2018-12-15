@@ -34,11 +34,9 @@ class Example extends React.Component {
 
   handleStatePrint = (e)=>{
     this.setState({print : true});
-    console.log("print-r go")
   }
   handleStatePrintOff = (e)=>{
     this.setState({print : false});
-    console.log("print-r stop")
   }
 
 
