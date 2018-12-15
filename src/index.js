@@ -216,7 +216,7 @@ class ReactToPrint extends React.Component {
     // Typical usage (don't forget to compare props):
     if (this.props.statePrint !== prevProps.statePrint) {
       this.props.handleStatePrintOff();
-      console.log("TURN OFF MOUNT")
+      
     }
   }
 }
