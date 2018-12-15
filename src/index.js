@@ -178,7 +178,7 @@ class ReactToPrint extends React.Component {
       }
     };
 
-    console.log("print-r stop now")
+    
     this.props.handleStatePrintOff;
 
     document.body.appendChild(printWindow);
@@ -196,7 +196,7 @@ class ReactToPrint extends React.Component {
     if(this.props.useState === true){
       
       if(this.props.statePrint === true){
-        console.log("print-r go now")
+       
         this.handlePrint()
       } 
 
@@ -204,7 +204,7 @@ class ReactToPrint extends React.Component {
         <div></div>
       )     
     }else{
-      console.log("not stated to print")
+      
       return React.cloneElement(trigger(), {
         onClick: this.handlePrint, 
         ref: this.setRef,
