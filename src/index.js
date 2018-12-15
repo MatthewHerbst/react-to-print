@@ -53,6 +53,7 @@ class ReactToPrint extends React.Component {
   }
 
   handlePrint = () => {
+    console.log("handling a print")
     const {
       bodyClass,
       content,
@@ -177,6 +178,9 @@ class ReactToPrint extends React.Component {
       }
     };
 
+    console.log("print-r stop now")
+    this.props.handleStatePrintOff;
+
     document.body.appendChild(printWindow);
   }
 
@@ -189,10 +193,25 @@ class ReactToPrint extends React.Component {
       trigger,
     } = this.props;
 
-    return React.cloneElement(trigger(), {
-      onClick: this.handlePrint,
-      ref: this.setRef,
-    });
+    if(this.props.useState === true){
+      
+      if(this.props.statePrint === true){
+        console.log("print-r go now")
+        this.handlePrint()
+      } 
+
+      return (
+        <div></div>
+      )     
+    }else{
+      console.log("not stated to print")
+      return React.cloneElement(trigger(), {
+        onClick: this.handlePrint, 
+        ref: this.setRef,
+      });
+    }
+
+
   }
 }
 

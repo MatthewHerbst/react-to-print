@@ -5,6 +5,13 @@ import ReactToPrint from '../src';
 import ComponentToPrint from './ComponentToPrint';
 
 class Example extends React.Component {
+  
+  constructor(props){
+    super(props);
+    this.state = {
+      print:false,
+  }
+      
   handleAfterPrint = () => {
     console.log('after print!'); // eslint-disable-line no-console
   }
@@ -25,14 +32,28 @@ class Example extends React.Component {
     this.componentRef = ref;
   }
 
+  handleStatePrint = (e)=>{
+    this.setState({print : true});
+    console.log("print-r go")
+  }
+  handleStatePrintOff = (e)=>{
+    this.setState({print : false});
+    console.log("print-r stop")
+  }
+
+
+
   render() {
     return (
       <div>
+        <button onClick={this.handleStatePrint} type="button">Print with state!</button>
         <ReactToPrint
           trigger={this.renderTrigger}
           content={this.renderContent}
           onBeforePrint={this.handleBeforePrint}
           onAfterPrint={this.handleAfterPrint}
+          statePrint={this.state.print}
+          handleStatePrintOff={this.handleStatePrintOff}
         />
         <ComponentToPrint ref={this.setRef} />
       </div>
