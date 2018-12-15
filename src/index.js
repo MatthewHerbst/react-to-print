@@ -53,7 +53,7 @@ class ReactToPrint extends React.Component {
   }
 
   handlePrint = () => {
-    console.log("handling a print")
+
     const {
       bodyClass,
       content,
@@ -179,7 +179,7 @@ class ReactToPrint extends React.Component {
     };
 
     
-    this.props.handleStatePrintOff;
+    
 
     document.body.appendChild(printWindow);
   }
@@ -196,7 +196,6 @@ class ReactToPrint extends React.Component {
     if(this.props.useState === true){
       
       if(this.props.statePrint === true){
-       
         this.handlePrint()
       } 
 
@@ -212,6 +211,13 @@ class ReactToPrint extends React.Component {
     }
 
 
+  }
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.statePrint !== prevProps.statePrint) {
+      this.props.handleStatePrintOff();
+      console.log("TURN OFF MOUNT")
+    }
   }
 }
 
