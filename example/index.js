@@ -54,6 +54,7 @@ class Example extends React.Component {
           onAfterPrint={this.handleAfterPrint}
           statePrint={this.state.print}
           handleStatePrintOff={this.handleStatePrintOff}
+          useState={false}
         />
         <ComponentToPrint ref={this.setRef} />
       </div>
