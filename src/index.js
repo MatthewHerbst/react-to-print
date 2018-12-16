@@ -18,6 +18,12 @@ class ReactToPrint extends React.Component {
     pageStyle: PropTypes.string,
     /** Optional class to pass to the print window body */
     bodyClass: PropTypes.string,
+    /** Optional print via state change. default: false */
+    useState: PropTypes.bool,
+    /** Set to true to trigger print by state. default: false */
+    statePrint: PropTypes.bool,
+    /** Callback to set useState back to false after printing */
+    handleStatePrintOff: PropTypes.func,
   };
 
   static defaultProps = {
@@ -53,7 +59,6 @@ class ReactToPrint extends React.Component {
   }
 
   handlePrint = () => {
-
     const {
       bodyClass,
       content,
@@ -178,9 +183,6 @@ class ReactToPrint extends React.Component {
       }
     };
 
-    
-    
-
     document.body.appendChild(printWindow);
   }
 
@@ -191,32 +193,27 @@ class ReactToPrint extends React.Component {
   render() {
     const {
       trigger,
+      useState,
+      statePrint,
     } = this.props;
 
     if(this.props.useState === true){
-      
       if(this.props.statePrint === true){
         this.handlePrint()
-      } 
-
-      return (
-        <div></div>
-      )     
-    }else{
-      
+      }
+      return ( null );     
+    } else {
       return React.cloneElement(trigger(), {
         onClick: this.handlePrint, 
         ref: this.setRef,
       });
     }
-
-
   }
+
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.statePrint !== prevProps.statePrint) {
       this.props.handleStatePrintOff();
-      
     }
   }
 }

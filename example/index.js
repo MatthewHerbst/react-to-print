@@ -9,7 +9,7 @@ class Example extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      print:false,
+      print: false,
   }
       
   handleAfterPrint = () => {
@@ -32,11 +32,11 @@ class Example extends React.Component {
     this.componentRef = ref;
   }
 
-  handleStatePrint = (e)=>{
-    this.setState({print : true});
+  handleStatePrint = (e) => {
+    this.setState({ print: true });
   }
-  handleStatePrintOff = (e)=>{
-    this.setState({print : false});
+  handleStatePrintOff = (e) => {
+    this.setState({ print: false });
   }
 
 
@@ -52,7 +52,6 @@ class Example extends React.Component {
           onAfterPrint={this.handleAfterPrint}
           statePrint={this.state.print}
           handleStatePrintOff={this.handleStatePrintOff}
-          useState={false}
         />
         <ComponentToPrint ref={this.setRef} />
       </div>
