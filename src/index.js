@@ -197,8 +197,8 @@ class ReactToPrint extends React.Component {
       statePrint,
     } = this.props;
 
-    if(this.props.useState === true){
-      if(this.props.statePrint === true){
+    if(useState === true){
+      if(statePrint === true){
         this.handlePrint()
       }
       return ( null );     
