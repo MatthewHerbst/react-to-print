@@ -2,6 +2,7 @@ import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
+import copy from 'rollup-plugin-copy';
 
 export default {
   input: 'src/index.js',
@@ -32,6 +33,10 @@ export default {
       output: {
         comments: false,
       },
+    }),
+    copy({
+      'index.d.ts': 'lib/index.d.ts',
+      verbose: true
     })
   ],
   output: {
