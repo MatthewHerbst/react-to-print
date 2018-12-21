@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "build:ts": "tsc -p .",
+    "postbuild": "npm run build:ts",
     "lint": "eslint . --color",
     "webpack": "webpack --progress",
     "webpack-dev-server": "webpack-dev-server --colors --progress"
@@ -56,9 +58,9 @@
     "rollup": "^0.52.0",
     "rollup-plugin-babel": "^4.1.0",
     "rollup-plugin-commonjs": "^8.2.6",
-    "rollup-plugin-copy-assets": "^1.0.0",
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-uglify": "^2.0.1",
+    "typescript": "^3.0.0",
     "webpack": "^3.9.1",
     "webpack-dev-server": "^2.9.5"
   }
