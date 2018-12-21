@@ -23,8 +23,8 @@ class ReactToPrint extends React.Component {
   static defaultProps = {
     bodyClass: '',
     copyStyles: true,
-    onAfterPrint: false,
-    onBeforePrint: false,
+    onAfterPrint: undefined,
+    onBeforePrint: undefined,
     pageStyle: undefined,
   };
 
