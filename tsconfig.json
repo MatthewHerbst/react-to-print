@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "lib",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "es6",
+      "dom",
+      "dom.iterable"
+    ],
+    "declaration": true,
+    "removeComments": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    // TODO: change this in future if using TypeScript files instead of JavaScript files
+    "emitDeclarationOnly": true
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "lib"
+  ]
+}
