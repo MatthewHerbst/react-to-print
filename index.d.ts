@@ -37,7 +37,7 @@ declare class ReactToPrint extends React.Component<ReactToPrint.ReactToPrintProp
 
 declare namespace ReactToPrint {
   type TriggerFn = () => React.CElement<React.ComponentPropsWithRef<any>, React.Component>;
-  type ContentFn = () => React.ReeactInstance;
+  type ContentFn = () => React.ReactInstance;
   type PrintCallbackFn = () => void;
 
   export interface ReactToPrintProps {
