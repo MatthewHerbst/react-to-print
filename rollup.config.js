@@ -36,8 +36,8 @@ export default {
     }),
     copy({
       'index.d.ts': 'lib/index.d.ts',
-      verbose: true
-    })
+      verbose: true,
+    }),
   ],
   output: {
     file: 'lib/index.js',
