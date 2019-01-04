@@ -34,6 +34,8 @@ class ReactToPrint extends React.Component {
     }, 500);
   }
 
+  currentPrintWindow;
+
   triggerPrint = (target) => {
     const { onBeforePrint, onAfterPrint } = this.props;
 
@@ -44,7 +46,6 @@ class ReactToPrint extends React.Component {
     setTimeout(() => {
       target.contentWindow.focus();
       target.contentWindow.print();
-      this.removeWindow(target);
 
       if (onAfterPrint) {
         onAfterPrint();
@@ -66,6 +67,9 @@ class ReactToPrint extends React.Component {
       console.error("Refs are not available for stateless components. For 'react-to-print' to work only Class based components can be printed"); // eslint-disable-line no-console
       return;
     }
+
+    /** clear prev print window in here */
+    this.currentPrintWindow && this.removeWindow(this.currentPrintWindow);
 
     const printWindow = document.createElement('iframe');
     printWindow.style.position = 'absolute';
