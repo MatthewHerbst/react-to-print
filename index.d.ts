@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 
 /*~ This declaration specifies that the class constructor function
  *~ is the exported object from the file
  */
-export = ReactToPrint;
+export default ReactToPrint;
 
 declare class ReactToPrint extends React.Component<ReactToPrint.ReactToPrintProps> {
   static propTypes: {
