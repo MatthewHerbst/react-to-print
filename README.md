@@ -72,7 +72,7 @@ class Example extends React.Component {
 }
 ```
 
-### Calling from functional components with hooks
+### Calling from functional components with [hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ```js
 import React, { useRef } from 'react';
