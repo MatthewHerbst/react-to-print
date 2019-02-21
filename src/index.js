@@ -136,7 +136,10 @@ class ReactToPrint extends React.Component {
               let styleCSS = '';
 
               for (let i = 0; i < node.sheet.cssRules.length; i++) {
-                styleCSS += `${node.sheet.cssRules[i].cssText}\r\n`;
+                //catch 'member not found' error on cssText
+                if (typeof node.sheet.cssRules[i].cssText === "string") {
+                  styleCSS += `${node.sheet.cssRules[i].cssText}\r\n`;
+                }
               }
 
               newHeadEl.setAttribute('id', `react-to-print-${index}`);
