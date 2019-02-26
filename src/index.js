@@ -40,16 +40,13 @@ class ReactToPrint extends React.Component {
     if (onBeforePrint) {
       onBeforePrint();
     }
+    target.contentWindow.focus();
+    target.contentWindow.print();
+    this.removeWindow(target);
 
-    setTimeout(() => {
-      target.contentWindow.focus();
-      target.contentWindow.print();
-      this.removeWindow(target);
-
-      if (onAfterPrint) {
-        onAfterPrint();
-      }
-    }, 500);
+    if (onAfterPrint) {
+      onAfterPrint();
+    }
   }
 
   handlePrint = () => {
@@ -73,9 +70,8 @@ class ReactToPrint extends React.Component {
     printWindow.style.left = '-1000px';
 
     const contentNodes = findDOMNode(contentEl);
-    const linkNodes = document.querySelectorAll('link[rel="stylesheet"]');
 
-    this.linkTotal = linkNodes.length || 0;
+    this.linkTotal = 0;
     this.linksLoaded = [];
     this.linksErrored = [];
 
@@ -105,6 +101,9 @@ class ReactToPrint extends React.Component {
 
       domDoc.open();
       domDoc.write(contentNodes.outerHTML);
+      this.linkTotal += 1;
+      domDoc.onload = markLoaded.bind(null, domDoc, true);
+      domDoc.onerror = markLoaded.bind(null, domDoc, false);
       domDoc.close();
 
       /* remove date/time from top */
@@ -114,6 +113,9 @@ class ReactToPrint extends React.Component {
 
       const styleEl = domDoc.createElement('style');
       styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
+      this.linkTotal += 1;
+      styleEl.onload = markLoaded.bind(null, styleEl, true);
+      styleEl.onerror = markLoaded.bind(null, styleEl, false);
       domDoc.head.appendChild(styleEl);
 
       if (bodyClass.length) {
@@ -144,6 +146,9 @@ class ReactToPrint extends React.Component {
 
               newHeadEl.setAttribute('id', `react-to-print-${index}`);
               newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
+              this.linkTotal += 1;
+              newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
+              newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
               domDoc.head.appendChild(newHeadEl);
             }
           } else {
@@ -163,7 +168,7 @@ class ReactToPrint extends React.Component {
               attributes.forEach((attr) => {
                 newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
               });
-
+              this.linkTotal += 1;
               newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
               newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
               domDoc.head.appendChild(newHeadEl);
@@ -173,10 +178,6 @@ class ReactToPrint extends React.Component {
             }
           }
         });
-      }
-
-      if (this.linkTotal === 0 || copyStyles === false) {
-        this.triggerPrint(printWindow);
       }
     };
 
