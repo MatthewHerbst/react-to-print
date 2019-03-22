@@ -4,20 +4,15 @@
     "outDir": "lib",
     "target": "es5",
     "module": "commonjs",
-    "lib": [
-      "es6",
-      "dom",
-      "dom.iterable"
-    ],
+    "importHelpers": true,
+    "jsx": "react",
     "declaration": true,
     "removeComments": true,
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    // TODO: change this in future if using TypeScript files instead of JavaScript files
-    "emitDeclarationOnly": true
   },
   "include": [
-    "./src"
+    "./src",
   ],
   "exclude": [
     "lib"
