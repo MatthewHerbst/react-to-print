@@ -10,6 +10,7 @@
   "scripts": {
     "start": "webpack-dev-server --env.development --progress --colors --hot --open",
     "build": "webpack --env.production --progress",
+    "prepare": "npm run build",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
   },
   "repository": {
