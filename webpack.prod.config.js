@@ -9,7 +9,10 @@ module.exports = {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, './lib'),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'umd',
+        library: 'lib',
+        umdNamedDefine: true,
+        globalObject: `(typeof self !== 'undefined' ? self : this)`
     },
     externals : {
         'react': 'react',
