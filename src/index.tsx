@@ -32,7 +32,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     removeWindow = (target) => {
         setTimeout(() => {
             target.parentNode.removeChild(target);
-        }, 0);
+        }, 500);
     };
 
     triggerPrint = (target) => {
@@ -50,7 +50,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (onAfterPrint) {
                 onAfterPrint();
             }
-        }, 0);
+        }, 500);
     };
 
     handlePrint = () => {
