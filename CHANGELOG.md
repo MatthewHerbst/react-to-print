@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.2 (May 3rd, 2019)
+
+- FIX [118](https://github.com/gregnb/react-to-print/issues/118): Ensure fonts have time to load before printing, thanks [aviklai](https://github.com/aviklai)
+
 ## 2.1.1 (April 13th, 2019)
 
 - FIX: Ensure we build the package as UMD instead of CommonJS ([#116](https://github.com/gregnb/react-to-print/pull/116), thanks [@aviklai](https://github.com/aviklai))
