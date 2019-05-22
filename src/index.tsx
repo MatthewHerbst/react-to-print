@@ -29,12 +29,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     linksLoaded: Element[];
     linksErrored: Element[];
 
-    removeWindow = (target) => {
-        setTimeout(() => {
-            target.parentNode.removeChild(target);
-        }, 500);
-    };
-
     triggerPrint = (target) => {
         const { onBeforePrint, onAfterPrint } = this.props;
 
@@ -45,7 +39,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         setTimeout(() => {
             target.contentWindow.focus();
             target.contentWindow.print();
-            this.removeWindow(target);
 
             if (onAfterPrint) {
                 onAfterPrint();
