@@ -1,9 +1,5 @@
 # CHANGELOG
 
-## 2.1.3 (May 22nd, 2019)
-
-- FIX [64](https://github.com/gregnb/react-to-print/issues/64): Print dialogue only open once in safari on Mac
-
 ## 2.1.2 (May 3rd, 2019)
 
 - FIX [118](https://github.com/gregnb/react-to-print/issues/118): Ensure fonts have time to load before printing, thanks [aviklai](https://github.com/aviklai)
