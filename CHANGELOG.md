@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.1.3 (June 22nd, 2019)
+
+- FIX [134](https://github.com/gregnb/react-to-print/pull/134): Solve print window issues in Safari (especially Mobile Safari), thanks [Ellenergic](https://github.com/Ellenergic)
+- CHORE: Updated the README to contain a link to a fully updated demo
+
 ## 2.1.2 (May 3rd, 2019)
 
 - FIX [118](https://github.com/gregnb/react-to-print/issues/118): Ensure fonts have time to load before printing, thanks [aviklai](https://github.com/aviklai)
