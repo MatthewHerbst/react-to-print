@@ -29,12 +29,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     linksLoaded: Element[];
     linksErrored: Element[];
 
-    removeWindow = (target) => {
-        setTimeout(() => {
-            target.parentNode.removeChild(target);
-        }, 500);
-    };
-
     triggerPrint = (target) => {
         const { onBeforePrint, onAfterPrint } = this.props;
 
@@ -45,8 +39,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         setTimeout(() => {
             target.contentWindow.focus();
             target.contentWindow.print();
-            this.removeWindow(target);
-
+            
             if (onAfterPrint) {
                 onAfterPrint();
             }
@@ -72,6 +65,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.style.position = "absolute";
         printWindow.style.top = "-1000px";
         printWindow.style.left = "-1000px";
+        printWindow.id = "printWindow";
 
         const contentNodes = findDOMNode(contentEl);
         const linkNodes = document.querySelectorAll("link[rel='stylesheet']");
@@ -178,6 +172,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
+
+        if (document.getElementById("printWindow")) {
+            document.body.removeChild(document.getElementById("printWindow"));
+        }
         document.body.appendChild(printWindow);
     };
 
