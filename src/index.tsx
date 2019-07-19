@@ -14,7 +14,7 @@ export interface IReactToPrintProps {
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
     /** Callback function to trigger before print */
-    onBeforePrint?: () => void;
+    onBeforePrint?: () => void | Promise<any>;
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Override default print window styling */
@@ -29,13 +29,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     linksLoaded: Element[];
     linksErrored: Element[];
 
-    triggerPrint = (target) => {
-        const { onBeforePrint, onAfterPrint } = this.props;
-
-        if (onBeforePrint) {
-            onBeforePrint();
-        }
-
+    startPrint = (target, onAfterPrint) => {
         setTimeout(() => {
             target.contentWindow.focus();
             target.contentWindow.print();
@@ -44,6 +38,21 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 onAfterPrint();
             }
         }, 500);
+    }
+
+    triggerPrint = (target) => {
+        const { onBeforePrint, onAfterPrint } = this.props;
+
+        if (onBeforePrint) {
+            const onBeforePrintOutput = onBeforePrint();
+            if (onBeforePrintOutput && typeof onBeforePrintOutput.then === 'function') {
+                onBeforePrintOutput.then(() => {
+                    this.startPrint(target, onAfterPrint);
+                });
+            } else {                
+                this.startPrint(target, onAfterPrint);
+            }
+        }            
     };
 
     handlePrint = () => {
