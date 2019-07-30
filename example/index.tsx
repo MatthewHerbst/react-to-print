@@ -22,6 +22,7 @@ class Example extends React.Component {
                     content={this.renderContent}
                     onBeforePrint={this.handleBeforePrint}
                     onAfterPrint={this.handleAfterPrint}
+                    removeAfterPrint
                 />
                 <ComponentToPrint ref={this.setRef}/>
             </div>

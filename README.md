@@ -137,7 +137,7 @@ The component accepts the following props:
 |   **`copyStyles`**    | boolean  | Copies all &lt;style> and &lt;link type="stylesheet" /> from <head> inside the parent window into the print window. (default: true) |
 |  **`onBeforePrint`**  | function | A callback function that triggers before print. Either returns void or a Promise. If the function returns a Promise the content will be printed when the Promise is resolved. Users are responsible for catching the Promise rejecting.                                                                                     |
 |  **`onAfterPrint`**   | function | A callback function that triggers after print                                                                                       |
-| **`closeAfterPrint`** | boolean  | Close the print window after action                                                                                                 |
+| **`removeAfterPrint`** | boolean  | Remove the print iframe after action                                                                                                 |
 |    **`pageStyle`**    | string   | Override default print window styling                                                                                               |
 |    **`bodyClass`**    | string   | Optional class to pass to the print window body                                                                                     |
 
