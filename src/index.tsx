@@ -21,6 +21,8 @@ export interface IReactToPrintProps {
     pageStyle?: string;
     /** Optional class to pass to the print window body */
     bodyClass?: string;
+     /** Optional - remove the iframe after printing.*/
+    removeAfterPrint?: boolean
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -32,10 +34,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     startPrint = (target, onAfterPrint) => {
         setTimeout(() => {
             target.contentWindow.focus();
-            target.contentWindow.print();
-            
+            target.contentWindow.print();            
             if (onAfterPrint) {
                 onAfterPrint();
+            }
+            if (this.props.removeAfterPrint) {
+                target.remove();
             }
         }, 500);
     }
