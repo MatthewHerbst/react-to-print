@@ -135,9 +135,9 @@ The component accepts the following props:
 |     **`trigger`**     | function | A function that returns a React Component or HTML element                                                                           |
 |     **`content`**     | function | A function that returns a component reference value. The content of this reference value is then used for print                     |
 |   **`copyStyles`**    | boolean  | Copies all &lt;style> and &lt;link type="stylesheet" /> from <head> inside the parent window into the print window. (default: true) |
-|  **`onBeforePrint`**  | function | A callback function that triggers before print. Either returns void or a Promise. If the function returns a Promise the content will be printed when the Promise is resolved. Users are responsible for catching the Promise rejecting.                                                                                     |
-|  **`onAfterPrint`**   | function | A callback function that triggers after print                                                                                       |
-| **`removeAfterPrint`** | boolean  | Remove the print iframe after action                                                                                                 |
+|  **`onBeforePrint`**  | function | Optional callback function that triggers before print. Either returns void or a Promise. If the function returns a Promise the content will be printed when the Promise is resolved. Users are responsible for catching the Promise rejecting.                                                                                     |
+|  **`onAfterPrint`**   | function | Optional callback function that triggers after print                                                                                       |
+| **`removeAfterPrint`** | boolean  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
 |    **`pageStyle`**    | string   | Override default print window styling                                                                                               |
 |    **`bodyClass`**    | string   | Optional class to pass to the print window body                                                                                     |
 
