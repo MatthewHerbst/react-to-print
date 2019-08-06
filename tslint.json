@@ -1,0 +1,9 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "max-line-length": [true, {
+      "limit": 100
+    }],
+    "prefer-for-of": false
+  }
+}
