@@ -21,47 +21,52 @@ export interface IReactToPrintProps {
     pageStyle?: string;
     /** Optional class to pass to the print window body */
     bodyClass?: string;
-     /** Optional - remove the iframe after printing.*/
-    removeAfterPrint?: boolean
+    /** Optional - remove the iframe after printing. */
+    removeAfterPrint?: boolean;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
-    triggerRef: React.RefObject<HTMLElement>;
-    linkTotal: number;
-    linksLoaded: Element[];
-    linksErrored: Element[];
+    public triggerRef: React.RefObject<HTMLElement>;
+    public linkTotal: number;
+    public linksLoaded: Element[];
+    public linksErrored: Element[];
 
-    startPrint = (target, onAfterPrint) => {
+    public startPrint = (target, onAfterPrint) => {
+        const { removeAfterPrint } = this.props;
+
         setTimeout(() => {
             target.contentWindow.focus();
-            target.contentWindow.print();            
+            target.contentWindow.print();
             if (onAfterPrint) {
                 onAfterPrint();
             }
-            if (this.props.removeAfterPrint) {
-                target.remove();
+            if (removeAfterPrint) {
+                // The user may have removed the iframe in `onAfterPrint`
+                if (document.getElementById("printWindow")) {
+                    document.body.removeChild(document.getElementById("printWindow"));
+                }
             }
         }, 500);
     }
 
-    triggerPrint = (target) => {
+    public triggerPrint = (target) => {
         const { onBeforePrint, onAfterPrint } = this.props;
 
         if (onBeforePrint) {
             const onBeforePrintOutput = onBeforePrint();
-            if (onBeforePrintOutput && typeof onBeforePrintOutput.then === 'function') {
+            if (onBeforePrintOutput && typeof onBeforePrintOutput.then === "function") {
                 onBeforePrintOutput.then(() => {
                     this.startPrint(target, onAfterPrint);
                 });
-            } else {                
+            } else {
                 this.startPrint(target, onAfterPrint);
             }
         } else {
             this.startPrint(target, onAfterPrint);
-        }            
-    };
+        }
+    }
 
-    handlePrint = () => {
+    public handlePrint = () => {
         const {
             bodyClass = "",
             content,
@@ -72,7 +77,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentEl = content();
 
         if (contentEl === undefined) {
-            console.error(`Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed`);
+            console.error(`Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed`); // tslint:disable-line max-line-length no-console
             return;
         }
 
@@ -93,12 +98,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
-                console.error(`"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:`, linkNode);
+                console.error(`"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:`, linkNode); // tslint:disable-line max-line-length no-console
                 this.linksErrored.push(linkNode);
             }
 
-            // We may have errors, but attempt to print anyways - maybe they are trivial and the user will
-            // be ok ignoring them
+            // We may have errors, but attempt to print anyways - maybe they are trivial and the
+            // user will be ok ignoring them
             if (this.linksLoaded.length + this.linksErrored.length === this.linkTotal) {
                 this.triggerPrint(printWindow);
             }
@@ -119,7 +124,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
             /* remove date/time from top */
             const defaultPageStyle = pageStyle === undefined
-                ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }"
+                ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }" // tslint:disable-line max-line-length
                 : pageStyle;
 
             const styleEl = domDoc.createElement("style");
@@ -139,35 +144,38 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (copyStyles !== false) {
                 const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
 
-                for (let index = 0, l = headEls.length; index < l; ++index) {
-                    const node = headEls[index];
+                for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
+                    const node = headEls[i];
                     if (node.tagName === "STYLE") {
                         const newHeadEl = domDoc.createElement(node.tagName);
                         const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
 
                         if (sheet) {
                             let styleCSS = "";
-                            for (let i = 0; i < sheet.cssRules.length; i++) {
-                                if (typeof sheet.cssRules[i].cssText === "string") {
-                                    styleCSS += `${sheet.cssRules[i].cssText}\r\n`;
+                            // NOTE: for-of is not supported by IE
+                            for (let j = 0, cssLen = sheet.cssRules.length; j < cssLen; j++) {
+                                if (typeof sheet.cssRules[j].cssText === "string") {
+                                    styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
                                 }
                             }
-                            newHeadEl.setAttribute("id", `react-to-print-${index}`);
+                            newHeadEl.setAttribute("id", `react-to-print-${i}`);
                             newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
                             domDoc.head.appendChild(newHeadEl);
                         }
                     } else {
-                        // Many browsers will do all sorts of weird things if they encounter an empty `href`
-                        // tag (which is invalid HTML). Some will attempt to load the current page. Some will
-                        // attempt to load the page"s parent directory. These problems can cause
-                        // `react-to-print` to stop  without any error being thrown. To avoid such problems we
-                        // simply do not attempt to load these links.
+                        // Many browsers will do all sorts of weird things if they encounter an
+                        // empty `href` tag (which is invalid HTML). Some will attempt to load the
+                        // current page. Some will attempt to load the page"s parent directory.
+                        // These problems can cause `react-to-print` to stop  without any error
+                        // being thrown. To avoid such problems we simply do not attempt to load
+                        // these links.
                         if (node.hasAttribute("href") && !!node.getAttribute("href")) {
                             const newHeadEl = domDoc.createElement(node.tagName);
 
-                            // node.attributes has NamedNodeMap type that not Array and can be iterated only via direct [i] access
-                            for (let i = 0, l = node.attributes.length; i < l; ++i) {
-                                const attr = node.attributes[i];
+                            // node.attributes has NamedNodeMap type that is not an Array and can be
+                            // iterated only via direct [i] access
+                            for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
+                                const attr = node.attributes[j];
                                 newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
                             }
 
@@ -175,8 +183,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
                             domDoc.head.appendChild(newHeadEl);
                         } else {
-                            console.warn(`"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:`, node); // eslint-disable-line no-console
-                            markLoaded(node, true); // `true` because we"ve already shown a warning for this
+                            console.warn(`"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:`, node); // tslint:disable-line max-line-length no-console
+                            // `true` because we"ve already shown a warning for this
+                            markLoaded(node, true);
                         }
                     }
                 }
@@ -187,18 +196,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
-
         if (document.getElementById("printWindow")) {
             document.body.removeChild(document.getElementById("printWindow"));
         }
         document.body.appendChild(printWindow);
-    };
+    }
 
-    setRef = (ref) => {
+    public setRef = (ref) => {
         this.triggerRef = ref;
-    };
+    }
 
-    render() {
+    public render() {
         const {
             trigger,
         } = this.props;
