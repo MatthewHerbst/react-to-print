@@ -9,12 +9,13 @@
     "declaration": true,
     "removeComments": true,
     "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "./src",
   ],
   "exclude": [
+    "dist",
     "lib"
   ]
 }

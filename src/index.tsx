@@ -136,9 +136,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
 
             const canvasEls = domDoc.querySelectorAll("canvas");
-            for (let index = 0, l = canvasEls.length; index < l; ++index) {
-                const node = canvasEls[index];
-                node.getContext("2d").drawImage(srcCanvasEls[index] as HTMLCanvasElement, 0, 0);
+            for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
+                const node = canvasEls[i];
+                node.getContext("2d").drawImage(srcCanvasEls[i] as HTMLCanvasElement, 0, 0);
             }
 
             if (copyStyles !== false) {
@@ -153,7 +153,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         if (sheet) {
                             let styleCSS = "";
                             // NOTE: for-of is not supported by IE
-                            for (let j = 0, cssLen = sheet.cssRules.length; j < cssLen; j++) {
+                            for (let j = 0, cssLen = sheet.cssRules.length; j < cssLen; ++j) {
                                 if (typeof sheet.cssRules[j].cssText === "string") {
                                     styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
                                 }
