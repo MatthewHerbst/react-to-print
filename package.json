@@ -46,7 +46,7 @@
     "lint-staged": "^7.3.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "ts-loader": "^5.3.3",
+    "ts-loader": "^6.0.4",
     "tslint": "^5.12.1",
     "typescript": "^3.3.4000",
     "webpack": "^4.39.1",
