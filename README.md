@@ -124,6 +124,10 @@ const Example = () => {
 };
 ```
 
+## Running locally
+
+*NOTE*: Node ^8.6 is required to build the library locally. We use Node ^10 for our CLI checks.
+
 ## API
 
 #### &lt;ReactToPrint />
