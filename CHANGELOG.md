@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.3.2 (August 6th, 2019)
+
+- FEATURE [156](https://github.com/gregnb/react-to-print/pull/156): dependency upgrades. All listed dependencies were manually upgraded to their latest versions. `npm audit fix` was then run to give us a clean audit. Finally, `npm dedupe` was run to reduce package bloat.
+
+- FIX [156](https://github.com/gregnb/react-to-print/pull/156): a stylesheet that no longer exists but that was being required by the local example has been removed
+
+*NOTE*: To build the library locally, Node ^8.6 is now required
+
 ## 2.3.1 (August 6th, 2019)
 
 - FIX [154](https://github.com/gregnb/react-to-print/pull/154): TSLint was not working properly for the project. A configuration was added, and linting errors were fixed. While fixing linting errors, a bug was discovered whereby if a stylesheet was found that did not have tag type `STYLE` it was possible that `react-to-print` would not include all stylesheets from the page into the print window
