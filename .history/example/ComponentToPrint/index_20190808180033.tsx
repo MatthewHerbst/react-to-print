@@ -1,8 +1,9 @@
-import * as React from 'react';
+import * as React from "react";
 
 type Props = {
-    text: string
-}
+    texto?: string,
+};
+
 export default class ComponentToPrint<Props> extends React.Component {
     canvasEl: HTMLCanvasElement = null;
 
@@ -14,7 +15,7 @@ export default class ComponentToPrint<Props> extends React.Component {
     }
 
     setRef = ref => this.canvasEl = ref;
-    
+
     render() {
         return (
             <div className="relativeCSS">
@@ -29,7 +30,7 @@ export default class ComponentToPrint<Props> extends React.Component {
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{this.props.text}</td>
+                        <td>1</td>
                         <td>2</td>
                     </tr>
                     <tr>

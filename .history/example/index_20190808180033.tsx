@@ -5,7 +5,7 @@ import ReactToPrint from '../src/index';
 import ComponentToPrint from './ComponentToPrint';
 
 interface State {
-    text: string;
+    texto: string;
 }
 
 interface Props {
@@ -18,7 +18,7 @@ class Example extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            text: "000000000";
+            texto: "000000000"
         };
     }
 
@@ -26,9 +26,7 @@ class Example extends React.Component<Props, State> {
     handleBeforePrint = () => console.log('before print!');
     renderContent = () => this.componentRef;
     renderTrigger = () => <button type="button">Print this out!</button>;
-    onBeforeGetContent = () => new Promise(resolve => {
-        this.setState({text: "text changed"}, () => resolve());
-    }));
+    onBeforeGetContent = () => Promise.resolve(() => this.setState({texto: "aaaaaaaaaaaaaa"}));
 
     setRef = ref => this.componentRef = ref;
 
@@ -43,7 +41,7 @@ class Example extends React.Component<Props, State> {
                     onBeforeGetContent={this.onBeforeGetContent}
                     removeAfterPrint
                 />
-                <ComponentToPrint ref={this.setRef} text={this.state.text}/>
+                <ComponentToPrint ref={this.setRef} texto={this.props.texto}/>
             </div>
         );
     }
