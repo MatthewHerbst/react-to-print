@@ -26,8 +26,10 @@ class Example extends React.Component<Props, State> {
     handleBeforePrint = () => console.log('before print!');
     renderContent = () => this.componentRef;
     renderTrigger = () => <button type="button">Print this out!</button>;
-    onBeforeGetContent = () => new Promise(resolve => {
-        this.setState({text: "text changed"}, () => resolve());
+    onBeforeGetContent = () => new Promise((resolve, reject) => {
+        this.setState({text: "text changed"}, () => resolve);
+        //if something goes wrong, regect the promise:
+        //reject();
     }));
 
     setRef = ref => this.componentRef = ref;
@@ -38,9 +40,9 @@ class Example extends React.Component<Props, State> {
                 <ReactToPrint
                     trigger={this.renderTrigger}
                     content={this.renderContent}
+                    onBeforeGetContent={this.onBeforeGetContent}
                     onBeforePrint={this.handleBeforePrint}
                     onAfterPrint={this.handleAfterPrint}
-                    onBeforeGetContent={this.onBeforeGetContent}
                     removeAfterPrint
                 />
                 <ComponentToPrint ref={this.setRef} text={this.state.text}/>

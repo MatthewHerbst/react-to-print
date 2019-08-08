@@ -14,7 +14,7 @@ export default class ComponentToPrint<Props> extends React.Component {
     }
 
     setRef = ref => this.canvasEl = ref;
-    
+
     render() {
         return (
             <div className="relativeCSS">

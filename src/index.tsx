@@ -216,13 +216,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         return React.cloneElement(trigger(), {
             onClick: () => {
-                const onBeforeGetContentPromise = onBeforeGetContent();
-                if(onBeforeGetContentPromise && typeof onBeforeGetContentPromise.then === "function") {
-                    onBeforeGetContentPromise.then(() => {
-                    return this.handlePrint();
-                    })
+                if(onBeforeGetContent) {
+                    const onBeforeGetContentOutput = onBeforeGetContent();
+                    if(onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
+                        onBeforeGetContentOutput.then(() => {
+                        this.handlePrint();
+                        })
+                    } else {
+                        return this.handlePrint();
+                    }
                 } else {
-                    return this.handlePrint();
+                     return this.handlePrint();
                 }
             },
             ref: this.setRef,
