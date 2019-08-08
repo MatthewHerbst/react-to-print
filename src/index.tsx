@@ -15,6 +15,8 @@ export interface IReactToPrintProps {
     copyStyles?: boolean;
     /** Callback function to trigger before print */
     onBeforePrint?: () => void | Promise<any>;
+
+    onBeforeGetContent?: () => Promise<any>;
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Override default print window styling */
@@ -209,10 +211,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     public render() {
         const {
             trigger,
+            onBeforeGetContent,
         } = this.props;
 
         return React.cloneElement(trigger(), {
-            onClick: this.handlePrint,
+            onClick: () => onBeforeGetContent ? onBeforeGetContent().then((e) => {
+                e();
+                this.handlePrint();
+            }) : this.handlePrint(),
             ref: this.setRef,
         });
     }
