@@ -18,7 +18,7 @@ export interface IReactToPrintProps {
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Callback function to trigger before get content to print */
-    onBeforeGetContent?: () => Promise<any>;
+    onBeforeGetContent?: () => void | Promise<any>;
     /** Override default print window styling */
     pageStyle?: string;
     /** Optional class to pass to the print window body */
