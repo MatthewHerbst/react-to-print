@@ -222,10 +222,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
           if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
             onBeforeGetContentOutput.then(this.handlePrint);
           } else {
-            return this.handlePrint();
+            this.handlePrint();
           }
         } else {
-          return this.handlePrint();
+          this.handlePrint();
         }
       },
       ref: this.setRef
