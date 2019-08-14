@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-export default class ComponentToPrint extends React.Component {
+type Props = {
+    text: string
+}
+export default class ComponentToPrint<Props> extends React.Component {
     canvasEl: HTMLCanvasElement = null;
 
     componentDidMount() {
@@ -26,7 +29,7 @@ export default class ComponentToPrint extends React.Component {
                     </thead>
                     <tbody>
                     <tr>
-                        <td>1</td>
+                        <td>{this.props.text}</td>
                         <td>2</td>
                     </tr>
                     <tr>
