@@ -68,6 +68,24 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
+    public handleClick = () => {
+        const {
+            onBeforeGetContent,
+            trigger,
+        } = this.props;
+
+        if (onBeforeGetContent) {
+            const onBeforeGetContentOutput = onBeforeGetContent();
+            if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
+                onBeforeGetContentOutput.then(this.handlePrint);
+            } else {
+                this.handlePrint();
+            }
+        } else {
+            this.handlePrint();
+        }
+    }
+
     public handlePrint = () => {
         const {
             bodyClass = "",
@@ -215,18 +233,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         } = this.props;
 
         return React.cloneElement(trigger(), {
-            onClick: () => {
-                if (onBeforeGetContent) {
-                    const onBeforeGetContentOutput = onBeforeGetContent();
-                    if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
-                        onBeforeGetContentOutput.then(this.handlePrint);
-                    } else {
-                        this.handlePrint();
-                    }
-                } else {
-                    this.handlePrint();
-                }
-            },
+            onClick: this.handleClick,
             ref: this.setRef,
         });
     }
