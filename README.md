@@ -130,21 +130,22 @@ const Example = () => {
 
 ## API
 
-#### &lt;ReactToPrint />
+### &lt;ReactToPrint />
 
-The component accepts the following props:
+The component accepts the following props (note: `?` denotes an optional prop):
 
 |         Name          | Type     | Description                                                                                                                         |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-|     **`trigger`**     | function | A function that returns a React Component or HTML element                                                                           |
-|     **`content`**     | function | A function that returns a component reference value. The content of this reference value is then used for print                     |
-|   **`copyStyles`**    | boolean  | Copies all &lt;style> and &lt;link type="stylesheet" /> from <head> inside the parent window into the print window. (default: true) |
-|  **`onBeforePrint`**  | function | ptional callback function that triggers before print. Either returns void or a Promise. If the function returns a Promise the content will be printed when the Promise is resolved. Users are responsible for catching the Promise rejecting. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use onBeforeGetContent instead.                                                                                     |
-| **`onBeforeGetContent`** | function | Optional callback function that triggers before the library gathers the page's content. Either returns void or a Promise. Users are responsible for catching the Promise rejecting. This can be used to change the content on the page before printing.
-|  **`onAfterPrint`**   | function | Optional callback function that triggers after print                                                                                       |
-| **`removeAfterPrint`** | boolean  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
-|    **`pageStyle`**    | string   | Override default print window styling                                                                                               |
-|    **`bodyClass`**    | string   | Optional class to pass to the print window body                                                                                     |
+|     **`trigger`**     | `function` | A function that returns a React Component or HTML element                                                                           |
+|     **`content`**     | `function` | A function that returns a component reference value. The content of this reference value is then used for print                     |
+|   **`copyStyles`**    | `boolean?`  | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
+| **`onBeforeGetContent`** | `function?` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing.
+|  **`onBeforePrint`**  | `function?` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead.                                                                                     |
+|  **`onAfterPrint`**   | `function?` | Callback function that triggers after print                                                                                       |
+|  **`onPrintError`**   | `function(errorLocation: string, error: Error)?` | Callback function that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent` or `onBeforePrint`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected.                                                                                     |
+| **`removeAfterPrint`** | `boolean?`  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
+|    **`pageStyle`**    | `string?`   | Override default print window styling                                                                                               |
+|    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
 
 ## FAQ
 
