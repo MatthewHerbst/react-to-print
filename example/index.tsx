@@ -4,13 +4,31 @@ import * as ReactDOM from 'react-dom';
 import ReactToPrint from '../src/index';
 import ComponentToPrint from './ComponentToPrint';
 
-class Example extends React.Component {
+interface State {
+    text: string;
+}
+
+interface Props {
+
+}
+
+class Example extends React.Component<Props, State> {
     componentRef: ComponentToPrint;
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            text: "000000000";
+        };
+    }
 
     handleAfterPrint = () => console.log('after print!');
     handleBeforePrint = () => console.log('before print!');
     renderContent = () => this.componentRef;
     renderTrigger = () => <button type="button">Print this out!</button>;
+    onBeforeGetContent = () => new Promise((resolve, reject) => {
+        this.setState({text: "text changed"}, () => resolve);
+    }));
 
     setRef = ref => this.componentRef = ref;
 
@@ -20,11 +38,12 @@ class Example extends React.Component {
                 <ReactToPrint
                     trigger={this.renderTrigger}
                     content={this.renderContent}
+                    onBeforeGetContent={this.onBeforeGetContent}
                     onBeforePrint={this.handleBeforePrint}
                     onAfterPrint={this.handleAfterPrint}
                     removeAfterPrint
                 />
-                <ComponentToPrint ref={this.setRef}/>
+                <ComponentToPrint ref={this.setRef} text={this.state.text}/>
             </div>
         );
     }
