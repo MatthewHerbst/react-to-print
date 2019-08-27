@@ -19,6 +19,8 @@ export interface IReactToPrintProps {
     onBeforePrint?: () => void | Promise<any>;
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
+    /** Callback function to listen for printing errors */
+    onPrintError?: (errorLocation: string, error: Error) => void;
     /** Override default print window styling */
     pageStyle?: string;
     /** Optional class to pass to the print window body */
@@ -52,19 +54,54 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     }
 
     public triggerPrint = (target) => {
-        const { onBeforePrint, onAfterPrint } = this.props;
+        const {
+            onAfterPrint,
+            onBeforePrint,
+            onPrintError,
+        } = this.props;
 
         if (onBeforePrint) {
             const onBeforePrintOutput = onBeforePrint();
             if (onBeforePrintOutput && typeof onBeforePrintOutput.then === "function") {
-                onBeforePrintOutput.then(() => {
-                    this.startPrint(target, onAfterPrint);
-                });
+                onBeforePrintOutput
+                    .then(() => {
+                        this.startPrint(target, onAfterPrint);
+                    })
+                    .catch((error) => {
+                        if (onPrintError) {
+                            onPrintError("onBeforePrint", error);
+                        }
+                    });
             } else {
                 this.startPrint(target, onAfterPrint);
             }
         } else {
             this.startPrint(target, onAfterPrint);
+        }
+    }
+
+    public handleClick = () => {
+        const {
+            onBeforeGetContent,
+            onPrintError,
+            trigger,
+        } = this.props;
+
+        if (onBeforeGetContent) {
+            const onBeforeGetContentOutput = onBeforeGetContent();
+            if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
+                onBeforeGetContentOutput
+                    .then(this.handlePrint)
+                    .catch((error) => {
+                        if (onPrintError) {
+                            onPrintError("onBeforeGetContent", error);
+                        }
+                    });
+            } else {
+                this.handlePrint();
+            }
+        } else {
+            this.handlePrint();
         }
     }
 
@@ -215,18 +252,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         } = this.props;
 
         return React.cloneElement(trigger(), {
-            onClick: () => {
-                if (onBeforeGetContent) {
-                    const onBeforeGetContentOutput = onBeforeGetContent();
-                    if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
-                        onBeforeGetContentOutput.then(this.handlePrint);
-                    } else {
-                        this.handlePrint();
-                    }
-                } else {
-                    this.handlePrint();
-                }
-            },
+            onClick: this.handleClick,
             ref: this.setRef,
         });
     }
