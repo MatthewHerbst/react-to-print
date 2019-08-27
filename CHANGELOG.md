@@ -1,8 +1,14 @@
 # CHANGELOG
 
+## 2.4.0 (August 27th, 2019)
+
+- FEATURE [161](https://github.com/gregnb/react-to-print/pull/161): add a new callback method `onPrintError`. This method is called when `react-to-print` catches a Promise rejection in either `onBeforeGetContent` or `onBeforePrint`. The API docs were also cleaned up to better explain which method to use when.
+
+- FEATURE [158](https://github.com/gregnb/react-to-print/pull/158)/[160](https://github.com/gregnb/react-to-print/pull/160): add new callback method `onBeforeGetContent`. Currently, `onBeforePrint` is called before the print window is opened but after `react-to-print` has gathered the content of the page. This new method is fired before `react-to-print` gathers the content of the page, meaning it can be used to change the content of the page before printing. It can optionally return a `Promise`. Thanks [@andfs](https://github.com/andfs)
+
 ## 2.3.2 (August 6th, 2019)
 
-- FEATURE [156](https://github.com/gregnb/react-to-print/pull/156): dependency upgrades. All listed dependencies were manually upgraded to their latest versions. `npm audit fix` was then run to give us a clean audit. Finally, `npm dedupe` was run to reduce package bloat.
+- CHORE [156](https://github.com/gregnb/react-to-print/pull/156): dependency upgrades. All listed dependencies were manually upgraded to their latest versions. `npm audit fix` was then run to give us a clean audit. Finally, `npm dedupe` was run to reduce package bloat.
 
 - FIX [156](https://github.com/gregnb/react-to-print/pull/156): a stylesheet that no longer exists but that was being required by the local example has been removed
 
