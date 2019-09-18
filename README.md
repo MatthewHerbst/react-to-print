@@ -149,5 +149,12 @@ The component accepts the following props (note: `?` denotes an optional prop):
 
 ## FAQ
 
-**Why does `react-to-print` skip `<link rel="stylesheet" href="">` tags?**
+### Why does `react-to-print` skip `<link rel="stylesheet" href="">` tags?
 `<link>`s with empty `href` attributes are [INVALID HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
+
+### How do you make `ComponentToPrint` show only while printing?
+If you've created a component that is intended only for printing and should not render in the parent component, wrap that component in a `div` with style set to `{ display: "none" }`, like so:
+
+    <div style={{ display: "none" }}><ComponentToPrint ref={componentRef} /></div>
+    
+This will hide `ComponentToPrint` but keep it in the DOM so that it can be copied for printing.
