@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 
 type Props = {
     text: string
 }
-export default class ComponentToPrint<Props> extends React.Component {
+export default class ComponentToPrint extends React.Component<Props> {
     canvasEl: HTMLCanvasElement = null;
 
-    componentDidMount() {
+    public componentDidMount() {
         const ctx = this.canvasEl.getContext('2d');
         ctx.beginPath();
         ctx.arc(95, 50, 40, 0, 2 * Math.PI);
