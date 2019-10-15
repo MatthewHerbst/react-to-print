@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import ReactToPrint from "../src/index";
 import ComponentToPrint from "./ComponentToPrint";
+import "./relativecss/test.css";
 
 interface State {
     text: string;
