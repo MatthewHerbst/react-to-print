@@ -21,7 +21,11 @@ module.exports = {
                 exclude: /node_modules/,
                 include: [/src/, /example/],
                 loader: 'ts-loader'
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
         ]
     },
     resolve: {
