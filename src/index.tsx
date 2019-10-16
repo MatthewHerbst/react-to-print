@@ -114,7 +114,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentEl = content();
 
         if (contentEl === undefined) {
-            console.error(`Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed`); // tslint:disable-line max-line-length no-console
+            console.error('Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed'); // tslint:disable-line max-line-length no-console
             return;
         }
 
@@ -135,7 +135,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
-                console.error(`"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:`, linkNode); // tslint:disable-line max-line-length no-console
+                console.error('"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:', linkNode); // tslint:disable-line max-line-length no-console
                 this.linksErrored.push(linkNode);
             }
 
@@ -220,7 +220,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
                             domDoc.head.appendChild(newHeadEl);
                         } else {
-                            console.warn(`"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:`, node); // tslint:disable-line max-line-length no-console
+                            console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // tslint:disable-line max-line-length no-console
                             // `true` because we"ve already shown a warning for this
                             markLoaded(node, true);
                         }
