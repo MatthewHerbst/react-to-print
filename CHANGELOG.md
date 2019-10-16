@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.5.0 (October 16th, 2019)
+
+- FEATURE [172](https://github.com/gregnb/react-to-print/pull/172): Allow the `trigger` component to be a functional component. Previously, only class based components were allowed here. Thanks [idanhaviv](https://github.com/idanhaviv)
+
+- FEATURE [172](https://github.com/gregnb/react-to-print/pull/172): Enable CSS HMR when running the local example build. Thanks [idanhaviv](https://github.com/idanhaviv)
+
 ## 2.4.0 (August 27th, 2019)
 
 - FEATURE [161](https://github.com/gregnb/react-to-print/pull/161): add a new callback method `onPrintError`. This method is called when `react-to-print` catches a Promise rejection in either `onBeforeGetContent` or `onBeforePrint`. The API docs were also cleaned up to better explain which method to use when.
