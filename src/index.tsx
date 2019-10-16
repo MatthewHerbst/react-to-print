@@ -30,7 +30,6 @@ export interface IReactToPrintProps {
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
-    public triggerRef: React.RefObject<HTMLElement>;
     public linkTotal: number;
     public linksLoaded: Element[];
     public linksErrored: Element[];
@@ -84,7 +83,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const {
             onBeforeGetContent,
             onPrintError,
-            trigger,
         } = this.props;
 
         if (onBeforeGetContent) {
@@ -241,19 +239,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         document.body.appendChild(printWindow);
     }
 
-    public setRef = (ref) => {
-        this.triggerRef = ref;
-    }
-
     public render() {
         const {
-            onBeforeGetContent,
             trigger,
         } = this.props;
 
         return React.cloneElement(trigger(), {
             onClick: this.handleClick,
-            ref: this.setRef,
         });
     }
 }
