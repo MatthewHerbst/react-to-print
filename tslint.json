@@ -4,6 +4,8 @@
     "max-line-length": [true, {
       "limit": 100
     }],
-    "prefer-for-of": false
+    "member-ordering": false,
+    "prefer-for-of": false,
+    "quotemark": [true, "double", "avoid-escape", "avoid-template", "jsx-double"]
   }
 }

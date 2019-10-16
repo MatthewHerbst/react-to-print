@@ -1,21 +1,22 @@
 import * as React from "react";
 
-type Props = {
-    text: string
-}
+type Props = { // tslint:disable-line interface-over-type-literal
+    text: string,
+};
+
 export default class ComponentToPrint extends React.Component<Props> {
-    canvasEl: HTMLCanvasElement = null;
+    private canvasEl: HTMLCanvasElement = null;
 
     public componentDidMount() {
-        const ctx = this.canvasEl.getContext('2d');
+        const ctx = this.canvasEl.getContext("2d");
         ctx.beginPath();
         ctx.arc(95, 50, 40, 0, 2 * Math.PI);
         ctx.stroke();
     }
 
-    setRef = ref => this.canvasEl = ref;
+    private setRef = (ref) => this.canvasEl = ref;
 
-    render() {
+    public render() {
         return (
             <div className="relativeCSS">
                 <div className="flash"/>
@@ -23,7 +24,7 @@ export default class ComponentToPrint extends React.Component<Props> {
                 <table className="testclass">
                     <thead>
                     <tr>
-                        <th style={{color: '#FF0000'}}>Column One</th>
+                        <th style={{ color: "#FF0000" }}>Column One</th>
                         <th className="testth">Column Two</th>
                     </tr>
                     </thead>
