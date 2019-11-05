@@ -9,6 +9,8 @@ export interface ITriggerProps<T> {
 export interface IReactToPrintProps {
     /** Trigger action used to open browser print */
     trigger: <T>() => React.ReactElement<ITriggerProps<T>>;
+    /** Callback function for getting printHandler to programmatically trigger browser print */
+    getPrintHandler?: (Function) => void;
     /** Content to be printed */
     content: () => React.ReactInstance;
     /** Copy styles over into print window. default: true */
@@ -33,6 +35,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     public linkTotal: number;
     public linksLoaded: Element[];
     public linksErrored: Element[];
+
+    public componentDidMount(): void {
+        const { getPrintHandler } = this.props;
+        if (typeof getPrintHandler === 'function') {
+            getPrintHandler(this.handlePrint);
+        }
+    }
 
     public startPrint = (target, onAfterPrint) => {
         const { removeAfterPrint } = this.props;
