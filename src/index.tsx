@@ -22,7 +22,7 @@ export interface IReactToPrintProps {
     /** Callback function to listen for printing errors */
     onPrintError?: (errorLocation: string, error: Error) => void;
     /** Override default print window styling */
-    pageStyle?: string;
+    pageStyle?: string | (() => string);
     /** Optional class to pass to the print window body */
     bodyClass?: string;
     /** Optional - remove the iframe after printing. */
@@ -162,7 +162,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             /* remove date/time from top */
             const defaultPageStyle = pageStyle === undefined
                 ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }" // tslint:disable-line max-line-length
-                : pageStyle;
+                : typeof pageStyle === "function"
+                    ? pageStyle()
+                    : pageStyle;
 
             const styleEl = domDoc.createElement("style");
             styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
