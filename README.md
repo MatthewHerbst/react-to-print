@@ -144,7 +144,7 @@ The component accepts the following props (note: `?` denotes an optional prop):
 |  **`onAfterPrint`**   | `function?` | Callback function that triggers after print                                                                                       |
 |  **`onPrintError`**   | `function(errorLocation: string, error: Error)?` | Callback function that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent` or `onBeforePrint`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected.                                                                                     |
 | **`removeAfterPrint`** | `boolean?`  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
-|    **`pageStyle`**    | `string?`   | Override default print window styling                                                                                               |
+|    **`pageStyle`**    | `string?`, `function?`   | Override default print window styling. If `function` then calling in runtime just before the print.                                                                                               |
 |    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
 
 ## FAQ
