@@ -61,6 +61,16 @@ export default class ComponentToPrint extends React.Component<Props> {
                     </tr>
                     </tbody>
                 </table>
+                <div className="container">
+                    <div>
+                        <span>Image 01</span>
+                        <img src="https://free-images.com/or/a31c/swan_flying_bird_fly.jpg" alt="Free-Images.com" width='100%'/>
+                    </div>
+                    <div>
+                        <span>Image 02</span>
+                        <img src="https://free-images.com/or/176d/squirrel_tail_bushy_tail.jpg" alt="Free-Images.com" width='100%'/>
+                    </div>
+                </div>
             </div>
         );
     }

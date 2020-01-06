@@ -7,6 +7,7 @@ import "./relativecss/test.css";
 
 interface State {
     text: string;
+    isLoading: boolean;
 }
 
 interface Props {
@@ -20,20 +21,27 @@ class Example extends React.Component<Props, State> {
         super(props);
         this.state = {
             text: "000000000",
+            isLoading: false
         };
     }
 
     private handleAfterPrint = () => console.log('after print!');
-    private handleBeforePrint = () => console.log('before print!');
+    private handleBeforePrint = () => this.setState({ isLoading: false});
     private renderContent = () => this.componentRef;
     private renderTrigger = () => <button type="button">Print this out!</button>;
-    private onBeforeGetContent = () => this.setState({text: "text changed"});
+    private onBeforeGetContent = () => {
+        this.setState({
+            text: "text changed",
+            isLoading: true
+        });
+    };
 
     setRef = ref => this.componentRef = ref;
 
     render() {
         return (
             <div>
+                {this.state.isLoading && <p className="indicator">Loading...</p>}
                 <ReactToPrint
                     trigger={this.renderTrigger}
                     content={this.renderContent}
