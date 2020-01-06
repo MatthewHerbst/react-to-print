@@ -26,7 +26,7 @@ class Example extends React.Component<Props, State> {
     }
 
     private handleAfterPrint = () => console.log('after print!');
-    private handleBeforePrint = () => this.setState({ isLoading: false})
+    private handleBeforePrint = () => this.setState({ isLoading: false});
     private renderContent = () => this.componentRef;
     private renderTrigger = () => <button type="button">Print this out!</button>;
     private onBeforeGetContent = () => {
