@@ -30,10 +30,9 @@ class Example extends React.Component<Props, State> {
     private renderContent = () => this.componentRef;
     private renderTrigger = () => <button type="button">Print this out!</button>;
     private onBeforeGetContent = () => {
-        this.setState({
-            text: "text changed",
-            isLoading: true
-        });
+        return new Promise((resolve: any) => 
+            this.setState({ text: "text changed", isLoading: true }, resolve)
+        );
     };
 
     setRef = ref => this.componentRef = ref;

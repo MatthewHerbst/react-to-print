@@ -132,7 +132,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         this.linksLoaded = [];
         this.linksErrored = [];
 
-        const markLoaded = (linkNode: any, loaded: any) => {
+        const markLoaded = (linkNode: any, loaded: boolean) => {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
@@ -219,7 +219,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 // iterated only via direct [i] access
                                 for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
                                     const attr = node.attributes[j];
-                                    if (attr && attr.nodeValue) {
+                                    if (attr) {
                                         newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
                                     }
                                 }
@@ -236,10 +236,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
             }
+
             if (this.linkTotal === 0 || copyStyles === false) {
                 this.triggerPrint(printWindow);
             }
         };
+
         const documentPrintWindow = document.getElementById('printWindow');
         if (documentPrintWindow) {
             document.body.removeChild(documentPrintWindow);
