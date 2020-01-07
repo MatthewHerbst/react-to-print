@@ -220,7 +220,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
                                     const attr = node.attributes[j];
                                     if (attr) {
-                                        newHeadEl.setAttribute(attr.nodeName, attr.nodeValue);
+                                        newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || '');
                                     }
                                 }
 
