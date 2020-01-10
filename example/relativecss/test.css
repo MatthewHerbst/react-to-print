@@ -5,3 +5,12 @@
 .testclass {
   background: rgba(76, 175, 80, 0.3);
 }
+
+.indicator {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: #FF0000;
+  font-weight: 700;
+}
