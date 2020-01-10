@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.5.1 (January 9th, 2020)
+
+- CHORE [208](https://github.com/gregnb/react-to-print/pull/208) Minor improvements to code comments, linting, and README
+
+- CHORE [207](https://github.com/gregnb/react-to-print/pull/207) Updated `devDependencies`
+
+- FIX [204](https://github.com/gregnb/react-to-print/pull/204): Ensure images are fully loaded before printing. Previously long-loading images might not be included in the print. This ensures that we wait for them to load, similar to how we wait for style sheets to load. Thanks [nhanhuynh-agilityio](https://github.com/nhanhuynh-agilityio)
+
 ## 2.5.0 (October 16th, 2019)
 
 - FEATURE [172](https://github.com/gregnb/react-to-print/pull/172): Allow the `trigger` component to be a functional component. Previously, only class based components were allowed here. Thanks [idanhaviv](https://github.com/idanhaviv)
