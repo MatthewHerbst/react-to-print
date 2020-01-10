@@ -45,7 +45,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
             if (removeAfterPrint) {
                 // The user may have removed the iframe in `onAfterPrint`
-                const documentPrintWindow = document.getElementById('printWindow');
+                const documentPrintWindow = document.getElementById("printWindow");
                 if (documentPrintWindow) {
                     document.body.removeChild(documentPrintWindow);
                 }
@@ -176,7 +176,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 const canvasEls = domDoc.querySelectorAll("canvas");
                 for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
                     const node = canvasEls[i];
-                    const contentDrawImage = node.getContext('2d');
+                    const contentDrawImage = node.getContext("2d");
                     if (contentDrawImage) {
                         contentDrawImage.drawImage(srcCanvasEls[i] as HTMLCanvasElement, 0, 0);
                     }
@@ -205,22 +205,23 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             }
                         } else {
                             // Many browsers will do all sorts of weird things if they encounter an
-                            // empty `href` tag (which is invalid HTML). Some will attempt to load the
-                            // current page. Some will attempt to load the page"s parent directory.
-                            // These problems can cause `react-to-print` to stop  without any error
-                            // being thrown. To avoid such problems we simply do not attempt to load
-                            // these links.
+                            // empty `href` tag (which is invalid HTML). Some will attempt to load
+                            // the current page. Some will attempt to load the page"s parent
+                            // directory. These problems can cause `react-to-print` to stop without
+                            // any error being thrown. To avoid such problems we simply do not
+                            // attempt to load these links. `img` tags with empty `src` attributes
+                            // are also invalid, so we do not attempt to load them.
                             if (node.hasAttribute("href") && !!node.getAttribute("href") ||
-                                (node.hasAttribute('src') && !!node.getAttribute('src'))
+                                (node.hasAttribute("src") && !!node.getAttribute("src"))
                             ) {
                                 const newHeadEl = domDoc.createElement(node.tagName);
 
-                                // node.attributes has NamedNodeMap type that is not an Array and can be
-                                // iterated only via direct [i] access
-                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
+                                // node.attributes has NamedNodeMap type that is not an Array and
+                                // can be iterated only via direct [i] access
+                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // tslint:disable-line max-line-length
                                     const attr = node.attributes[j];
                                     if (attr) {
-                                        newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || '');
+                                        newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
                                     }
                                 }
 
@@ -242,10 +243,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
-        const documentPrintWindow = document.getElementById('printWindow');
+        const documentPrintWindow = document.getElementById("printWindow");
         if (documentPrintWindow) {
             document.body.removeChild(documentPrintWindow);
         }
+
         document.body.appendChild(printWindow);
     }
 
