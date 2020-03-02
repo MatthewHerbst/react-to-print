@@ -146,6 +146,7 @@ The component accepts the following props (note: `?` denotes an optional prop):
 | **`removeAfterPrint`** | `boolean?`  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
 |    **`pageStyle`**    | `string?`   | Override default print window styling                                                                                               |
 |    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
+|    **`suppressErrors`**    | `boolean?`   | When passed, prevents console logging of errors                                                                                     |
 
 ## FAQ
 
