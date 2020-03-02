@@ -1,6 +1,6 @@
 {
   "name": "react-to-print",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Print React components in the browser",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,6 +24,7 @@
     "react-to-print"
   ],
   "author": "gregnb <gregnb@gmail.com>",
+  "contributors": ["Matthew Herbst"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gregnb/react-to-print/issues"
