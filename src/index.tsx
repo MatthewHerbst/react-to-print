@@ -27,6 +27,8 @@ export interface IReactToPrintProps {
     bodyClass?: string;
     /** Optional - remove the iframe after printing. */
     removeAfterPrint?: boolean;
+    /** Optional - suppress error messages */
+    suppressErrors?: boolean;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -110,12 +112,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             content,
             copyStyles = true,
             pageStyle,
+            suppressErrors,
         } = this.props;
 
         const contentEl = content();
 
         if (contentEl === undefined) {
-            console.error('Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed'); // tslint:disable-line max-line-length no-console
+            if (!suppressErrors) {
+                console.error('Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed'); // tslint:disable-line max-line-length no-console
+            }
             return;
         }
 
@@ -136,7 +141,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
-                console.error('"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:', linkNode); // tslint:disable-line max-line-length no-console
+                if (!suppressErrors) {
+                    console.error('"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:', linkNode); // tslint:disable-line max-line-length no-console
+                }
                 this.linksErrored.push(linkNode);
             }
 
