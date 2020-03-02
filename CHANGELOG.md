@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.1 (March 3rd, 2020)
+
+- CHORE [220](https://github.com/gregnb/react-to-print/pull/222) Added `suppressErrors` documentation to the README
+
 ## 2.6.0 (March 3rd, 2020)
 
 - FEATURE [220](https://github.com/gregnb/react-to-print/pull/220) Adds a `suppressErrors` prop. When passed, console logging of errors is disabled. Thanks [invious](https://github.com/invious)
