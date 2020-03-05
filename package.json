@@ -24,7 +24,9 @@
     "react-to-print"
   ],
   "author": "gregnb <gregnb@gmail.com>",
-  "contributors": ["Matthew Herbst"],
+  "contributors": [
+    "Matthew Herbst"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gregnb/react-to-print/issues"
