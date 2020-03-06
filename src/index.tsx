@@ -126,7 +126,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (contentEl === null) {
             if (!suppressErrors) {
-                console.error("Content prop returned null. Ref might still be in initial state."); // tslint:disable-line max-line-length no-console
+                console.error('There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.'); // tslint:disable-line max-line-length no-console
             }
             return;
         }
