@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.2 (March 8th, 2020)
+
+- FIX [224](https://github.com/gregnb/react-to-print/pull/224) Handle the `content` prop returning `null`. This is required for proper usage in TypeScript strict mode. Thanks [a-sync](https://github.com/a-sync)
+
 ## 2.6.1 (March 3rd, 2020)
 
 - CHORE [220](https://github.com/gregnb/react-to-print/pull/222) Added `suppressErrors` documentation to the README
