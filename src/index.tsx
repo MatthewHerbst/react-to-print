@@ -10,7 +10,7 @@ export interface IReactToPrintProps {
     /** Trigger action used to open browser print */
     trigger: <T>() => React.ReactElement<ITriggerProps<T>>;
     /** Content to be printed */
-    content: () => React.ReactInstance;
+    content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
     /** Callback function to trigger before page content is retrieved for printing */
@@ -120,6 +120,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         if (contentEl === undefined) {
             if (!suppressErrors) {
                 console.error('Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed'); // tslint:disable-line max-line-length no-console
+            }
+            return;
+        }
+
+        if (contentEl === null) {
+            if (!suppressErrors) {
+                console.error('There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.'); // tslint:disable-line max-line-length no-console
             }
             return;
         }
