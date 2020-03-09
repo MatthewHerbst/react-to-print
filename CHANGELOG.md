@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.3 (March 9th, 2020)
+
+- FIX [227](https://github.com/gregnb/react-to-print/pull/227) Add a `title` to the print iframe to improve accessibility. Thanks [invious](https://github.com/invious)
+
 ## 2.6.2 (March 8th, 2020)
 
 - FIX [224](https://github.com/gregnb/react-to-print/pull/224) Handle the `content` prop returning `null`. This is required for proper usage in TypeScript strict mode. Thanks [a-sync](https://github.com/a-sync)
