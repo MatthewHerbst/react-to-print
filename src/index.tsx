@@ -136,6 +136,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.style.top = "-1000px";
         printWindow.style.left = "-1000px";
         printWindow.id = "printWindow";
+        printWindow.title = "Print Window";
 
         const contentNodes = findDOMNode(contentEl);
         const linkNodes = document.querySelectorAll("link[rel='stylesheet'], img");
