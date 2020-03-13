@@ -48,11 +48,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     public startPrint = (target: any, onAfterPrint: any) => {
         const { removeAfterPrint } = this.props;
-        const docAsBase64 = templateToUri(target.contentWindow.document.documentElement.outerHTML)
+        const docAsBase64 = templateToUri(target.contentWindow.document.documentElement.outerHTML);
 
         setTimeout(() => {
             target.contentWindow.focus();
-            download(docAsBase64, "DocumentDownload", "PDF")
+            download(docAsBase64, "DocumentDownload", "PDF");
             if (onAfterPrint) {
                 onAfterPrint();
             }
