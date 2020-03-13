@@ -1,5 +1,7 @@
+import * as download from "downloadjs";
+import {Base64} from "js-base64";
 import * as React from "react";
-import { findDOMNode } from "react-dom";
+import {findDOMNode} from "react-dom";
 
 export interface ITriggerProps<T> {
     onClick: () => void;
@@ -29,7 +31,15 @@ export interface IReactToPrintProps {
     removeAfterPrint?: boolean;
     /** Optional - suppress error messages */
     suppressErrors?: boolean;
+    /** Optional - download pdf file directly */
+    downloadPDF?: boolean;
+    /** Optional - Document title for iFrame or PDF file */
+    documentTitle?: string;
 }
+
+export const templateToUri = (html) => (
+    `data:text/html;base64,${encodeURIComponent(Base64.encode(html))}`
+);
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linkTotal: number;
@@ -38,10 +48,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     public startPrint = (target: any, onAfterPrint: any) => {
         const { removeAfterPrint } = this.props;
+        const docAsBase64 = templateToUri(target.contentWindow.document.documentElement.outerHTML)
 
         setTimeout(() => {
             target.contentWindow.focus();
-            target.contentWindow.print();
+            download(docAsBase64, "DocumentDownload", "PDF")
             if (onAfterPrint) {
                 onAfterPrint();
             }
