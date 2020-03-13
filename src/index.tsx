@@ -33,7 +33,7 @@ export interface IReactToPrintProps {
     suppressErrors?: boolean;
     /** Optional - download pdf file directly */
     downloadPDF?: boolean;
-    /** Optional - Document title for iFrame or PDF file */
+    /** Optional - Document title for PDF file */
     documentTitle?: string;
 }
 
@@ -47,12 +47,18 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linksErrored: Element[];
 
     public startPrint = (target: any, onAfterPrint: any) => {
-        const { removeAfterPrint } = this.props;
+        const { removeAfterPrint, downloadPDF, documentTitle } = this.props;
         const docAsBase64 = templateToUri(target.contentWindow.document.documentElement.outerHTML);
 
         setTimeout(() => {
             target.contentWindow.focus();
-            download(docAsBase64, "DocumentDownload", "PDF");
+
+            if (downloadPDF) {
+                download(docAsBase64, documentTitle, "PDF");
+            } else {
+                target.contentWindow.print();
+            }
+
             if (onAfterPrint) {
                 onAfterPrint();
             }
