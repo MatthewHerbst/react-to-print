@@ -38,7 +38,7 @@ export interface IReactToPrintProps {
 }
 
 export const templateToUri = (html) => (
-    `data:text/html;base64,${encodeURIComponent(Base64.encode(html))}`
+    `data:application/pdf;base64,${encodeURIComponent(Base64.encode(html))}`
 );
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -48,13 +48,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     public startPrint = (target: any, onAfterPrint: any) => {
         const { removeAfterPrint, downloadPDF, documentTitle } = this.props;
-        const docAsBase64 = templateToUri(target.contentWindow.document.documentElement.outerHTML);
 
         setTimeout(() => {
             target.contentWindow.focus();
 
             if (downloadPDF) {
-                download(docAsBase64, documentTitle, "PDF");
+                const docAsBase64 = templateToUri(
+                    target.contentWindow.document.documentElement.outerHTML,
+                );
+                download(docAsBase64, documentTitle, "application/pdf");
             } else {
                 target.contentWindow.print();
             }

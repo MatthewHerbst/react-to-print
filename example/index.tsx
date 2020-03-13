@@ -48,6 +48,7 @@ class Example extends React.Component<Props, State> {
                     onBeforePrint={this.handleBeforePrint}
                     onAfterPrint={this.handleAfterPrint}
                     removeAfterPrint
+                    downloadPDF
                 />
                 <ComponentToPrint ref={this.setRef} text={this.state.text}/>
             </div>
