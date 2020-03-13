@@ -33,7 +33,7 @@ export interface IReactToPrintProps {
     suppressErrors?: boolean;
     /** Optional - download pdf file directly */
     downloadPDF?: boolean;
-    /** Optional - Document title for PDF file */
+    /** Optional - document title for PDF file */
     documentTitle?: string;
 }
 
