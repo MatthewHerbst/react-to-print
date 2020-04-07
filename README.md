@@ -147,6 +147,7 @@ The component accepts the following props (note: `?` denotes an optional prop):
 |    **`pageStyle`**    | `string?`   | Override default print window styling                                                                                               |
 |    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
 |    **`suppressErrors`**    | `boolean?`   | When passed, prevents console logging of errors                                                                                     |
+|    **`excludeImgHeader`**    | `boolean?`   | When passed, exclude images from the header                                                                                   |
 
 ## FAQ
 
