@@ -142,7 +142,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.title = "Print Window";
 
         const contentNodes = findDOMNode(contentEl);
-        const linkNodesWhitelist = ["ink[rel='stylesheet']"];
+        const linkNodesWhitelist = ["link[rel='stylesheet']"];
         if(!excludeImgHeader) {
            linkNodesWhitelist.push("img");
         }
@@ -209,7 +209,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
 
                 if (copyStyles !== false) {
-                    const headElsWhitelist = ["style", "ink[rel='stylesheet']"];
+                    const headElsWhitelist = ["style", "link[rel='stylesheet']"];
                     if(!excludeImgHeader) {
                        headElsWhitelist.push("img");
                     }
