@@ -29,6 +29,8 @@ export interface IReactToPrintProps {
     removeAfterPrint?: boolean;
     /** Optional - suppress error messages */
     suppressErrors?: boolean;
+    /** Optional - If browser (Ex. Edge) duplicates images you can remove them from the header */
+    excludeImgHeader?: boolean;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -113,6 +115,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             copyStyles = true,
             pageStyle,
             suppressErrors,
+            excludeImgHeader = false
         } = this.props;
 
         const contentEl = content();
@@ -139,7 +142,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.title = "Print Window";
 
         const contentNodes = findDOMNode(contentEl);
-        const linkNodes = document.querySelectorAll("link[rel='stylesheet'], img");
+        const linkNodesWhitelist = ["ink[rel='stylesheet']"];
+        if(!excludeImgHeader) {
+           linkNodesWhitelist.push("img");
+        }
+        const linkNodes = document.querySelectorAll(linkNodesWhitelist.length === 1 ? linkNodesWhitelist : linkNodesWhitelist.join(", "));
 
         this.linkTotal = linkNodes.length || 0;
         this.linksLoaded = [];
@@ -163,6 +170,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         };
 
         printWindow.onload = () => {
+            const {
+                excludeImgHeader = false
+            } = this.props;
+            
             /* IE11 support */
             if (window.navigator && window.navigator.userAgent.indexOf("Trident/7.0") > -1) {
                 printWindow.onload = null;
@@ -198,7 +209,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
 
                 if (copyStyles !== false) {
-                    const headEls = document.querySelectorAll("style, link[rel='stylesheet'], img");
+                    const headElsWhitelist = ["style", "ink[rel='stylesheet']"];
+                    if(!excludeImgHeader) {
+                       headElsWhitelist.push("img");
+                    }
+                    const headEls = document.querySelectorAll(headElsWhitelist.join(", "));
 
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
                         const node = headEls[i];
