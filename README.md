@@ -11,6 +11,10 @@
 
 So you've created a React component but would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a new print window with CSS styles copied over as well.
 
+## Compatibility
+
+`react-to-print` should be compatible with all major browsers. We also do our best to support IE11.
+
 ## Install
 
 `npm install --save react-to-print`
