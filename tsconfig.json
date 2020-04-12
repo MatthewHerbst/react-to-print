@@ -1,21 +1,28 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "lib",
-    "target": "es5",
-    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "downlevelIteration": true,
     "importHelpers": true,
     "jsx": "react",
-    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "lib",
     "removeComments": true,
-    "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true
+    "target": "es5"
   },
   "include": [
-    "./src",
+    "./src"
   ],
   "exclude": [
     "dist",
-    "lib"
+    "example",
+    "lib",
+    "node_modules",
+    "webpack.config.js",
+    "webpack.dev.config.js",
+    "webpack.prod.config.js"
   ]
 }
