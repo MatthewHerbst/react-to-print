@@ -37,14 +37,25 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linksErrored: Element[];
 
     public startPrint = (target: any, onAfterPrint: any) => {
-        const { removeAfterPrint } = this.props;
+        const {
+            removeAfterPrint,
+            suppressErrors,
+        } = this.props;
 
         setTimeout(() => {
             target.contentWindow.focus();
-            target.contentWindow.print();
-            if (onAfterPrint) {
-                onAfterPrint();
+            if (target.contentWindow.print) {
+                target.contentWindow.print();
+
+                if (onAfterPrint) {
+                    onAfterPrint();
+                }
+            } else {
+                if (!suppressErrors) {
+                    console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // tslint:disable-line no-console
+                }
             }
+
             if (removeAfterPrint) {
                 // The user may have removed the iframe in `onAfterPrint`
                 const documentPrintWindow = document.getElementById("printWindow");
