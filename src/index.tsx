@@ -119,7 +119,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (contentEl === undefined) {
             if (!suppressErrors) {
-                console.error('Refs are not available for stateless components. For "react-to-print" to work only Class based components can be printed'); // tslint:disable-line max-line-length no-console
+                console.error('For "react-to-print" to work only Class based components can be printed.'); // tslint:disable-line max-line-length no-console
             }
             return;
         }
