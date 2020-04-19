@@ -38,7 +38,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     static defaultProps = {
         bodyClass: undefined,
-        copyStyles: false,
+        copyStyles: true,
         onAfterPrint: undefined,
         onBeforeGetContent: undefined,
         onBeforePrint: undefined,
@@ -134,9 +134,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     public handlePrint = () => {
         const {
-            bodyClass = "",
+            bodyClass,
             content,
-            copyStyles = true,
+            copyStyles,
             pageStyle,
             suppressErrors,
         } = this.props;
@@ -210,7 +210,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
                 domDoc.head.appendChild(styleEl);
 
-                if (bodyClass.length) {
+                if (bodyClass) {
                     domDoc.body.classList.add(bodyClass);
                 }
 
