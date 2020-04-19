@@ -7,34 +7,46 @@ export interface ITriggerProps<T> {
 }
 
 export interface IReactToPrintProps {
-    /** Trigger action used to open browser print */
-    trigger: <T>() => React.ReactElement<ITriggerProps<T>>;
+    /** Class to pass to the print window body */
+    bodyClass?: string;
     /** Content to be printed */
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
+    /** Callback function to trigger after print */
+    onAfterPrint?: () => void;
     /** Callback function to trigger before page content is retrieved for printing */
     onBeforeGetContent?: () => void | Promise<any>;
     /** Callback function to trigger before print */
     onBeforePrint?: () => void | Promise<any>;
-    /** Callback function to trigger after print */
-    onAfterPrint?: () => void;
     /** Callback function to listen for printing errors */
-    onPrintError?: (errorLocation: string, error: Error) => void;
+    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint", error: Error) => void;
     /** Override default print window styling */
     pageStyle?: string;
-    /** Optional class to pass to the print window body */
-    bodyClass?: string;
-    /** Optional - remove the iframe after printing. */
+    /** Remove the iframe after printing. */
     removeAfterPrint?: boolean;
-    /** Optional - suppress error messages */
+    /** Suppress error messages */
     suppressErrors?: boolean;
+    /** Trigger action used to open browser print */
+    trigger: <T>() => React.ReactElement<ITriggerProps<T>>;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linkTotal: number;
     private linksLoaded: Element[];
     private linksErrored: Element[];
+
+    static defaultProps = {
+        bodyClass: undefined,
+        copyStyles: false,
+        onAfterPrint: undefined,
+        onBeforeGetContent: undefined,
+        onBeforePrint: undefined,
+        onPrintError: undefined,
+        pageStyle: undefined,
+        removeAfterPrint: false,
+        suppressErrors: false,
+    }
 
     public startPrint = (target: any, onAfterPrint: any) => {
         const {
@@ -44,6 +56,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         setTimeout(() => {
             target.contentWindow.focus();
+
+            // Some browsers, such as Firefox Android, do not support printing at all
+            // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
             if (target.contentWindow.print) {
                 target.contentWindow.print();
 
@@ -161,7 +176,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 this.linksLoaded.push(linkNode);
             } else {
                 if (!suppressErrors) {
-                    console.error('"react-to-print" was unable to load a link. It may be invalid. "react-to-print" will continue attempting to print the page. The link the errored was:', linkNode); // tslint:disable-line max-line-length no-console
+                    console.error('"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode); // tslint:disable-line max-line-length no-console
                 }
                 this.linksErrored.push(linkNode);
             }
@@ -208,7 +223,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
-                if (copyStyles !== false) {
+                if (copyStyles) {
                     const headEls = document.querySelectorAll("style, link[rel='stylesheet'], img");
 
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
@@ -237,7 +252,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             // any error being thrown. To avoid such problems we simply do not
                             // attempt to load these links. `img` tags with empty `src` attributes
                             // are also invalid, so we do not attempt to load them.
-                            if (node.hasAttribute("href") && !!node.getAttribute("href") ||
+                            if (
+                                (node.hasAttribute("href") && !!node.getAttribute("href")) ||
                                 (node.hasAttribute("src") && !!node.getAttribute("src"))
                             ) {
                                 const newHeadEl = domDoc.createElement(node.tagName);
@@ -264,7 +280,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
             }
 
-            if (this.linkTotal === 0 || copyStyles === false) {
+            if (this.linkTotal === 0 || !copyStyles) {
                 this.triggerPrint(printWindow);
             }
         };
