@@ -74,16 +74,6 @@ class ComponentToPrint extends React.Component {
             <td>data 2</td>
             <td>data 3</td>
           </tr>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
         </tbody>
       </table>
     );
@@ -126,16 +116,6 @@ class ComponentToPrint extends React.Component {
             <td>data 2</td>
             <td>data 3</td>
           </tr>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
         </tbody>
       </table>
     );
@@ -144,6 +124,7 @@ class ComponentToPrint extends React.Component {
 
 const Example = () => {
   const componentRef = useRef();
+
   return (
     <div>
       <ReactToPrint
