@@ -6,6 +6,8 @@ export interface ITriggerProps<T> {
     ref: (v: T) => void;
 }
 
+type PropertyFunction<T> = () => T;
+
 export interface IReactToPrintProps {
     /** Class to pass to the print window body */
     bodyClass?: string;
@@ -22,7 +24,7 @@ export interface IReactToPrintProps {
     /** Callback function to listen for printing errors */
     onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint", error: Error) => void;
     /** Override default print window styling */
-    pageStyle?: string;
+    pageStyle?: string | PropertyFunction<string>;
     /** Remove the iframe after printing. */
     removeAfterPrint?: boolean;
     /** Suppress error messages */
@@ -32,58 +34,59 @@ export interface IReactToPrintProps {
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
-    private linkTotal: number;
-    private linksLoaded: Element[];
-    private linksErrored: Element[];
+    private linkTotal!: number;
+    private linksLoaded!: Element[];
+    private linksErrored!: Element[];
 
     static defaultProps = {
-        bodyClass: undefined,
         copyStyles: true,
-        onAfterPrint: undefined,
-        onBeforeGetContent: undefined,
-        onBeforePrint: undefined,
-        onPrintError: undefined,
-        pageStyle: undefined,
+        pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
         removeAfterPrint: false,
         suppressErrors: false,
-    }
+    };
 
-    public startPrint = (target: any, onAfterPrint: any) => {
+    public startPrint = (target: HTMLIFrameElement) => {
         const {
+            onAfterPrint,
             removeAfterPrint,
             suppressErrors,
         } = this.props;
 
         setTimeout(() => {
-            target.contentWindow.focus();
+            if (target.contentWindow) {
+                target.contentWindow.focus(); // Needed for IE 11
 
-            // Some browsers, such as Firefox Android, do not support printing at all
-            // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
-            if (target.contentWindow.print) {
-                target.contentWindow.print();
+                // Some browsers, such as Firefox Android, do not support printing at all
+                // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
+                if (target.contentWindow.print) {
+                    target.contentWindow.print();
 
-                if (onAfterPrint) {
-                    onAfterPrint();
+                    if (onAfterPrint) {
+                        onAfterPrint();
+                    }
+                } else {
+                    if (!suppressErrors) {
+                        console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // tslint:disable-line no-console
+                    }
+                }
+
+                if (removeAfterPrint) {
+                    // The user may have removed the iframe in `onAfterPrint`
+                    const documentPrintWindow = document.getElementById("printWindow");
+                    if (documentPrintWindow) {
+                        document.body.removeChild(documentPrintWindow);
+                    }
                 }
             } else {
                 if (!suppressErrors) {
-                    console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // tslint:disable-line no-console
-                }
-            }
-
-            if (removeAfterPrint) {
-                // The user may have removed the iframe in `onAfterPrint`
-                const documentPrintWindow = document.getElementById("printWindow");
-                if (documentPrintWindow) {
-                    document.body.removeChild(documentPrintWindow);
+                    console.error("Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"); // tslint:disable-line no-console
                 }
             }
         }, 500);
     }
 
-    public triggerPrint = (target: any) => {
+    public triggerPrint = (target: HTMLIFrameElement) => {
         const {
-            onAfterPrint,
             onBeforePrint,
             onPrintError,
         } = this.props;
@@ -93,7 +96,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (onBeforePrintOutput && typeof onBeforePrintOutput.then === "function") {
                 onBeforePrintOutput
                     .then(() => {
-                        this.startPrint(target, onAfterPrint);
+                        this.startPrint(target);
                     })
                     .catch((error) => {
                         if (onPrintError) {
@@ -101,10 +104,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         }
                     });
             } else {
-                this.startPrint(target, onAfterPrint);
+                this.startPrint(target);
             }
         } else {
-            this.startPrint(target, onAfterPrint);
+            this.startPrint(target);
         }
     }
 
@@ -171,7 +174,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         this.linksLoaded = [];
         this.linksErrored = [];
 
-        const markLoaded = (linkNode: any, loaded: boolean) => {
+        const markLoaded = (linkNode: Element, loaded: boolean) => {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
@@ -194,20 +197,19 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 printWindow.onload = null;
             }
 
-            const domDoc = printWindow.contentDocument || printWindow.contentWindow.document;
+            const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
             const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
             if (domDoc) {
                 domDoc.open();
                 domDoc.write((contentNodes as HTMLCanvasElement).outerHTML);
                 domDoc.close();
 
-                /* remove date/time from top */
-                const defaultPageStyle = pageStyle === undefined
-                    ? "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }" // tslint:disable-line max-line-length
-                    : pageStyle;
+                const defaultPageStyle = typeof pageStyle === "function" ? pageStyle() : pageStyle;
 
                 const styleEl = domDoc.createElement("style");
-                styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
+                // TODO: TS 3 should have removed the need for the `!`, so why is it still needed?
+                // https://github.com/Microsoft/TypeScript/issues/23812
+                styleEl.appendChild(domDoc.createTextNode(defaultPageStyle!));
                 domDoc.head.appendChild(styleEl);
 
                 if (bodyClass) {
