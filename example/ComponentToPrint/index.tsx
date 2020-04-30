@@ -5,16 +5,18 @@ type Props = { // tslint:disable-line interface-over-type-literal
 };
 
 export default class ComponentToPrint extends React.Component<Props> {
-    private canvasEl: HTMLCanvasElement = null;
+    private canvasEl!: HTMLCanvasElement;
 
     public componentDidMount() {
         const ctx = this.canvasEl.getContext("2d");
-        ctx.beginPath();
-        ctx.arc(95, 50, 40, 0, 2 * Math.PI);
-        ctx.stroke();
+        if (ctx) {
+            ctx.beginPath();
+            ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
     }
 
-    private setRef = (ref) => this.canvasEl = ref;
+    private setRef = (ref: HTMLCanvasElement) => this.canvasEl = ref;
 
     public render() {
         return (
@@ -64,11 +66,11 @@ export default class ComponentToPrint extends React.Component<Props> {
                 <div className="container">
                     <div>
                         <span>Image 01</span>
-                        <img src="https://free-images.com/or/a31c/swan_flying_bird_fly.jpg" alt="Free-Images.com" width='100%'/>
+                        <img src="https://free-images.com/or/a31c/swan_flying_bird_fly.jpg" alt="Free-Images.com" width="100%"/>
                     </div>
                     <div>
                         <span>Image 02</span>
-                        <img src="https://free-images.com/or/176d/squirrel_tail_bushy_tail.jpg" alt="Free-Images.com" width='100%'/>
+                        <img src="https://free-images.com/or/176d/squirrel_tail_bushy_tail.jpg" alt="Free-Images.com" width="100%"/>
                     </div>
                 </div>
             </div>
