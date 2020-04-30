@@ -168,9 +168,18 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.title = "Print Window";
 
         const contentNodes = findDOMNode(contentEl);
-        const linkNodes = document.querySelectorAll("link[rel='stylesheet'], img");
 
-        this.linkTotal = linkNodes.length || 0;
+        if (!contentNodes) {
+            if (!suppressErrors) {
+                console.error('"react-to-print" could not locate the DOM node corresponding with the `content` prop'); // tslint:disable-line max-line-length no-console
+            }
+            return;
+        }
+
+        const globalStyleLinkNodes = document.querySelectorAll("link[rel='stylesheet']");
+        const renderComponentImgNodes = (contentNodes as Element).querySelectorAll("img")
+
+        this.linkTotal = globalStyleLinkNodes.length + renderComponentImgNodes.length;
         this.linksLoaded = [];
         this.linksErrored = [];
 
@@ -225,8 +234,26 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
+                // Pre-load all images
+                for (let i = 0; i < renderComponentImgNodes.length; i++) {
+                    const imgNode = renderComponentImgNodes[i];
+                    const imgSrc = imgNode.getAttribute("src");
+
+                    if (!imgSrc) {
+                        if (!suppressErrors) {
+                            console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // tslint:disable-line max-line-length no-console
+                        }
+                    } else {
+                        // tslint:disable-line max-line-length https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
+                        const img = new Image();
+                        img.onload = markLoaded.bind(null, imgNode, true);
+                        img.onerror = markLoaded.bind(null, imgNode, false);
+                        img.src = imgSrc;
+                    }
+                }
+
                 if (copyStyles) {
-                    const headEls = document.querySelectorAll("style, link[rel='stylesheet'], img");
+                    const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
 
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
                         const node = headEls[i];
@@ -252,12 +279,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             // the current page. Some will attempt to load the page"s parent
                             // directory. These problems can cause `react-to-print` to stop without
                             // any error being thrown. To avoid such problems we simply do not
-                            // attempt to load these links. `img` tags with empty `src` attributes
-                            // are also invalid, so we do not attempt to load them.
-                            if (
-                                (node.hasAttribute("href") && !!node.getAttribute("href")) ||
-                                (node.hasAttribute("src") && !!node.getAttribute("src"))
-                            ) {
+                            // attempt to load these links.
+                            if (node.getAttribute("href")) {
                                 const newHeadEl = domDoc.createElement(node.tagName);
 
                                 // node.attributes has NamedNodeMap type that is not an Array and
@@ -273,7 +296,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
                                 domDoc.head.appendChild(newHeadEl);
                             } else {
-                                console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // tslint:disable-line max-line-length no-console
+                                if (!suppressErrors) {
+                                    console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // tslint:disable-line max-line-length no-console
+                                }
                                 // `true` because we"ve already shown a warning for this
                                 markLoaded(node, true);
                             }
