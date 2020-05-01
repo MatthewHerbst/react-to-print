@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.7.0 (May 1st, 2020)
+
+- FEATURE [198](https://github.com/gregnb/react-to-print/pull/198): `pageStyle` prop can now be passed as a function. Thanks [sergeyshmakov](https://github.com/sergeyshmakov)
+- FIX [218](https://github.com/gregnb/react-to-print/issues/218): Image duplication in Edge and IE. This should also fix [211](https://github.com/gregnb/react-to-print/issues/211) (slow performance with many images on the page). Thank you [dioscarey](https://github.com/dioscarey) for helping to get this pushed through
+- Fix [93](https://github.com/gregnb/react-to-print/issues/93): Check for existence of `target.contentWindow.print`
+- CHORE: updated an error message (see [96](https://github.com/gregnb/react-to-print/issues/96))
+- CHORE: updated all `devDependencies` to latest
+- CHORE: slightly decreased size of the build by better using UglifyJS
+- CHORE: enabled TypeScript strict mode
+- CHORE: added a "Compatibility" section to the README. Also moved some sections around and shortened the example
+- CHORE: improved browser built targets based on `browserslist` best practices
+
 ## 2.6.3 (March 9th, 2020)
 
 - FIX [227](https://github.com/gregnb/react-to-print/pull/227) Add a `title` to the print iframe to improve accessibility. Thanks [invious](https://github.com/invious)

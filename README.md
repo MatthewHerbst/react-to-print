@@ -9,27 +9,27 @@
 [![dependencies Status](https://david-dm.org/gregnb/react-to-print/status.svg)](https://david-dm.org/gregnb/react-to-print)
 [![npm version](https://badge.fury.io/js/react-to-print.svg)](https://badge.fury.io/js/react-to-print)
 
-So you've created a React component but would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a new print window with CSS styles copied over as well.
+So you've created a React component and would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a print window with CSS styles copied over as well.
+
+## Demo
+
+[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
 ## Compatibility
 
 `react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
 
-## Known Incompatible Browsers
+### Known Incompatible Browsers
 
 - Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
 
 ## Known Issues
 
-- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where `window.print` does not block
+- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
 
 ## Install
 
 `npm install --save react-to-print`
-
-## Demo
-
-[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
 ## API
 
@@ -151,7 +151,7 @@ const Example = () => {
 
 `<link>`s with empty `href` attributes are [INVALID HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
 
-*Note*: related to the above, `img` tags with empty `src` attributes are also invalid, and we do not attempt to load them.
+*Note*: related to the above, `img` tags with empty `src` attributes are also invalid, and we may not attempt to load them.
 
 ### How do you make `ComponentToPrint` show only while printing
 
