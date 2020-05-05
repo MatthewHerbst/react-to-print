@@ -1,6 +1,11 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
+export interface IPrintContextProps {
+    handlePrint: () => void,
+};
+export const PrintContext = React.createContext({} as IPrintContextProps);
+
 export interface ITriggerProps<T> {
     onClick: () => void;
     ref: (v: T) => void;
@@ -30,7 +35,7 @@ export interface IReactToPrintProps {
     /** Suppress error messages */
     suppressErrors?: boolean;
     /** Trigger action used to open browser print */
-    trigger: <T>() => React.ReactElement<ITriggerProps<T>>;
+    trigger?: <T>() => React.ReactElement<ITriggerProps<T>>;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -322,11 +327,23 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
     public render() {
         const {
+            children,
             trigger,
         } = this.props;
-
-        return React.cloneElement(trigger(), {
-            onClick: this.handleClick,
-        });
+        if (trigger) {
+            return React.cloneElement(trigger(), {
+                onClick: this.handleClick,
+            });
+        } else {
+            const value = {handlePrint: this.handleClick};
+            return <PrintContext.Provider value={value as IPrintContextProps}>
+                {children}
+            </PrintContext.Provider>
+        }
     }
 }
+
+export const useReactToPrint = (options: IReactToPrintProps) => {
+    const entity = React.useMemo(() => new ReactToPrint(options), [options]);
+    return React.useCallback(() => entity.handleClick(), [entity]);
+};
