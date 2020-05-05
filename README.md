@@ -39,7 +39,7 @@ The component accepts the following props:
 
 |         Name          | Type     | Description                                                                                                                         |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-|     **`trigger`**     | `function` | A function that returns a React Component or HTML element                                                                           |
+|     **`trigger?`**     | `function` | A function that returns a React Component or HTML element                                                                           |
 |     **`content`**     | `function` | A function that returns a component reference value. The content of this reference value is then used for print                     |
 |   **`copyStyles?`**    | `boolean`  | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing.
@@ -51,6 +51,13 @@ The component accepts the following props:
 |    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
 |    **`suppressErrors`**    | `boolean?`   | When passed, prevents `console` logging of errors
 
+### PrintContext
+
+In case you don't want to specify `trigger` directly within other props but you rather want to gain some extra control over it, you could make use of PrintContext. By using PrintContext you can get direct access to the `handlePrint` method which triggers printing action.
+
+### [useReactToPrint]
+For the functional components, there is a useReactToPrint hook, which accepts an object with the same configuration props as `<ReactToPrint />` itself and returns a handlePrint function, by calling which you can trigger printing action.
+ 
 ## Example
 
 ### Calling from class components
@@ -95,6 +102,53 @@ class Example extends React.Component {
 }
 ```
 
+### Calling from class components with PrintContext
+```js
+import React from 'react';
+import ReactToPrint, { PrintContext } from 'react-to-print';
+
+class ComponentToPrint extends React.Component {
+  render() {
+    return (
+      <table>
+        <thead>
+          <th>column 1</th>
+          <th>column 2</th>
+          <th>column 3</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+}
+
+class Example extends React.Component {
+  render() {
+    return (
+      <div>
+        <ReactToPrint
+          content={() => this.componentRef}
+        >
+        	<PrintContext.Consumer>
+				{({ handlePrint }) => (
+					<button onClick={handlePrint}>Print this out!</button>
+				)}
+			</PrintContext.Consumer>
+        </ReactToPrint>
+        <ComponentToPrint ref={el => (this.componentRef = el)} />
+      </div>
+    );
+  }
+}
+```
+
+
 ### Calling from functional components with [hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ```js
@@ -132,6 +186,48 @@ const Example = () => {
         content={() => componentRef.current}
       />
       <ComponentToPrint ref={componentRef} />
+    </div>
+  );
+};
+
+```
+### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html)
+
+```js
+import React, { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
+
+class ComponentToPrint extends React.Component {
+  render() {
+    return (
+      <table>
+        <thead>
+          <th>column 1</th>
+          <th>column 2</th>
+          <th>column 3</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>data 1</td>
+            <td>data 2</td>
+            <td>data 3</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+}
+
+const Example = () => {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+  
+  return (
+    <div>
+      <ComponentToPrint ref={componentRef} />
+      <button onClick={handlePrint}>Print this out!</button>
     </div>
   );
 };
