@@ -9,14 +9,14 @@ export interface ITriggerProps<T> {
 type PropertyFunction<T> = () => T;
 
 export interface IReactToPrintProps {
-    /** Optional title for document if saved as file */
-    documentTitle?: string
     /** Class to pass to the print window body */
     bodyClass?: string;
     /** Content to be printed */
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
+    /** Optional title for document if saved as file */
+    documentTitle?: string
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Callback function to trigger before page content is retrieved for printing */
