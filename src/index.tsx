@@ -9,6 +9,8 @@ export interface ITriggerProps<T> {
 type PropertyFunction<T> = () => T;
 
 export interface IReactToPrintProps {
+    /** Optional title for document if saved as file */
+    documentTitle?: string
     /** Class to pass to the print window body */
     bodyClass?: string;
     /** Content to be printed */
@@ -50,6 +52,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             onAfterPrint,
             removeAfterPrint,
             suppressErrors,
+            documentTitle,
         } = this.props;
 
         setTimeout(() => {
@@ -59,7 +62,19 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 // Some browsers, such as Firefox Android, do not support printing at all
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
                 if (target.contentWindow.print) {
+
+                    // save current document title before override
+                    const tempTitle = document.title;
+                    if (documentTitle) {
+                        document.title  = documentTitle; // It causes overriding tab title during the print process
+                    }
+
                     target.contentWindow.print();
+
+                    // reset document title with original title after print process
+                    if (documentTitle) {
+                        document.title = tempTitle;
+                    }
 
                     if (onAfterPrint) {
                         onAfterPrint();
