@@ -66,7 +66,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     // save current document title before override
                     const tempTitle = document.title;
                     if (documentTitle) {
-                        document.title  = documentTitle; // It causes overriding tab title during the print process
+                        document.title  = documentTitle; // Overrides the tab title during the print process
                     }
 
                     target.contentWindow.print();
