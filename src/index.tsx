@@ -70,7 +70,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                     target.contentWindow.print();
 
-                    // reset document title with original title after print process
                     if (documentTitle) {
                         document.title = tempTitle;
                     }
