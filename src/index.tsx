@@ -1,10 +1,16 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
+const contextEnabled = React.hasOwnProperty("createContext");
+const hooksEnabled = React.hasOwnProperty("useMemo") && React.hasOwnProperty("useCallback");
+
 export interface IPrintContextProps {
     handlePrint: () => void,
 };
-export const PrintContext = React.createContext({} as IPrintContextProps);
+const PrintContext = contextEnabled ?
+    React.createContext({} as IPrintContextProps) : null;
+export const PrintContextConsumer = PrintContext ?
+    PrintContext.Consumer : () => null;
 
 export interface ITriggerProps<T> {
     onClick: () => void;
@@ -336,14 +342,24 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             });
         } else {
             const value = {handlePrint: this.handleClick};
-            return <PrintContext.Provider value={value as IPrintContextProps}>
-                {children}
-            </PrintContext.Provider>
+            if (!PrintContext) {
+                // tslint:disable-next-line:max-line-length
+                console.warn('"react-to-print" requires React 16.3.0 and higher to be able to use "PrintContext"'); // tslint:disable-line no-console
+                return null;
+            }
+            return PrintContext ?
+                <PrintContext.Provider value={value as IPrintContextProps}>
+                    {children}
+                </PrintContext.Provider> : <h2>lorem</h2>
         }
     }
 }
 
-export const useReactToPrint = (options: IReactToPrintProps) => {
-    const entity = React.useMemo(() => new ReactToPrint(options), [options]);
-    return React.useCallback(() => entity.handleClick(), [entity]);
-};
+export const useReactToPrint = hooksEnabled ?
+    (options: IReactToPrintProps) => {
+        const entity = React.useMemo(() => new ReactToPrint(options), [options]);
+        return React.useCallback(() => entity.handleClick(), [entity]);
+    } : () => {
+        console.warn('"react-to-print" requires React 16.8 and higher to be able to use "useReactToPrint"'); // tslint:disable-line no-console
+        return null;
+    };

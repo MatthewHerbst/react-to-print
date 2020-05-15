@@ -51,12 +51,12 @@ The component accepts the following props:
 |    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
 |    **`suppressErrors`**    | `boolean?`   | When passed, prevents `console` logging of errors
 
-### PrintContext
+### PrintContextConsumer
 
-In case you don't want to specify `trigger` directly within other props but you rather want to gain some extra control over it, you could make use of PrintContext. By using PrintContext you can get direct access to the `handlePrint` method which triggers printing action.
+If you need extra control over printing and don't want to specify `trigger` directly, `PrintContextConsumer` allows you to gain direct access to the `handlePrint` method which triggers the print action. Requires React 16.3.0 and higher.
 
 ### [useReactToPrint]
-For the functional components, there is a useReactToPrint hook, which accepts an object with the same configuration props as `<ReactToPrint />` itself and returns a handlePrint function, by calling which you can trigger printing action.
+For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` returns a `handlePrint` function which when called will trigger the print action. Requires React 16.8 and higher.
  
 ## Example
 
@@ -102,10 +102,10 @@ class Example extends React.Component {
 }
 ```
 
-### Calling from class components with PrintContext
+### Calling from class components with PrintContextConsumer
 ```js
 import React from 'react';
-import ReactToPrint, { PrintContext } from 'react-to-print';
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 
 class ComponentToPrint extends React.Component {
   render() {
@@ -135,11 +135,11 @@ class Example extends React.Component {
         <ReactToPrint
           content={() => this.componentRef}
         >
-        	<PrintContext.Consumer>
+        	<PrintContextConsumer>
 				{({ handlePrint }) => (
 					<button onClick={handlePrint}>Print this out!</button>
 				)}
-			</PrintContext.Consumer>
+			</PrintContextConsumer>
         </ReactToPrint>
         <ComponentToPrint ref={el => (this.componentRef = el)} />
       </div>
@@ -149,7 +149,7 @@ class Example extends React.Component {
 ```
 
 
-### Calling from functional components with [hooks](https://reactjs.org/docs/hooks-intro.html)
+### Calling from functional components with `useReactToPrint` [hook](https://reactjs.org/docs/hooks-intro.html)
 
 ```js
 import React, { useRef } from 'react';
