@@ -7,10 +7,8 @@ const hooksEnabled = React.hasOwnProperty("useMemo") && React.hasOwnProperty("us
 export interface IPrintContextProps {
     handlePrint: () => void,
 };
-const PrintContext = contextEnabled ?
-    React.createContext({} as IPrintContextProps) : null;
-export const PrintContextConsumer = PrintContext ?
-    PrintContext.Consumer : () => null;
+const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
+export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
 
 export interface ITriggerProps<T> {
     onClick: () => void;
@@ -334,8 +332,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     public render() {
         const {
             children,
+            suppressErrors,
             trigger,
         } = this.props;
+
         if (trigger) {
             return React.cloneElement(trigger(), {
                 onClick: this.handleClick,
@@ -343,23 +343,29 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         } else {
             const value = {handlePrint: this.handleClick};
             if (!PrintContext) {
-                // tslint:disable-next-line:max-line-length
-                console.warn('"react-to-print" requires React 16.3.0 and higher to be able to use "PrintContext"'); // tslint:disable-line no-console
+                if (!suppressErrors) {
+                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // tslint:disable-line max-line-length no-console
+                }
                 return null;
             }
+
             return PrintContext ?
                 <PrintContext.Provider value={value as IPrintContextProps}>
                     {children}
-                </PrintContext.Provider> : <h2>lorem</h2>
+                </PrintContext.Provider> :
+                <h2>lorem</h2>
         }
     }
 }
 
 export const useReactToPrint = hooksEnabled ?
-    (options: IReactToPrintProps) => {
-        const entity = React.useMemo(() => new ReactToPrint(options), [options]);
+    (props: IReactToPrintProps) => {
+        const entity = React.useMemo(() => new ReactToPrint(props), [props]);
         return React.useCallback(() => entity.handleClick(), [entity]);
-    } : () => {
-        console.warn('"react-to-print" requires React 16.8 and higher to be able to use "useReactToPrint"'); // tslint:disable-line no-console
+    } :
+    (props: IReactToPrintProps) => {
+        if (!props.suppressErrors) {
+            console.warn('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // tslint:disable-line no-console
+        }
         return null;
     };
