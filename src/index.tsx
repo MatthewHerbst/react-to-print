@@ -24,7 +24,7 @@ export interface IReactToPrintProps {
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
-    /** Optional title for document if saved as file */
+    /** Set the title for printing when saving as a file */
     documentTitle?: string
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
@@ -72,9 +72,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
                 if (target.contentWindow.print) {
 
+                    // NOTE: Overrides the page's title during the print process
                     const tempTitle = document.title;
                     if (documentTitle) {
-                        document.title  = documentTitle; // Overrides the tab title during the print process
+                        document.title  = documentTitle;
                     }
 
                     target.contentWindow.print();
