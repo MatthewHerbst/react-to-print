@@ -26,6 +26,8 @@ export interface IReactToPrintProps {
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
+    /** Optional title for document if saved as file */
+    documentTitle?: string
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Callback function to trigger before page content is retrieved for printing */
@@ -61,6 +63,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             onAfterPrint,
             removeAfterPrint,
             suppressErrors,
+            documentTitle,
         } = this.props;
 
         setTimeout(() => {
@@ -70,7 +73,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 // Some browsers, such as Firefox Android, do not support printing at all
                 // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
                 if (target.contentWindow.print) {
+
+                    const tempTitle = document.title;
+                    if (documentTitle) {
+                        document.title  = documentTitle; // Overrides the tab title during the print process
+                    }
+
                     target.contentWindow.print();
+
+                    if (documentTitle) {
+                        document.title = tempTitle;
+                    }
 
                     if (onAfterPrint) {
                         onAfterPrint();

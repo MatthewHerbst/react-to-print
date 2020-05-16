@@ -38,6 +38,7 @@ class Example extends React.Component<{}, State> {
             <div>
                 {this.state.isLoading && <p className="indicator">Loading...</p>}
                 <ReactToPrint
+                    documentTitle={"Awesome_FileName"}
                     trigger={this.renderTrigger}
                     content={this.renderContent}
                     onBeforeGetContent={this.onBeforeGetContent}
