@@ -66,8 +66,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "tslint",
-      "git add"
+      "tslint"
     ]
   }
 }
