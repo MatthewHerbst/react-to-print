@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## 2.8.0 (May 19th, 2020)
+
+- FEATURE [245](https://github.com/gregnb/react-to-print/pull/245): `documentTitle` prop can now be passed to set a default filename when the user is saving as a PDF. Thanks [zb2oby](https://github.com/zb2oby)
+- FEATURE [244](https://github.com/gregnb/react-to-print/pull/244): `trigger` is now an optional prop. To print without it we now offer two new options.
+
+  `PrintContextConsumer` with a render-props pattern:
+
+  ```js
+  import { PrintContextConsumer } from 'react-to-print';
+
+  <ReactToPrint content={() => this.componentRef}>
+    <PrintContextConsumer>
+      {({ handlePrint }) => <button onClick={handlePrint}>Print this out!</button>}
+    </PrintContextConsumer>
+  </ReactToPrint>
+  ```
+
+  `useReactToPrint` for hook-based printing
+
+  ```js
+  import { useReactToPrint } from 'react-to-print';
+
+  const Example = () => {
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({ content: () => componentRef.current });
+
+    return (
+      <div>
+        <ComponentToPrint ref={componentRef} />
+        <button onClick={handlePrint}>Print this out!</button>
+      </div>
+    );
+  };
+  ```
+
+  Huge thanks to [vtsybulin](https://github.com/vtsybulin) for these fantastic additions.
+
+- CHORE: upgrade `devDependencies` to latest
+
 ## 2.7.0 (May 1st, 2020)
 
 - FEATURE [198](https://github.com/gregnb/react-to-print/pull/198): `pageStyle` prop can now be passed as a function. Thanks [sergeyshmakov](https://github.com/sergeyshmakov)
