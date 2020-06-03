@@ -6,7 +6,7 @@ const hooksEnabled = React.hasOwnProperty("useMemo") && React.hasOwnProperty("us
 
 export interface IPrintContextProps {
     handlePrint: () => void,
-};
+}
 const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
 export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
 
@@ -91,7 +91,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 } else {
                     if (!suppressErrors) {
-                        console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // tslint:disable-line no-console
+                        console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // eslint-disable-line no-console
                     }
                 }
 
@@ -104,7 +104,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
             } else {
                 if (!suppressErrors) {
-                    console.error("Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"); // tslint:disable-line no-console
+                    console.error("Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"); // eslint-disable-line no-console
                 }
             }
         }, 500);
@@ -173,14 +173,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (contentEl === undefined) {
             if (!suppressErrors) {
-                console.error('For "react-to-print" to work only Class based components can be printed.'); // tslint:disable-line max-line-length no-console
+                console.error('For "react-to-print" to work only Class based components can be printed.'); // eslint-disable-line no-console
             }
             return;
         }
 
         if (contentEl === null) {
             if (!suppressErrors) {
-                console.error('There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.'); // tslint:disable-line max-line-length no-console
+                console.error('There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.'); // eslint-disable-line no-console
             }
             return;
         }
@@ -196,7 +196,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (!contentNodes) {
             if (!suppressErrors) {
-                console.error('"react-to-print" could not locate the DOM node corresponding with the `content` prop'); // tslint:disable-line max-line-length no-console
+                console.error('"react-to-print" could not locate the DOM node corresponding with the `content` prop'); // eslint-disable-line no-console
             }
             return;
         }
@@ -213,7 +213,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 this.linksLoaded.push(linkNode);
             } else {
                 if (!suppressErrors) {
-                    console.error('"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode); // tslint:disable-line max-line-length no-console
+                    console.error('"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode); // eslint-disable-line no-console
                 }
                 this.linksErrored.push(linkNode);
             }
@@ -254,7 +254,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     const node = canvasEls[i];
                     const contentDrawImage = node.getContext("2d");
                     if (contentDrawImage) {
-                        contentDrawImage.drawImage(srcCanvasEls[i] as HTMLCanvasElement, 0, 0);
+                        contentDrawImage.drawImage(srcCanvasEls[i], 0, 0);
                     }
                 }
 
@@ -265,10 +265,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                     if (!imgSrc) {
                         if (!suppressErrors) {
-                            console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // tslint:disable-line max-line-length no-console
+                            console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // eslint-disable-line no-console
                         }
                     } else {
-                        // tslint:disable-line max-line-length https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
+                        // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                         const img = new Image();
                         img.onload = markLoaded.bind(null, imgNode, true);
                         img.onerror = markLoaded.bind(null, imgNode, false);
@@ -309,7 +309,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                                 // node.attributes has NamedNodeMap type that is not an Array and
                                 // can be iterated only via direct [i] access
-                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // tslint:disable-line max-line-length
+                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line  max-len
                                     const attr = node.attributes[j];
                                     if (attr) {
                                         newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
@@ -321,7 +321,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 domDoc.head.appendChild(newHeadEl);
                             } else {
                                 if (!suppressErrors) {
-                                    console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // tslint:disable-line max-line-length no-console
+                                    console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // eslint-disable-line no-console
                                 }
                                 // `true` because we"ve already shown a warning for this
                                 markLoaded(node, true);
@@ -359,7 +359,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const value = {handlePrint: this.handleClick};
             if (!PrintContext) {
                 if (!suppressErrors) {
-                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // tslint:disable-line max-line-length no-console
+                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // eslint-disable-line no-console 
                 }
                 return null;
             }
@@ -385,7 +385,7 @@ export const useReactToPrint = hooksEnabled ?
     } :
     (props: IReactToPrintProps) => {
         if (!props.suppressErrors) {
-            console.warn('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // tslint:disable-line no-console
+            console.warn('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // eslint-disable-line no-console
         }
         return undefined;
     };
