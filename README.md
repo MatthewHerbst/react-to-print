@@ -262,3 +262,7 @@ If you've created a component that is intended only for printing and should not 
 ```
 
 This will hide `ComponentToPrint` but keep it in the DOM so that it can be copied for printing.
+
+### Changing print settings in the print dialog
+
+Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
