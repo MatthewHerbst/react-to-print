@@ -58,7 +58,9 @@ export const FunctionalComponentWithHook = () => {
   return (
     <div>
       {loading && <p className="indicator">Loading...</p>}
-      <button onClick={handlePrint}>Print this out!</button>
+      <button onClick={handlePrint}>
+        Print using a Functional Component with the useReactToPrint hook
+      </button>
       <ComponentToPrint ref={componentRef} text={text} />
     </div>
   );
