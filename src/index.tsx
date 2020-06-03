@@ -226,10 +226,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         };
 
         printWindow.onload = () => {
-            /* IE11 support */
-            if (window.navigator && window.navigator.userAgent.indexOf("Trident/7.0") > -1) {
-                printWindow.onload = null;
-            }
+            // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
+            // `onload` callback. This ensures that it is only called once.
+            printWindow.onload = null;
 
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
             const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
