@@ -17,6 +17,13 @@ export interface ITriggerProps<T> {
 
 type PropertyFunction<T> = () => T;
 
+const defaultProps = {
+    copyStyles: true,
+    pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
+    removeAfterPrint: false,
+    suppressErrors: false,
+};
+
 export interface IReactToPrintProps {
     /** Class to pass to the print window body */
     bodyClass?: string;
@@ -49,12 +56,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linksLoaded!: Element[];
     private linksErrored!: Element[];
 
-    static defaultProps = {
-        copyStyles: true,
-        pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
-        removeAfterPrint: false,
-        suppressErrors: false,
-    };
+    static defaultProps = defaultProps;
 
     public startPrint = (target: HTMLIFrameElement) => {
         const {
@@ -224,10 +226,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         };
 
         printWindow.onload = () => {
-            /* IE11 support */
-            if (window.navigator && window.navigator.userAgent.indexOf("Trident/7.0") > -1) {
-                printWindow.onload = null;
-            }
+            // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
+            // `onload` callback. This ensures that it is only called once.
+            printWindow.onload = null;
 
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
             const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
@@ -374,12 +375,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
 export const useReactToPrint = hooksEnabled ?
     (props: IReactToPrintProps) => {
-        const entity = React.useMemo(() => new ReactToPrint(props), [props]);
+        const entity = React.useMemo(
+            // TODO: is there a better way of applying the defaultProps?
+            () => new ReactToPrint({ ...defaultProps, ...props }),
+            [props]
+        );
+
         return React.useCallback(() => entity.handleClick(), [entity]);
     } :
     (props: IReactToPrintProps) => {
         if (!props.suppressErrors) {
             console.warn('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // tslint:disable-line no-console
         }
-        return null;
+        return undefined;
     };
