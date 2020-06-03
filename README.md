@@ -45,7 +45,7 @@ The component accepts the following props:
 |     **`documentTitle?`**     | `string` | Set the title for printing when saving as a file
 | **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing.
 |  **`onBeforePrint?`**  | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead.                                                                                     |
-|  **`onAfterPrint?`**   | `function` | Callback function that triggers after print                                                                                       |
+|  **`onAfterPrint?`**   | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel                                                                                      |
 |  **`onPrintError?`**   | `function` | Callback function (signature: `function(errorLocation: 'onBeforePrint' | 'onBeforeGetContent', error: Error)`) that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent` or `onBeforePrint`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected.                                                                                     |
 | **`removeAfterPrint?`** | `boolean`  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
 |    **`pageStyle?`**    | `string | function`   | We set some basic styles to help improve page printing. Use this to override them and provide your own. If given as a function, it must return a `string`                                                                                               |
@@ -142,7 +142,7 @@ class Example extends React.Component {
         <ReactToPrint content={() => this.componentRef}>
           <PrintContextConsumer>
             {({ handlePrint }) => (
-                <button onClick={handlePrint}>Print this out!</button>
+              <button onClick={handlePrint}>Print this out!</button>
             )}
           </PrintContextConsumer>
         </ReactToPrint>
