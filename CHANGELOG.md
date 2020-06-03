@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.9.0 (June 2nd, 2020)
+
+- FEATURE [255](https://github.com/gregnb/react-to-print/pull/255): updated local development examples so that every use case is covered
+- FIX [255](https://github.com/gregnb/react-to-print/pull/255): `onload` event listener is now cleared after being called
+- FIX [255](https://github.com/gregnb/react-to-print/pull/255): `useReactToPrint` now properly sets `defaultProps`
+- CHORE [256](https://github.com/gregnb/react-to-print/pull/256): updated `devDependencies` to latest. This clears a high severity `npm audit` issue
+
 ## 2.8.0 (May 19th, 2020)
 
 - FEATURE [245](https://github.com/gregnb/react-to-print/pull/245): `documentTitle` prop can now be passed to set a default filename when the user is saving as a PDF. Thanks [zb2oby](https://github.com/zb2oby)
