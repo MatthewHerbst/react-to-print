@@ -11,7 +11,7 @@
     "start": "webpack-dev-server --env.development --progress --colors --hot --open",
     "build": "webpack --env.production --progress",
     "prepare": "npm run build",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
+    "lint": "eslint src/**/*.{ts,tsx}"
   },
   "repository": {
     "type": "git",
@@ -42,9 +42,12 @@
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "acorn": "^7.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.5.3",
+    "eslint": "^7.1.0",
     "html-webpack-plugin": "^4.3.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.7",
@@ -52,7 +55,6 @@
     "react-dom": "^16.8.4",
     "style-loader": "^1.2.1",
     "ts-loader": "^7.0.5",
-    "tslint": "^6.1.2",
     "typescript": "^3.9.3",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.43.0",
@@ -66,7 +68,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "tslint"
+      "eslint"
     ]
   }
 }
