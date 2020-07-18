@@ -237,6 +237,49 @@ const Example = () => {
 };
 ```
 
+## Troubleshooting Page Breaks
+If your content rendered as print media does not automatically break multipage content into multiple pages, the issue may be 
+    1) caused by pitfalls of style incompatibility with print media rendering, **or** 
+    2) you may need to explicity define CSS page-break properties to dfine where and how page breaks may occurr.
+    
+### Common Style Pitfalls
+ - A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
+ - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks. 
+
+### CSS Page Break Pattern for Dynamic React Content
+`JSX`
+```
+<div className="print-container" style={{margin: "0", padding: "0"}}>
+  <div className="page-break" />
+</div>
+```
+`CSS`
+```
+@media all {
+
+}
+
+@media print {
+  html, body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    page-break-before: auto;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}
+```
+
 ## Running locally
 
 *NOTE*: Node ^10 is required to build the library locally. We use Node ^10 for our CLI checks.
