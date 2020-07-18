@@ -256,7 +256,9 @@ If your content rendered as print media does not automatically break multipage c
 `CSS`
 ```
 @media all {
-
+  .page-break {
+    display: none;
+  }
 }
 
 @media print {
@@ -270,6 +272,7 @@ If your content rendered as print media does not automatically break multipage c
 @media print {
   .page-break {
     margin-top: 1rem;
+    display: block;
     page-break-before: auto;
   }
 }
