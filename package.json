@@ -10,6 +10,7 @@
   "scripts": {
     "start": "webpack-dev-server --env.development --progress --colors --hot --open",
     "build": "webpack --env.production --progress",
+    "start:electron": "cross-env NODE_ENV=development electron example/ElectronPrint/electron/electron.js",
     "prepare": "npm run build",
     "lint": "eslint src/**/*.{ts,tsx}"
   },
@@ -47,10 +48,12 @@
     "acorn": "^7.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.5.3",
+    "electron": "^9.1.1",
     "eslint": "^7.1.0",
     "html-webpack-plugin": "^4.3.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.7",
+    "cross-env": "^7.0.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "style-loader": "^1.2.1",

@@ -6,6 +6,7 @@ import { ClassComponentContextConsumer } from "./ClassComponentContextConsumer";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
 import "./relativecss/test.css";
+import {ElectronPrint} from "./ElectronPrint";
 
 interface State {
   text: string;
@@ -20,6 +21,7 @@ class Example extends React.Component<{}, State> {
         <ClassComponentContextConsumer />
         <FunctionalComponent />
         <FunctionalComponentWithHook />
+        <ElectronPrint />
       </>
     );
   }
