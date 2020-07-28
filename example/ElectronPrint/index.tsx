@@ -33,8 +33,8 @@ export class ElectronPrint extends React.PureComponent<{}> {
   }
 
   printWithElectron = (target: HTMLIFrameElement) => {
-    // Create a new Electron window
-    let printWindow = window.open('', 'silent-print-content')!;
+    // Create a new Electron window (opening the current url in the new window to allow relative sources to work)
+    let printWindow = window.open(window.location.href, 'silent-print-content')!;
 
     // Write the iframe contents into its body
     printWindow.document.body = target.contentWindow!.document.body;
