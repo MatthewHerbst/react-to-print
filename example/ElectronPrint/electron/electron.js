@@ -1,5 +1,5 @@
 const {
-  app, BrowserWindow, protocol, ipcMain, webContents
+  app, BrowserWindow, protocol, ipcMain
 } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -20,6 +20,7 @@ function createWindow() {
       nodeIntegrationInSubFrames: true, // allow preloading in iframes
       nodeIntegration: false, // disable NodeJS functionality in the renderers
       contextIsolation: true, // ensure the renderer cannot peek into main process
+      nativeWindowOpen: true,
       preload: path.join(__dirname, 'electron_preload.js'),
     },
   });
@@ -28,6 +29,13 @@ function createWindow() {
   if (!(process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true')) {
     mainWindow.removeMenu();
   }
+
+  // Open new silent printer windows hidden
+  mainWindow.webContents.on("new-window", function (e, url, frameName, disposition, options) {
+    if (frameName === 'silent-print-content') {
+      options.show = false
+    }
+  })
 
   // Load the localhost React server in development
   // environments, otherwise load the built files
@@ -74,23 +82,11 @@ app.on('ready', () => {
   ipcMain.on('', (event) => {
     event.reply
   })
-  ipcMain.handle('silent-print', async (event) => {
-    // Return a promise with the result of the print
-    return new Promise((resolve, reject) => {
-      // Print the invoker's window silently
-      console.log(event.frameId)
-      console.log(event.sender.id)
-      event.sender.frame
-      console.log(webContents.fromId(event.sender.id));
-      webContents.fromId(event.sender.id).print({silent: true}, (success, failureReason) => {
-        if (success) {
-          resolve(success);
-        }
-        if (failureReason) {
-          reject(failureReason);
-        }
-      });
+  ipcMain.on('silent-print', (event) => {
+    // Print the window silently
+    event.sender.print({silent: true}, (success, failureReason) => {
+      // Signal that the print is finished
+      event.reply('silent-print-result', success ? 'success' : failureReason);
     });
   });
-
 });
