@@ -267,3 +267,15 @@ This will hide `ComponentToPrint` but keep it in the DOM so that it can be copie
 ### Changing print settings in the print dialog
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
+
+## Helpful CSS Tricks
+
+### Set landscape printing ([240](https://github.com/gregnb/react-to-print/issues/240))
+
+In the component that is passed in as the content ref, add the following:
+
+```css
+@media print {
+  @page { size: landscape; }
+}
+```
