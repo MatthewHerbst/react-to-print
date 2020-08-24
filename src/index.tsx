@@ -40,9 +40,11 @@ export interface IReactToPrintProps {
     /** Callback function to trigger before print */
     onBeforePrint?: () => void | Promise<any>;
     /** Callback function to listen for printing errors */
-    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint", error: Error) => void;
+    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint" | "print", error: Error) => void;
     /** Override default print window styling */
     pageStyle?: string | PropertyFunction<string>;
+    /** Override the default `window.print` method that is used for printing */
+    print?: (target: HTMLIFrameElement) => Promise<any>;
     /** Remove the iframe after printing. */
     removeAfterPrint?: boolean;
     /** Suppress error messages */
@@ -61,7 +63,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     public startPrint = (target: HTMLIFrameElement) => {
         const {
             onAfterPrint,
-            removeAfterPrint,
+            onPrintError,
+            print,
             suppressErrors,
             documentTitle,
         } = this.props;
@@ -70,10 +73,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (target.contentWindow) {
                 target.contentWindow.focus(); // Needed for IE 11
 
-                // Some browsers, such as Firefox Android, do not support printing at all
-                // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
-                if (target.contentWindow.print) {
-
+                if (print) {
+                    print(target)
+                        .then(this.handleRemoveIframe)
+                        .catch((error: Error) => {
+                            if (onPrintError) {
+                                onPrintError('print', error);
+                            } else if (!suppressErrors) {
+                                console.error("An error was thrown by the specified `print` function", error);
+                            }
+                        });
+                } else if (target.contentWindow.print) {
                     // NOTE: Overrides the page's title during the print process
                     const tempTitle = document.title;
                     if (documentTitle) {
@@ -90,18 +100,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         onAfterPrint();
                     }
                 } else {
+                    // Some browsers, such as Firefox Android, do not support printing at all
+                    // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
                     if (!suppressErrors) {
                         console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // eslint-disable-line no-console
                     }
                 }
 
-                if (removeAfterPrint) {
-                    // The user may have removed the iframe in `onAfterPrint`
-                    const documentPrintWindow = document.getElementById("printWindow");
-                    if (documentPrintWindow) {
-                        document.body.removeChild(documentPrintWindow);
-                    }
-                }
+                this.handleRemoveIframe();
             } else {
                 if (!suppressErrors) {
                     console.error("Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"); // eslint-disable-line no-console
@@ -344,6 +350,20 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         document.body.appendChild(printWindow);
     }
 
+    public handleRemoveIframe = () => {
+        const {
+            removeAfterPrint,
+        } = this.props;
+
+        if (removeAfterPrint) {
+            // The user may have removed the iframe in `onAfterPrint`
+            const documentPrintWindow = document.getElementById("printWindow");
+            if (documentPrintWindow) {
+                document.body.removeChild(documentPrintWindow);
+            }
+        }
+    }
+
     public render() {
         const {
             children,
@@ -359,7 +379,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const value = {handlePrint: this.handleClick};
             if (!PrintContext) {
                 if (!suppressErrors) {
-                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // eslint-disable-line no-console 
+                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // eslint-disable-line no-console
                 }
                 return null;
             }

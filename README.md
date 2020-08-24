@@ -37,20 +37,21 @@ So you've created a React component and would love to give end users the ability
 
 The component accepts the following props:
 
-|         Name          | Type     | Description                                                                                                                         |
+| Name | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-|     **`trigger?`**     | `function` | A function that returns a React Component or Element. Note: under the hood, we inject a custom `onClick` prop into the returned Component/Element. As such, do not provide an `onClick` prop to the root node returned by `trigger`, as it will be overwritten.                                                                           |
-|     **`content`**     | `function` | A function that returns a component reference value. The content of this reference value is then used for print                     |
-|   **`copyStyles?`**    | `boolean`  | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
-|     **`documentTitle?`**     | `string` | Set the title for printing when saving as a file
-| **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing.
-|  **`onBeforePrint?`**  | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead.                                                                                     |
-|  **`onAfterPrint?`**   | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel                                                                                      |
-|  **`onPrintError?`**   | `function` | Callback function (signature: `function(errorLocation: 'onBeforePrint' | 'onBeforeGetContent', error: Error)`) that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent` or `onBeforePrint`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected.                                                                                     |
-| **`removeAfterPrint?`** | `boolean`  | Remove the print iframe after action. Defaults to `false`.                                                                                                 |
-|    **`pageStyle?`**    | `string` or `function`   | We set some basic styles to help improve page printing. Use this to override them and provide your own. If given as a function, it must return a `string`                                                                                               |
-|    **`bodyClass`**    | `string?`   | Class to pass to the print window body                                                                                     |
-|    **`suppressErrors`**    | `boolean?`   | When passed, prevents `console` logging of errors
+| **`bodyClass?`** | `string` | Class to pass to the print window |
+| **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
+| **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
+| **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
+| **`onAfterPrint?`** | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel |
+| **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing |
+| **`onBeforePrint?`** | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead |
+| **`onPrintError?`** | `function` | Callback function (signature: `function(errorLocation: 'onBeforePrint' | 'onBeforeGetContent' | 'print', error: Error)`) that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent`, `onBeforePrint`, and `print`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected |
+| **`pageStyle?`** | `string` or `function` | We set some basic styles to help improve page printing. Use this to override them and provide your own. If given as a function it must return a `string` |
+| **`print?`** | `function` | If passed, this function will be used instead of `window.print` to print the content. This function is passed the `HTMLIFrameElement` which is the iframe used internally to gather content for printing. When finished, this function must return a Promise. Use this to print in non-browser environments such as Electron |
+| **`removeAfterPrint?`** | `boolean` | Remove the print iframe after action. Defaults to `false` |
+| **`suppressErrors?`** | `boolean` | When passed, prevents `console` logging of errors |
+| **`trigger?`** | `function` | A function that returns a React Component or Element. Note: under the hood, we inject a custom `onClick` prop into the returned Component/Element. As such, do not provide an `onClick` prop to the root node returned by `trigger`, as it will be overwritten |
 
 ### `PrintContextConsumer`
 
@@ -315,3 +316,19 @@ This will hide `ComponentToPrint` but keep it in the DOM so that it can be copie
 ### Changing print settings in the print dialog
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
+
+## Helpful CSS Tricks
+
+### Set landscape printing ([240](https://github.com/gregnb/react-to-print/issues/240))
+
+In the component that is passed in as the content ref, add the following:
+
+```css
+@media print {
+  @page { size: landscape; }
+}
+```
+
+### Printing elements that are not displayed ([159](https://github.com/gregnb/react-to-print/issues/159))
+
+Instead of using `{ display: 'none' }`, try using `{ overflow: hidden; height: 0; }`
