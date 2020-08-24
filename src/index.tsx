@@ -84,7 +84,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             }
                         });
                 } else if (target.contentWindow.print) {
-
                     // NOTE: Overrides the page's title during the print process
                     const tempTitle = document.title;
                     if (documentTitle) {

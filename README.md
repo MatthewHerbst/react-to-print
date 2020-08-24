@@ -279,3 +279,7 @@ In the component that is passed in as the content ref, add the following:
   @page { size: landscape; }
 }
 ```
+
+### Printing elements that are not displayed ([159](https://github.com/gregnb/react-to-print/issues/159))
+
+Instead of using `{ display: 'none' }`, try using `{ overflow: hidden; height: 0; }`
