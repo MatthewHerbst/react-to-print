@@ -40,7 +40,7 @@ export interface IReactToPrintProps {
     /** Callback function to trigger before print */
     onBeforePrint?: () => void | Promise<any>;
     /** Callback function to listen for printing errors */
-    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint", error: Error) => void;
+    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint" | "print", error: Error) => void;
     /** Override default print window styling */
     pageStyle?: string | PropertyFunction<string>;
     /** Override the default `window.print` method that is used for printing */
@@ -63,6 +63,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     public startPrint = (target: HTMLIFrameElement) => {
         const {
             onAfterPrint,
+            onPrintError,
             print,
             suppressErrors,
             documentTitle,
@@ -76,7 +77,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     print(target)
                         .then(this.handleRemoveIframe)
                         .catch((error: Error) => {
-                            if (!suppressErrors) {
+                            if (onPrintError) {
+                                onPrintError('print', error);
+                            } else if (!suppressErrors) {
                                 console.error("An error was thrown by the specified `print` function", error);
                             }
                         });
