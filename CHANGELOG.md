@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.10.0 (August 23rd, 2020)
+
+- FEATURE [272](https://github.com/gregnb/react-to-print/pull/272): a new prop `print` has been added. This can be used to override the default browser [`Window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print). This can be useful if you want to print in an alternative environment such as Electron. As part of this change, `onPrintError` will now report if an error occurs in a passed in `print` method. Thanks to [Ririshi](https://github.com/Ririshi) for this idea
+- DOCS [269](https://github.com/gregnb/react-to-print/pull/269): added guidelines for how to achieve nice page breaks. Thanks [hbrannan](https://github.com/hbrannan)
+- CHORE [273](https://github.com/gregnb/react-to-print/pull/273): updated `devDependencies`, `npm dedupe`, `npm audit fix`
+
 ## 2.9.0 (June 2nd, 2020)
 
 - FEATURE [255](https://github.com/gregnb/react-to-print/pull/255): updated local development examples so that every use case is covered
