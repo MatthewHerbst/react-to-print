@@ -15,18 +15,6 @@ So you've created a React component and would love to give end users the ability
 
 [![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
-## Compatibility
-
-`react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
-
-### Known Incompatible Browsers
-
-- Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
-
-## Known Issues
-
-- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
-
 ## Install
 
 `npm install --save react-to-print`
@@ -43,6 +31,7 @@ The component accepts the following props:
 | **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
+| **`fonts?`** | `{ family: string, source: string }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
 | **`onAfterPrint?`** | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel |
 | **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing |
 | **`onBeforePrint?`** | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead |
@@ -60,6 +49,18 @@ If you need extra control over printing and don't want to specify `trigger` dire
 ### `useReactToPrint`
 
 For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React ^16.8.0.
+
+## Compatibility
+
+`react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
+
+### Known Incompatible Browsers
+
+- Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
+
+## Known Issues
+
+- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
 
 ## Examples
 
@@ -238,55 +239,6 @@ const Example = () => {
 };
 ```
 
-## Pattern for Page-Breaking Dynamic React Content
-In HTML (e.g., JSX), define a page-break class to apply to elements which could be sensibly split into a following page. 
-```
-<div className="print-container" style={{margin: "0", padding: "0"}}>
-  {_.map(listOfContent, yourContent => (
-    <div className="page-break" />
-    <div>{yourContent}</div>
-  )}
-</div>
-```
-In corresponding style files, define your `media print` styles, including: setting your preference for CSS `page-break-` (see [w3's reference](https://www.w3schools.com/cssref/pr_print_pageba.asp) for options) to `auto`, and ensuring that  your `page-break` element does not affect non-print style.
-```
-@media all {
-  .page-break {
-    display: none;
-  }
-}
-
-@media print {
-  html, body {
-    height: initial !important;
-    overflow: initial !important;
-    -webkit-print-color-adjust: exact;
-  }
-}
-
-@media print {
-  .page-break {
-    margin-top: 1rem;
-    display: block;
-    page-break-before: auto;
-  }
-}
-
-@page {
-  size: auto;
-  margin: 20mm;
-}
-```
-
-## Troubleshooting Page Breaks
-If your content rendered as print media does not automatically break multipage content into multiple pages, the issue may be 
-    1) style incompatibilities with print media rendering, **or** 
-    2) a need to assign `CSS page-break-` properties to define how your document should behave when printed.
-    
-### Common Style Pitfalls
- - A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
- - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks. 
- 
 ## Running locally
 
 *NOTE*: Node ^10 is required to build the library locally. We use Node ^10 for our CLI checks.
@@ -317,7 +269,7 @@ This will hide `ComponentToPrint` but keep it in the DOM so that it can be copie
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
 
-## Helpful CSS Tricks
+## Helpful Style Tips
 
 ### Set landscape printing ([240](https://github.com/gregnb/react-to-print/issues/240))
 
@@ -332,3 +284,62 @@ In the component that is passed in as the content ref, add the following:
 ### Printing elements that are not displayed ([159](https://github.com/gregnb/react-to-print/issues/159))
 
 Instead of using `{ display: 'none' }`, try using `{ overflow: hidden; height: 0; }`
+
+### Page Breaks
+
+#### Pattern for Page-Breaking Dynamic React Content
+
+Define a page-break class to apply to elements which could be sensibly split into a page.
+
+```html
+<div className="print-container" style={{ margin: "0", padding: "0" }}>
+  {listOfContent.map(yourContent => (
+    <>
+      <div className="page-break" />
+      <div>{yourContent}</div>
+    </>
+  )}
+</div>
+```
+
+In your styles, define your `@media print` styles, which should include setting your preference for CSS `page-break-` (see [w3's reference](https://www.w3schools.com/cssref/pr_print_pageba.asp) for options) to `auto`, and ensuring that your `page-break` element does not affect non-print style.
+
+```css
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
+@media print {
+  html, body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}
+```
+
+#### Troubleshooting Page Breaks
+
+If your content rendered as print media does not automatically break multi-page content into multiple pages, the issue may be
+    1) style incompatibilities with print media rendering, **or**
+    2) a need to assign `CSS page-break-` properties to define how your document should behave when printed
+
+#### Common Page Break Pitfalls
+
+- A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
+- A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks.

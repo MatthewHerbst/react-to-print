@@ -15,6 +15,12 @@ export interface ITriggerProps<T> {
     ref: (v: T) => void;
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/API/FontFace/FontFace
+type Font = {
+    family: string;
+    source: string;
+};
+
 type PropertyFunction<T> = () => T;
 
 const defaultProps = {
@@ -32,7 +38,9 @@ export interface IReactToPrintProps {
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
     /** Set the title for printing when saving as a file */
-    documentTitle?: string
+    documentTitle?: string;
+    /** */
+    fonts?: Font[];
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
     /** Callback function to trigger before page content is retrieved for printing */
@@ -57,6 +65,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private linkTotal!: number;
     private linksLoaded!: Element[];
     private linksErrored!: Element[];
+    private fontsLoaded!: FontFace[];
+    private fontsErrored!: FontFace[];
 
     static defaultProps = defaultProps;
 
@@ -171,6 +181,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             bodyClass,
             content,
             copyStyles,
+            fonts,
             pageStyle,
             suppressErrors,
         } = this.props;
@@ -213,6 +224,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         this.linkTotal = globalStyleLinkNodes.length + renderComponentImgNodes.length;
         this.linksLoaded = [];
         this.linksErrored = [];
+        this.fontsLoaded = [];
+        this.fontsErrored = [];
 
         const markLoaded = (linkNode: Element, loaded: boolean) => {
             if (loaded) {
@@ -226,7 +239,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
             // We may have errors, but attempt to print anyways - maybe they are trivial and the
             // user will be ok ignoring them
-            if (this.linksLoaded.length + this.linksErrored.length === this.linkTotal) {
+            const numResourcesManaged =
+                this.linksLoaded.length +
+                this.linksErrored.length +
+                this.fontsLoaded.length +
+                this.fontsErrored.length;
+
+            if (numResourcesManaged === this.linkTotal) {
                 this.triggerPrint(printWindow);
             }
         };
@@ -242,6 +261,29 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 domDoc.open();
                 domDoc.write((contentNodes as HTMLCanvasElement).outerHTML);
                 domDoc.close();
+
+                if (fonts) {
+                    if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
+                        fonts.forEach((font) => {
+                            const fontFace = new FontFace(font.family, font.source);
+                            printWindow.contentDocument!.fonts.add(fontFace);
+                            fontFace.loaded
+                                .then((loadedFontFace) => {
+                                    this.fontsLoaded.push(loadedFontFace);
+                                })
+                                .catch((error: SyntaxError) => {
+                                    this.fontsErrored.push(fontFace);
+                                    if (!suppressErrors) {
+                                        console.error('"react-to-print" was unable to load a font. "react-to-print" will continue attempting to print the page. The font that failed to load is:', fontFace, 'The error from loading the font is:', error); // eslint-disable-line no-console
+                                    }
+                                });
+                        });
+                    } else {
+                        if (!suppressErrors) {
+                            console.error('"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API'); // eslint-disable-line no-console
+                        }
+                    }
+                }
 
                 const defaultPageStyle = typeof pageStyle === "function" ? pageStyle() : pageStyle;
 
