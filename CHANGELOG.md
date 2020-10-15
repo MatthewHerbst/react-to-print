@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.10.1 (October 15th, 2020)
+
+- FIX [296](https://github.com/gregnb/react-to-print/pull/296): Ensure `bodyClass` can handle multiple class names instead of just a single class name. Thanks [seanblonien](https://github.com/seanblonien)
+- CHORE: update patch and minor `devDependencies`, `dedupe`, and `audit fix`
+
 ## 2.10.0 (August 23rd, 2020)
 
 - FEATURE [272](https://github.com/gregnb/react-to-print/pull/272): a new prop `print` has been added. This can be used to override the default browser [`Window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print). This can be useful if you want to print in an alternative environment such as Electron. As part of this change, `onPrintError` will now report if an error occurs in a passed in `print` method. Thanks to [Ririshi](https://github.com/Ririshi) for this idea

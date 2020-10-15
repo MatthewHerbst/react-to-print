@@ -39,7 +39,7 @@ The component accepts the following props:
 
 | Name | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| **`bodyClass?`** | `string` | Class to pass to the print window |
+| **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
 | **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
@@ -239,7 +239,7 @@ const Example = () => {
 ```
 
 ## Pattern for Page-Breaking Dynamic React Content
-In HTML (e.g., JSX), define a page-break class to apply to elements which could be sensibly split into a following page. 
+In HTML (e.g., JSX), define a page-break class to apply to elements which could be sensibly split into a following page.
 ```
 <div className="print-container" style={{margin: "0", padding: "0"}}>
   {_.map(listOfContent, yourContent => (
@@ -279,14 +279,14 @@ In corresponding style files, define your `media print` styles, including: setti
 ```
 
 ## Troubleshooting Page Breaks
-If your content rendered as print media does not automatically break multipage content into multiple pages, the issue may be 
-    1) style incompatibilities with print media rendering, **or** 
+If your content rendered as print media does not automatically break multipage content into multiple pages, the issue may be
+    1) style incompatibilities with print media rendering, **or**
     2) a need to assign `CSS page-break-` properties to define how your document should behave when printed.
-    
+
 ### Common Style Pitfalls
  - A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
- - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks. 
- 
+ - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks.
+
 ## Running locally
 
 *NOTE*: Node ^10 is required to build the library locally. We use Node ^10 for our CLI checks.
