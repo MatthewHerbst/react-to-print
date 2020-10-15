@@ -252,7 +252,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 domDoc.head.appendChild(styleEl);
 
                 if (bodyClass) {
-                    domDoc.body.classList.add(bodyClass);
+                    domDoc.body.classList.add(...bodyClass.split(" "));
                 }
 
                 const canvasEls = domDoc.querySelectorAll("canvas");
