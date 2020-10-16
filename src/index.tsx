@@ -282,6 +282,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
+                // Copy checkboxes state
+                const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
+                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');  
+                for (let i = 0; i < originalCheckboxes.length; i++) {
+                    (copiedCheckboxes[i] as HTMLInputElement).checked = 
+                    (originalCheckboxes[i] as HTMLInputElement).checked;                    
+                }
+
                 if (copyStyles) {
                     const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
 
