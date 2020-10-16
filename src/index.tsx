@@ -1,8 +1,8 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
-const contextEnabled = React.hasOwnProperty("createContext");
-const hooksEnabled = React.hasOwnProperty("useMemo") && React.hasOwnProperty("useCallback");
+const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContext");
+const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
 
 export interface IPrintContextProps {
     handlePrint: () => void,
