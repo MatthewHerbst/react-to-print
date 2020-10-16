@@ -4,7 +4,17 @@ type Props = { // tslint:disable-line interface-over-type-literal
   text: string,
 };
 
-export class ComponentToPrint extends React.PureComponent<Props> {
+type State = {
+  checked: boolean,
+};
+
+export class ComponentToPrint extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = { checked: false };
+  }
+
   private canvasEl!: HTMLCanvasElement;
 
   public componentDidMount() {
@@ -15,6 +25,8 @@ export class ComponentToPrint extends React.PureComponent<Props> {
       ctx.stroke();
     }
   }
+
+  private handleCheckboxOnClick = () => this.setState({ checked: !this.state.checked });
 
   private setRef = (ref: HTMLCanvasElement) => this.canvasEl = ref;
 
@@ -33,7 +45,13 @@ export class ComponentToPrint extends React.PureComponent<Props> {
           <tbody>
           <tr>
             <td>{this.props.text}</td>
-            <td>2</td>
+            <td>
+              <input
+                checked={this.state.checked}
+                onClick={this.handleCheckboxOnClick}
+                type="checkbox"
+              />
+            </td>
           </tr>
           <tr>
             <td>3</td>

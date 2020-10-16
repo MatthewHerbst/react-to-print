@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.10.2 (October 16th, 2020)
+
+- FIX [298](https://github.com/gregnb/react-to-print/pull/298): Fixes a long-standing issue of checkbox state not always copying properly into the print window. Thanks [aviklai](https://github.com/aviklai)
+- CHORE: update patch and minor `devDependencies`, `dedupe`, and `audit fix`
+
 ## 2.10.1 (October 15th, 2020)
 
 - FIX [296](https://github.com/gregnb/react-to-print/pull/296): Ensure `bodyClass` can handle multiple class names instead of just a single class name. Thanks [seanblonien](https://github.com/seanblonien)
