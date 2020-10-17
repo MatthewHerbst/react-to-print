@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.10.3 (October 16th, 2020)
+
+- FIX [301](https://github.com/gregnb/react-to-print/pull/301): Ensures the library works with modules that have a `null` prototype such as ES modules and SystemJS modules. Thanks [joeldenning](https://github.com/joeldenning)
+
 ## 2.10.2 (October 16th, 2020)
 
 - FIX [298](https://github.com/gregnb/react-to-print/pull/298): Fixes a long-standing issue of checkbox state not always copying properly into the print window. Thanks [aviklai](https://github.com/aviklai)
