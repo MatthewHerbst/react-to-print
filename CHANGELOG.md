@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.10.3 (October 16th, 2020)
+
+- FIX [301](https://github.com/gregnb/react-to-print/pull/301): Ensures the library works with modules that have a `null` prototype such as ES modules and SystemJS modules. Thanks [joeldenning](https://github.com/joeldenning)
+
+## 2.10.2 (October 16th, 2020)
+
+- FIX [298](https://github.com/gregnb/react-to-print/pull/298): Fixes a long-standing issue of checkbox state not always copying properly into the print window. Thanks [aviklai](https://github.com/aviklai)
+- CHORE: update patch and minor `devDependencies`, `dedupe`, and `audit fix`
+
+## 2.10.1 (October 15th, 2020)
+
+- FIX [296](https://github.com/gregnb/react-to-print/pull/296): Ensure `bodyClass` can handle multiple class names instead of just a single class name. Thanks [seanblonien](https://github.com/seanblonien)
+- CHORE: update patch and minor `devDependencies`, `dedupe`, and `audit fix`
+
 ## 2.10.0 (August 23rd, 2020)
 
 - FEATURE [272](https://github.com/gregnb/react-to-print/pull/272): a new prop `print` has been added. This can be used to override the default browser [`Window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print). This can be useful if you want to print in an alternative environment such as Electron. As part of this change, `onPrintError` will now report if an error occurs in a passed in `print` method. Thanks to [Ririshi](https://github.com/Ririshi) for this idea

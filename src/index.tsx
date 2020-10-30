@@ -1,8 +1,8 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
-const contextEnabled = React.hasOwnProperty("createContext");
-const hooksEnabled = React.hasOwnProperty("useMemo") && React.hasOwnProperty("useCallback");
+const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContext");
+const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
 
 export interface IPrintContextProps {
     handlePrint: () => void,
@@ -294,7 +294,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 domDoc.head.appendChild(styleEl);
 
                 if (bodyClass) {
-                    domDoc.body.classList.add(bodyClass);
+                    domDoc.body.classList.add(...bodyClass.split(" "));
                 }
 
                 const canvasEls = domDoc.querySelectorAll("canvas");
@@ -322,6 +322,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         img.onerror = markLoaded.bind(null, imgNode, false);
                         img.src = imgSrc;
                     }
+                }
+
+                // Copy checkboxes state
+                const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
+                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');  
+                for (let i = 0; i < originalCheckboxes.length; i++) {
+                    (copiedCheckboxes[i] as HTMLInputElement).checked = 
+                    (originalCheckboxes[i] as HTMLInputElement).checked;                    
                 }
 
                 if (copyStyles) {

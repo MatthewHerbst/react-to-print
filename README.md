@@ -27,7 +27,7 @@ The component accepts the following props:
 
 | Name | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| **`bodyClass?`** | `string` | Class to pass to the print window |
+| **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
 | **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
@@ -64,13 +64,8 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 ## Examples
 
-### Calling from class components
-
-```js
-import React from 'react';
-import ReactToPrint from 'react-to-print';
-
-class ComponentToPrint extends React.Component {
+```jsx
+export class ComponentToPrint extends React.PureComponent {
   render() {
     return (
       <table>
@@ -90,8 +85,17 @@ class ComponentToPrint extends React.Component {
     );
   }
 }
+```
 
-class Example extends React.Component {
+### Calling from class components
+
+```jsx
+import React from 'react';
+import ReactToPrint from 'react-to-print';
+
+import { ComponentToPrint } from './ComponentToPrint';
+
+class Example extends React.PureComponent {
   render() {
     return (
       <div>
@@ -112,32 +116,13 @@ class Example extends React.Component {
 
 ### Calling from class components with `PrintContextConsumer`
 
-```js
+```jsx
 import React from 'react';
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 
-class ComponentToPrint extends React.Component {
-  render() {
-    return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  }
-}
+import { ComponentToPrint } from './ComponentToPrint';
 
-class Example extends React.Component {
+class Example extends React.PureComponent {
   render() {
     return (
       <div>
@@ -157,30 +142,11 @@ class Example extends React.Component {
 
 ### Calling from functional components
 
-```js
+```jsx
 import React, { useRef } from 'react';
 import ReactToPrint from 'react-to-print';
 
-class ComponentToPrint extends React.Component {
-  render() {
-    return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  }
-}
+import { ComponentToPrint } from './ComponentToPrint';
 
 const Example = () => {
   const componentRef = useRef();
@@ -199,30 +165,11 @@ const Example = () => {
 
 ### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html)
 
-```js
+```jsx
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-class ComponentToPrint extends React.Component {
-  render() {
-    return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  }
-}
+import { ComponentToPrint } from './ComponentToPrint';
 
 const Example = () => {
   const componentRef = useRef();
