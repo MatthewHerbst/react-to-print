@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.11.0 (October 30th, 2020)
+
+- FIX/FEATURE [285](https://github.com/gregnb/react-to-print/pull/285): Adds a new `fonts` prop which allows the passing of custom fonts. Previously custom fonts were not loaded into the print window
+- CHORE: update patch and minor `devDependencies`, `dedupe`, and `audit fix`
+
 ## 2.10.3 (October 16th, 2020)
 
 - FIX [301](https://github.com/gregnb/react-to-print/pull/301): Ensures the library works with modules that have a `null` prototype such as ES modules and SystemJS modules. Thanks [joeldenning](https://github.com/joeldenning)
