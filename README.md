@@ -62,6 +62,10 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 - `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
 
+## Common Pitfalls
+
+- The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
+
 ## Examples
 
 ```jsx
