@@ -1,6 +1,13 @@
+// TODO: why does the dev build not pick this up automatically?
+// https://github.com/microsoft/TypeScript-React-Starter/issues/12#issuecomment-369113072
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path='../index.d.ts'/>
+
 import * as React from "react";
 
-type Props = { // tslint:disable-line interface-over-type-literal
+import image from '../test_image.png';
+
+type Props = {
   text: string,
 };
 
@@ -26,7 +33,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
     }
   }
 
-  private handleCheckboxOnClick = () => this.setState({ checked: !this.state.checked });
+  private handleCheckboxOnChange = () => this.setState({ checked: !this.state.checked });
 
   private setRef = (ref: HTMLCanvasElement) => this.canvasEl = ref;
 
@@ -34,12 +41,12 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
     return (
       <div className="relativeCSS">
         <div className="flash" />
-        <img alt="A test image" src="example/test_image.png" />
-        <table className="testclass">
+        <img alt="A test image" src={image as string} />
+        <table className="testClass">
           <thead>
           <tr>
-            <th style={{ color: "#FF0000" }}>Column One</th>
-            <th className="testth">Column Two</th>
+            <th className="column1">Column One</th>
+            <th>Column Two</th>
           </tr>
           </thead>
           <tbody>
@@ -48,7 +55,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             <td>
               <input
                 checked={this.state.checked}
-                onClick={this.handleCheckboxOnClick}
+                onChange={this.handleCheckboxOnChange}
                 type="checkbox"
               />
             </td>
@@ -85,11 +92,6 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
           </tr>
           </tbody>
         </table>
-          <div className="container">
-            <div>
-              <img alt="Swan" src="https://free-images.com/or/a31c/swan_flying_bird_fly.jpg" width="300px"/>
-            </div>
-          </div>
       </div>
     );
   }

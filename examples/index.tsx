@@ -7,12 +7,13 @@ import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
 import "./relativecss/test.css";
 
-interface State {
+type Props = Record<string, unknown>;
+type State = {
   text: string;
   isLoading: boolean;
 }
 
-class Example extends React.Component<{}, State> {
+class Example extends React.Component<Props, State> {
   render() {
     return (
       <>

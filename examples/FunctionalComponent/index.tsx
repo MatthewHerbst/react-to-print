@@ -6,8 +6,7 @@ import ReactToPrint from "../../src/index";
 export const FunctionalComponent = () => {
   const componentRef = React.useRef(null);
 
-  // TODO: want to make this `null` default but TS complains
-  const onBeforeGetContentResolve = React.useRef(Promise.resolve);
+  const onBeforeGetContentResolve = React.useRef<(() => void) | null>(null);
 
   const [loading, setLoading] = React.useState(false);
   const [text, setText] = React.useState("old boring text");
@@ -25,7 +24,7 @@ export const FunctionalComponent = () => {
     setLoading(true);
     setText("Loading new text...");
 
-    return new Promise((resolve: any) => {
+    return new Promise<void>((resolve) => {
       onBeforeGetContentResolve.current = resolve;
 
       setTimeout(() => {
@@ -68,7 +67,7 @@ export const FunctionalComponent = () => {
         removeAfterPrint
         trigger={reactToPrintTrigger}
       />
-      {loading && <p className="indicator">Loading...</p>}
+      {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
       <ComponentToPrint ref={componentRef} text={text} />
     </div>
   );
