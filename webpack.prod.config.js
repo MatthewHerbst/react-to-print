@@ -2,7 +2,6 @@
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -16,15 +15,7 @@ module.exports = {
         globalObject: `(typeof self !== 'undefined' ? self : this)`
     },
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    output: {
-                        comments: false,
-                    },
-                },
-            }),
-        ],
+        minimize: true,
     },
     externals : {
         'react': 'react',

@@ -6,8 +6,7 @@ import { useReactToPrint } from "../../src/index";
 export const FunctionalComponentWithHook = () => {
   const componentRef = React.useRef(null);
 
-  // TODO: want to make this `null` default but TS complains
-  const onBeforeGetContentResolve = React.useRef(Promise.resolve);
+  const onBeforeGetContentResolve = React.useRef<(() => void) | null>(null);
 
   const [loading, setLoading] = React.useState(false);
   const [text, setText] = React.useState("old boring text");
@@ -25,7 +24,7 @@ export const FunctionalComponentWithHook = () => {
     setLoading(true);
     setText("Loading new text...");
 
-    return new Promise((resolve: any) => {
+    return new Promise<void>((resolve) => {
       onBeforeGetContentResolve.current = resolve;
 
       setTimeout(() => {
@@ -57,7 +56,7 @@ export const FunctionalComponentWithHook = () => {
 
   return (
     <div>
-      {loading && <p className="indicator">Loading...</p>}
+      {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
       <button onClick={handlePrint}>
         Print using a Functional Component with the useReactToPrint hook
       </button>

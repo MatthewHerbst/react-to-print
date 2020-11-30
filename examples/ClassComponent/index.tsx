@@ -1,12 +1,18 @@
 import * as React from "react";
 
 import { ComponentToPrint } from "../ComponentToPrint";
-import ReactToPrint, { PrintContextConsumer } from "../../src/index";
+import ReactToPrint from "../../src/index";
 
-export class ClassComponentContextConsumer extends React.PureComponent<{}, { isLoading: boolean, text: string }> { // tslint:disable-line max-line-length
+type Props = Record<string, unknown>;
+type State = {
+  isLoading: boolean;
+  text: string;
+};
+
+export class ClassComponent extends React.PureComponent<Props, State> {
   componentRef: ComponentToPrint | null = null;
 
-  constructor(props: Readonly<{}>) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -42,6 +48,17 @@ export class ClassComponentContextConsumer extends React.PureComponent<{}, { isL
     return this.componentRef;
   }
 
+  reactToPrintTrigger = () => {
+    // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+    // to the root node of the returned component as it will be overwritten.
+
+    // Bad: the `onClick` here will be overwritten by `react-to-print`
+    // return <button onClick={() => alert('This will not work')}>Print this out!</button>;
+
+    // Good
+    return <button>Print using a Class Component</button>;
+  }
+
   render() {
     return (
       <div>
@@ -52,16 +69,9 @@ export class ClassComponentContextConsumer extends React.PureComponent<{}, { isL
           onBeforeGetContent={this.handleOnBeforeGetContent}
           onBeforePrint={this.handleBeforePrint}
           removeAfterPrint
-        >
-          <PrintContextConsumer>
-            {({ handlePrint }) => (
-              <button onClick={handlePrint}>
-                Print using a Class Component with PrintContextConsumer
-              </button>
-            )}
-          </PrintContextConsumer>
-        </ReactToPrint>
-        {this.state.isLoading && <p className="indicator">Loading...</p>}
+          trigger={this.reactToPrintTrigger}
+        />
+        {this.state.isLoading && <p className="indicator">onBeforeGetContent: Loading...</p>}
         <ComponentToPrint ref={this.setComponentRef} text={this.state.text} />
       </div>
     );

@@ -1,12 +1,18 @@
 import * as React from "react";
 
 import { ComponentToPrint } from "../ComponentToPrint";
-import ReactToPrint from "../../src/index";
+import ReactToPrint, { PrintContextConsumer } from "../../src/index";
 
-export class ClassComponent extends React.PureComponent<{}, { isLoading: boolean, text: string }> {
+type Props = Record<string, unknown>;
+type State = {
+  isLoading: boolean;
+  text: string;
+};
+
+export class ClassComponentContextConsumer extends React.PureComponent<Props, State> {
   componentRef: ComponentToPrint | null = null;
 
-  constructor(props: Readonly<{}>) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -42,17 +48,6 @@ export class ClassComponent extends React.PureComponent<{}, { isLoading: boolean
     return this.componentRef;
   }
 
-  reactToPrintTrigger = () => {
-    // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-    // to the root node of the returned component as it will be overwritten.
-
-    // Bad: the `onClick` here will be overwritten by `react-to-print`
-    // return <a href="#" onClick={() => alert('This will not work')}>Print this out!</a>;
-
-    // Good
-    return <a href="#">Print using a Class Component</a>;
-  }
-
   render() {
     return (
       <div>
@@ -63,9 +58,16 @@ export class ClassComponent extends React.PureComponent<{}, { isLoading: boolean
           onBeforeGetContent={this.handleOnBeforeGetContent}
           onBeforePrint={this.handleBeforePrint}
           removeAfterPrint
-          trigger={this.reactToPrintTrigger}
-        />
-        {this.state.isLoading && <p className="indicator">Loading...</p>}
+        >
+          <PrintContextConsumer>
+            {({ handlePrint }) => (
+              <button onClick={handlePrint}>
+                Print using a Class Component with PrintContextConsumer
+              </button>
+            )}
+          </PrintContextConsumer>
+        </ReactToPrint>
+        {this.state.isLoading && <p className="indicator">onBeforeGetContent: Loading...</p>}
         <ComponentToPrint ref={this.setComponentRef} text={this.state.text} />
       </div>
     );

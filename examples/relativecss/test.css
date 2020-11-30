@@ -1,0 +1,18 @@
+.column1 {
+  color: #FF0000;
+}
+
+.indicator {
+  font-size: 2rem;
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.relativeCSS {
+ border: solid 1px #FF0000;
+}
+
+.testClass {
+  background: rgba(76, 175, 80, 0.3);
+}
+

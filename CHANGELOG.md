@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.12.0 (November 27th, 2020)
+
+- CHORE: added React/ReactDOM ^17 to allowed peerDependencies. Library still supports React >= 15, though expect a major release in the near-future that drops React 15 support, which will clear the way to removing the restriction that the top-level component being printed must be a class component
+- CHORE: upgraded all devDependencies. Big changes here include updating Typescript from 3 -> 4 and Webpack from 4 -> 5. While upgrading Webpack the minifier was changed from UglifyJS to Terser, resulting in a 5.7% reduced file size (14.1kb -> 13.3kb)
+- CHORE: Use Node ^14 for CLI tests
+- DOCUMENTATION: small improvements to the examples, including renaming them from `example` -> `examples`
+- DOCUMENTATION: added a note about finding the [`examples`](https://github.com/gregnb/react-to-print/tree/master/examples) folder
+- DOCUMENTATION [311](https://github.com/gregnb/react-to-print/issues/311): small type fix, thanks [nealeu](https://github.com/nealeu)
+- DOCUMENTATION: added a "Common Pitfalls" section to the README, starting with a note on using the library with a component wrapped in `connect` from `react-redux`
+
 ## 2.11.0 (October 30th, 2020)
 
 - FIX/FEATURE [285](https://github.com/gregnb/react-to-print/pull/285): Adds a new `fonts` prop which allows the passing of custom fonts. Previously custom fonts were not loaded into the print window
