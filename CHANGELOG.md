@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.12.1 (December 14th, 2020)
+
+- FIX [329](https://github.com/gregnb/react-to-print/pull/329): v2.12.0 upgraded Webpack from 4 -> 5 which broke the package for environments that didn't support ES6 as Webpack now requires finer grained controls to output pure ES5 code. These changes have been made.
+- CHORE: upgraded all devDependencies
+
 ## 2.12.0 (November 27th, 2020)
 
 - CHORE: added React/ReactDOM ^17 to allowed peerDependencies. Library still supports React >= 15, though expect a major release in the near-future that drops React 15 support, which will clear the way to removing the restriction that the top-level component being printed must be a class component

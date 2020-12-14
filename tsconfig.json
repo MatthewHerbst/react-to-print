@@ -10,9 +10,9 @@
     "noUnusedParameters": true,
     "outDir": "lib",
     "removeComments": true,
-    "sourceMap": true,
+    // "sourceMap": true,
     "strict": true,
-    "target": "es5"
+    "target": "ES5",
   },
   "include": [
     "./src"
