@@ -371,7 +371,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                                 // node.attributes has NamedNodeMap type that is not an Array and
                                 // can be iterated only via direct [i] access
-                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line  max-len
+                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
                                     const attr = node.attributes[j];
                                     if (attr) {
                                         newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
@@ -398,20 +398,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
-        const documentPrintWindow = document.getElementById("printWindow");
-        if (documentPrintWindow) {
-            document.body.removeChild(documentPrintWindow);
-        }
-
-        document.body.appendChild(printWindow);
+        this.handleRemoveIframe(true);
     }
 
-    public handleRemoveIframe = () => {
+    public handleRemoveIframe = (force?: boolean) => {
         const {
             removeAfterPrint,
         } = this.props;
 
-        if (removeAfterPrint) {
+        if (force || removeAfterPrint) {
             // The user may have removed the iframe in `onAfterPrint`
             const documentPrintWindow = document.getElementById("printWindow");
             if (documentPrintWindow) {
