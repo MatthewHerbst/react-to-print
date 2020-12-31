@@ -329,12 +329,19 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
-                // Copy checkboxes state
+                // Copy checkbox states
                 const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
                 const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');
                 for (let i = 0; i < originalCheckboxes.length; i++) {
                     (copiedCheckboxes[i] as HTMLInputElement).checked =
                     (originalCheckboxes[i] as HTMLInputElement).checked;
+                }
+
+                // Copy select states
+                const originalSelects = (contentNodes as HTMLElement).querySelectorAll('select');
+                const copiedSelects = domDoc.querySelectorAll('select');
+                for (let i = 0; i < originalSelects.length; i++) {
+                    copiedSelects[i].value = originalSelects[i].value;
                 }
 
                 if (copyStyles) {
@@ -398,6 +405,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         };
 
         this.handleRemoveIframe(true);
+        document.body.appendChild(printWindow);
     }
 
     public handleRemoveIframe = (force?: boolean) => {

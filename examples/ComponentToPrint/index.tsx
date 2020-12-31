@@ -61,7 +61,14 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             </td>
           </tr>
           <tr>
-            <td>3</td>
+            <td>
+              <select name="cars" id="cars">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+              </select>
+            </td>
             <td>4</td>
           </tr>
           <tr>
