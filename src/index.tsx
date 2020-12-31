@@ -23,6 +23,7 @@ type Font = {
 
 type PropertyFunction<T> = () => T;
 
+// NOTE: https://github.com/Microsoft/TypeScript/issues/23812
 const defaultProps = {
     copyStyles: true,
     pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
@@ -287,11 +288,16 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 const defaultPageStyle = typeof pageStyle === "function" ? pageStyle() : pageStyle;
 
-                const styleEl = domDoc.createElement("style");
-                // TODO: TS 3 should have removed the need for the `!`, so why is it still needed?
-                // https://github.com/Microsoft/TypeScript/issues/23812
-                styleEl.appendChild(domDoc.createTextNode(defaultPageStyle!));
-                domDoc.head.appendChild(styleEl);
+                if (typeof defaultPageStyle !== 'string') {
+                    if (!suppressErrors) {
+                        // eslint-disable-next-line max-len
+                        console.error(`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`);
+                    }
+                } else {
+                    const styleEl = domDoc.createElement("style");
+                    styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
+                    domDoc.head.appendChild(styleEl);
+                }
 
                 if (bodyClass) {
                     domDoc.body.classList.add(...bodyClass.split(" "));
@@ -326,10 +332,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 // Copy checkboxes state
                 const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
-                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');  
+                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');
                 for (let i = 0; i < originalCheckboxes.length; i++) {
-                    (copiedCheckboxes[i] as HTMLInputElement).checked = 
-                    (originalCheckboxes[i] as HTMLInputElement).checked;                    
+                    (copiedCheckboxes[i] as HTMLInputElement).checked =
+                    (originalCheckboxes[i] as HTMLInputElement).checked;
                 }
 
                 if (copyStyles) {
