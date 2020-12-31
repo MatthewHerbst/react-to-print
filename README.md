@@ -236,6 +236,30 @@ In the component that is passed in as the content ref, add the following:
 
 Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 0; }`
 
+### Using the `pageStyle` prop
+
+The `pageStyle` prop can be used to set anything from simple to complex styles. For example:
+
+```js
+const pageStyle = `
+  @page {
+    size: 80mm 50mm;
+  }
+
+  @media all {
+    .pagebreak {
+      display: none;
+    }
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
+  }
+`;
+```
+
 ### Page Breaks
 
 #### Pattern for Page-Breaking Dynamic React Content
