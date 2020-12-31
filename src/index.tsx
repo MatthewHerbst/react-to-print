@@ -290,8 +290,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 if (typeof defaultPageStyle !== 'string') {
                     if (!suppressErrors) {
-                        // eslint-disable-next-line max-len
-                        console.error(`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`);
+                        console.error(`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`); // eslint-disable-line max-len, no-console
                     }
                 } else {
                     const styleEl = domDoc.createElement("style");
