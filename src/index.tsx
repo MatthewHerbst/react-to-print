@@ -337,6 +337,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     (originalCheckboxes[i] as HTMLInputElement).checked;
                 }
 
+                // Copy radio states
+                const originalRadios = (contentNodes as HTMLElement).querySelectorAll('input[type=radio]');
+                const radios = domDoc.querySelectorAll('input[type=radio]');
+                for (let i = 0; i < originalRadios.length; i++) {
+                    (radios[i] as HTMLInputElement).checked =
+                    (originalRadios[i] as HTMLInputElement).checked;
+                }
+
                 // Copy select states
                 const originalSelects = (contentNodes as HTMLElement).querySelectorAll('select');
                 const copiedSelects = domDoc.querySelectorAll('select');

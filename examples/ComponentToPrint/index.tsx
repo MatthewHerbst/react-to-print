@@ -69,7 +69,12 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
                 <option value="audi">Audi</option>
               </select>
             </td>
-            <td>4</td>
+            <td>
+              Blue
+              <input type="radio" id="blue" name="color" value="blue" />
+              Red
+              <input type="radio" id="red" name="color" value="red" />
+            </td>
           </tr>
           <tr>
             <td>5</td>
