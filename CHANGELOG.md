@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.12.2 (Jan 1st, 2021)
+
+Happy new years!
+
+- FIX [196](https://github.com/gregnb/react-to-print/issues/196): For a long time various inputs/select did not properly copy their value over into the print window. This has been corrected!
+- FIX [292](https://github.com/gregnb/react-to-print/issues/292): Removed usage of `document.write`
+- FIX: Edge case where passing a function to the `pageStyle` prop that did not return a string could cause problems
+- CHORE: Upgraded all `devDependencies`
+- CHORE: Minor README updates
+
 ## 2.12.1 (December 14th, 2020)
 
 - FIX [329](https://github.com/gregnb/react-to-print/pull/329): v2.12.0 upgraded Webpack from 4 -> 5 which broke the package for environments that didn't support ES6 as Webpack now requires finer grained controls to output pure ES5 code. These changes have been made.
