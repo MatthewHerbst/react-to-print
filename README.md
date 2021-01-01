@@ -192,9 +192,7 @@ const Example = () => {
 
 - The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
 
-## Running locally
-
-*NOTE*: Node >=10 is required to build the library locally. We use Node ^14 for our CLI checks.
+- Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/gregnb/react-to-print/issues/248) for an example.
 
 ## FAQ
 
@@ -236,7 +234,31 @@ In the component that is passed in as the content ref, add the following:
 
 ### Printing elements that are not displayed ([159](https://github.com/gregnb/react-to-print/issues/159))
 
-Instead of using `{ display: 'none' }`, try using `{ overflow: hidden; height: 0; }`
+Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 0; }`
+
+### Using the `pageStyle` prop
+
+The `pageStyle` prop can be used to set anything from simple to complex styles. For example:
+
+```js
+const pageStyle = `
+  @page {
+    size: 80mm 50mm;
+  }
+
+  @media all {
+    .pagebreak {
+      display: none;
+    }
+  }
+
+  @media print {
+    .pagebreak {
+      page-break-before: always;
+    }
+  }
+`;
+```
 
 ### Page Breaks
 
@@ -296,3 +318,7 @@ If your content rendered as print media does not automatically break multi-page 
 
 - A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
 - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks.
+
+## Running locally
+
+*NOTE*: Node >=10 is required to build the library locally. We use Node ^14 for our CLI checks.

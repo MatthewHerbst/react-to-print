@@ -23,6 +23,7 @@ type Font = {
 
 type PropertyFunction<T> = () => T;
 
+// NOTE: https://github.com/Microsoft/TypeScript/issues/23812
 const defaultProps = {
     copyStyles: true,
     pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
@@ -258,9 +259,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
             const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
             if (domDoc) {
-                domDoc.open();
-                domDoc.write((contentNodes as HTMLCanvasElement).outerHTML);
-                domDoc.close();
+                domDoc.body.append(contentNodes.cloneNode(true));
 
                 if (fonts) {
                     if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
@@ -287,11 +286,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 const defaultPageStyle = typeof pageStyle === "function" ? pageStyle() : pageStyle;
 
-                const styleEl = domDoc.createElement("style");
-                // TODO: TS 3 should have removed the need for the `!`, so why is it still needed?
-                // https://github.com/Microsoft/TypeScript/issues/23812
-                styleEl.appendChild(domDoc.createTextNode(defaultPageStyle!));
-                domDoc.head.appendChild(styleEl);
+                if (typeof defaultPageStyle !== 'string') {
+                    if (!suppressErrors) {
+                        console.error(`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`); // eslint-disable-line max-len, no-console
+                    }
+                } else {
+                    const styleEl = domDoc.createElement("style");
+                    styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
+                    domDoc.head.appendChild(styleEl);
+                }
 
                 if (bodyClass) {
                     domDoc.body.classList.add(...bodyClass.split(" "));
@@ -324,12 +327,30 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
-                // Copy checkboxes state
-                const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
-                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');  
-                for (let i = 0; i < originalCheckboxes.length; i++) {
-                    (copiedCheckboxes[i] as HTMLInputElement).checked = 
-                    (originalCheckboxes[i] as HTMLInputElement).checked;                    
+                // Copy input values
+                // This covers most input types, though some need additional work (further down)
+                const inputSelector = 'input';
+                const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector); // eslint-disable-line max-len
+                const copiedInputs = domDoc.querySelectorAll(inputSelector);
+                for (let i = 0; i < originalInputs.length; i++) {
+                    copiedInputs[i].value = originalInputs[i].value;
+                }
+
+                // Copy checkbox, radio checks
+                const checkedSelector = 'input[type=checkbox],input[type=radio]';
+                const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector); // eslint-disable-line max-len
+                const copiedCRs = domDoc.querySelectorAll(checkedSelector);
+                for (let i = 0; i < originalCRs.length; i++) {
+                    (copiedCRs[i] as HTMLInputElement).checked =
+                    (originalCRs[i] as HTMLInputElement).checked;
+                }
+
+                // Copy select states
+                const selectSelector = 'select';
+                const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector); // eslint-disable-line max-len
+                const copiedSelects = domDoc.querySelectorAll(selectSelector);
+                for (let i = 0; i < originalSelects.length; i++) {
+                    copiedSelects[i].value = originalSelects[i].value;
                 }
 
                 if (copyStyles) {
@@ -365,7 +386,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                                 // node.attributes has NamedNodeMap type that is not an Array and
                                 // can be iterated only via direct [i] access
-                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line  max-len
+                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
                                     const attr = node.attributes[j];
                                     if (attr) {
                                         newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
@@ -392,20 +413,16 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
-        const documentPrintWindow = document.getElementById("printWindow");
-        if (documentPrintWindow) {
-            document.body.removeChild(documentPrintWindow);
-        }
-
+        this.handleRemoveIframe(true);
         document.body.appendChild(printWindow);
     }
 
-    public handleRemoveIframe = () => {
+    public handleRemoveIframe = (force?: boolean) => {
         const {
             removeAfterPrint,
         } = this.props;
 
-        if (removeAfterPrint) {
+        if (force || removeAfterPrint) {
             // The user may have removed the iframe in `onAfterPrint`
             const documentPrintWindow = document.getElementById("printWindow");
             if (documentPrintWindow) {
