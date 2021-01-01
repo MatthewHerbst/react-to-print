@@ -329,25 +329,28 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 }
 
-                // Copy checkbox states
-                const originalCheckboxes = (contentNodes as HTMLElement).querySelectorAll('input[type=checkbox]');
-                const copiedCheckboxes = domDoc.querySelectorAll('input[type=checkbox]');
-                for (let i = 0; i < originalCheckboxes.length; i++) {
-                    (copiedCheckboxes[i] as HTMLInputElement).checked =
-                    (originalCheckboxes[i] as HTMLInputElement).checked;
+                // Copy input values
+                // This covers most input types, though some need additional work (further down)
+                const inputSelector = 'input';
+                const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector); // eslint-disable-line max-len
+                const copiedInputs = domDoc.querySelectorAll(inputSelector);
+                for (let i = 0; i < originalInputs.length; i++) {
+                    copiedInputs[i].value = originalInputs[i].value;
                 }
 
-                // Copy radio states
-                const originalRadios = (contentNodes as HTMLElement).querySelectorAll('input[type=radio]');
-                const radios = domDoc.querySelectorAll('input[type=radio]');
-                for (let i = 0; i < originalRadios.length; i++) {
-                    (radios[i] as HTMLInputElement).checked =
-                    (originalRadios[i] as HTMLInputElement).checked;
+                // Copy checkbox, radio checks
+                const checkedSelector = 'input[type=checkbox],input[type=radio]';
+                const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector); // eslint-disable-line max-len
+                const copiedCRs = domDoc.querySelectorAll(checkedSelector);
+                for (let i = 0; i < originalCRs.length; i++) {
+                    (copiedCRs[i] as HTMLInputElement).checked =
+                    (originalCRs[i] as HTMLInputElement).checked;
                 }
 
                 // Copy select states
-                const originalSelects = (contentNodes as HTMLElement).querySelectorAll('select');
-                const copiedSelects = domDoc.querySelectorAll('select');
+                const selectSelector = 'select';
+                const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector); // eslint-disable-line max-len
+                const copiedSelects = domDoc.querySelectorAll(selectSelector);
                 for (let i = 0; i < originalSelects.length; i++) {
                     copiedSelects[i].value = originalSelects[i].value;
                 }

@@ -77,7 +77,17 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             </td>
           </tr>
           <tr>
-            <td>5</td>
+            <td>
+              <input type="date" />
+            </td>
+            <td>
+              Test Date
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input />
+            </td>
             <td>
               <img
                 alt="Google logo"
