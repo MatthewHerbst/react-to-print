@@ -259,9 +259,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
             const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
             if (domDoc) {
-                domDoc.open();
-                domDoc.write((contentNodes as HTMLCanvasElement).outerHTML);
-                domDoc.close();
+                domDoc.body.append(contentNodes.cloneNode(true));
 
                 if (fonts) {
                     if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
