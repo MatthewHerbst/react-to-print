@@ -5,6 +5,7 @@ import { ClassComponent } from "./ClassComponent";
 import { ClassComponentContextConsumer } from "./ClassComponentContextConsumer";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
+import { ClassComponentText } from "./ClassComponentText";
 import "./relativecss/test.css";
 
 type Props = Record<string, unknown>;
@@ -21,6 +22,7 @@ class Example extends React.Component<Props, State> {
         <ClassComponentContextConsumer />
         <FunctionalComponent />
         <FunctionalComponentWithHook />
+        <ClassComponentText />
       </>
     );
   }

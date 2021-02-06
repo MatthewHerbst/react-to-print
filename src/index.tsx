@@ -219,8 +219,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             return;
         }
 
+        // React components can return a bare string as a valid JSX response
+        const isText = contentNodes instanceof Text;
+
         const globalStyleLinkNodes = document.querySelectorAll("link[rel='stylesheet']");
-        const renderComponentImgNodes = (contentNodes as Element).querySelectorAll("img")
+        const renderComponentImgNodes = isText ? [] : (contentNodes as Element).querySelectorAll("img")
 
         this.linkTotal = globalStyleLinkNodes.length + renderComponentImgNodes.length;
         this.linksLoaded = [];
@@ -257,7 +260,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             printWindow.onload = null;
 
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
-            const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
+
             if (domDoc) {
                 domDoc.body.appendChild(contentNodes.cloneNode(true));
 
@@ -300,57 +303,61 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     domDoc.body.classList.add(...bodyClass.split(" "));
                 }
 
-                const canvasEls = domDoc.querySelectorAll("canvas");
-                for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
-                    const node = canvasEls[i];
-                    const contentDrawImage = node.getContext("2d");
-                    if (contentDrawImage) {
-                        contentDrawImage.drawImage(srcCanvasEls[i], 0, 0);
-                    }
-                }
-
-                // Pre-load all images
-                for (let i = 0; i < renderComponentImgNodes.length; i++) {
-                    const imgNode = renderComponentImgNodes[i];
-                    const imgSrc = imgNode.getAttribute("src");
-
-                    if (!imgSrc) {
-                        if (!suppressErrors) {
-                            console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // eslint-disable-line no-console
+                if (!isText) {
+                    // Copy all canvases
+                    const canvasEls = domDoc.querySelectorAll("canvas");
+                    const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
+                    for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
+                        const node = canvasEls[i];
+                        const contentDrawImage = node.getContext("2d");
+                        if (contentDrawImage) {
+                            contentDrawImage.drawImage(srcCanvasEls[i], 0, 0);
                         }
-                    } else {
-                        // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
-                        const img = new Image();
-                        img.onload = markLoaded.bind(null, imgNode, true);
-                        img.onerror = markLoaded.bind(null, imgNode, false);
-                        img.src = imgSrc;
                     }
-                }
 
-                // Copy input values
-                // This covers most input types, though some need additional work (further down)
-                const inputSelector = 'input';
-                const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector); // eslint-disable-line max-len
-                const copiedInputs = domDoc.querySelectorAll(inputSelector);
-                for (let i = 0; i < originalInputs.length; i++) {
-                    copiedInputs[i].value = originalInputs[i].value;
-                }
+                    // Pre-load all images
+                    for (let i = 0; i < renderComponentImgNodes.length; i++) {
+                        const imgNode = renderComponentImgNodes[i];
+                        const imgSrc = imgNode.getAttribute("src");
 
-                // Copy checkbox, radio checks
-                const checkedSelector = 'input[type=checkbox],input[type=radio]';
-                const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector); // eslint-disable-line max-len
-                const copiedCRs = domDoc.querySelectorAll(checkedSelector);
-                for (let i = 0; i < originalCRs.length; i++) {
-                    (copiedCRs[i] as HTMLInputElement).checked =
-                    (originalCRs[i] as HTMLInputElement).checked;
-                }
+                        if (!imgSrc) {
+                            if (!suppressErrors) {
+                                console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // eslint-disable-line no-console
+                            }
+                        } else {
+                            // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
+                            const img = new Image();
+                            img.onload = markLoaded.bind(null, imgNode, true);
+                            img.onerror = markLoaded.bind(null, imgNode, false);
+                            img.src = imgSrc;
+                        }
+                    }
 
-                // Copy select states
-                const selectSelector = 'select';
-                const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector); // eslint-disable-line max-len
-                const copiedSelects = domDoc.querySelectorAll(selectSelector);
-                for (let i = 0; i < originalSelects.length; i++) {
-                    copiedSelects[i].value = originalSelects[i].value;
+                    // Copy input values
+                    // This covers most input types, though some need additional work (further down)
+                    const inputSelector = 'input';
+                    const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector); // eslint-disable-line max-len
+                    const copiedInputs = domDoc.querySelectorAll(inputSelector);
+                    for (let i = 0; i < originalInputs.length; i++) {
+                        copiedInputs[i].value = originalInputs[i].value;
+                    }
+
+                    // Copy checkbox, radio checks
+                    const checkedSelector = 'input[type=checkbox],input[type=radio]';
+                    const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector); // eslint-disable-line max-len
+                    const copiedCRs = domDoc.querySelectorAll(checkedSelector);
+                    for (let i = 0; i < originalCRs.length; i++) {
+                        (copiedCRs[i] as HTMLInputElement).checked =
+                        (originalCRs[i] as HTMLInputElement).checked;
+                    }
+
+                    // Copy select states
+                    const selectSelector = 'select';
+                    const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector); // eslint-disable-line max-len
+                    const copiedSelects = domDoc.querySelectorAll(selectSelector);
+                    for (let i = 0; i < originalSelects.length; i++) {
+                        copiedSelects[i].value = originalSelects[i].value;
+                    }
                 }
 
                 if (copyStyles) {
@@ -443,19 +450,21 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 onClick: this.handleClick,
             });
         } else {
-            const value = {handlePrint: this.handleClick};
             if (!PrintContext) {
                 if (!suppressErrors) {
                     console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // eslint-disable-line no-console
                 }
+
                 return null;
             }
 
-            return PrintContext ?
+            const value = { handlePrint: this.handleClick };
+
+            return (
                 <PrintContext.Provider value={value as IPrintContextProps}>
                     {children}
-                </PrintContext.Provider> :
-                <h2>lorem</h2>
+                </PrintContext.Provider>
+            );
         }
     }
 }
