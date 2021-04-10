@@ -24,5 +24,6 @@ module.exports = {
         ignoreStrings: true,
       },
     ],
+    "quotes": ["error", "double"]
   },
 };
