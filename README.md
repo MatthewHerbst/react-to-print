@@ -58,10 +58,6 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 - Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
 
-## Known Issues
-
-- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
-
 ## Examples
 
 For full examples please see the [`examples`](https://github.com/gregnb/react-to-print/tree/master/examples) folder.
@@ -188,6 +184,10 @@ const Example = () => {
 };
 ```
 
+## Known Issues
+
+- `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
+
 ## Common Pitfalls
 
 - The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
@@ -195,6 +195,10 @@ const Example = () => {
 - Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/gregnb/react-to-print/issues/248) for an example.
 
 ## FAQ
+
+### Can the `ComponentToPrint` be a functional component?
+
+Officially no, but there are workarounds using the `useRef` hook. See [#96](https://github.com/gregnb/react-to-print/issues/96) and [#181](https://github.com/gregnb/react-to-print/issues/181) for examples. We will officially support this once we release the next major version which will drop React 15 support.
 
 ### Why does `onAfterPrint` fire even if the user cancels printing
 
