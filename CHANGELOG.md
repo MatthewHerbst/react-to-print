@@ -1,12 +1,17 @@
 # CHANGELOG
 
-## 2.12.3 (Feb 5th, 2021)
+## 2.12.4 (April 10th, 2021)
+
+- CHORE: Upgraded all `devDependencies`
+- DOCS: Added a section to the README about workarounds for functional components as the `ComponentToPrint`
+
+## 2.12.3 (February 5th, 2021)
 
 - FIX [344](https://github.com/gregnb/react-to-print/pull/344): Remove the single use of [`ParentNode.append`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append) in favor of [`Node.appendChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild). `append` is not supported by IE11, and polyfilling it within the context of an iframe can be difficult
 - FIX [344](https://github.com/gregnb/react-to-print/pull/344): While testing the above I realized that trying to print out a bare string didn't work. This has been fixed
 - CHORE: Upgraded all `devDependencies`
 
-## 2.12.2 (Jan 1st, 2021)
+## 2.12.2 (January 1st, 2021)
 
 Happy new years!
 
