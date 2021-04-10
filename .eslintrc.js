@@ -23,7 +23,6 @@ module.exports = {
         ignoreComments: true,
         ignoreStrings: true,
       },
-    ],
-    "quotes": ["error", "double"]
+    ]
   },
 };
