@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.12.5 (May 29th, 2021)
+
+- CHORE: Upgraded `devDependencies`
+
 ## 2.12.4 (April 10th, 2021)
 
 - CHORE: Upgraded all `devDependencies`
