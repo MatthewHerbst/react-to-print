@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.12.6 (May 31st, 2021)
+
+- FIX [379](https://github.com/gregnb/react-to-print/pull/379): `img` tags missing a `src` attribute should not prevent printing
+
 ## 2.12.5 (May 29th, 2021)
 
 - CHORE: Upgraded `devDependencies`
