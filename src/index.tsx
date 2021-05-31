@@ -323,6 +323,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         if (!imgSrc) {
                             if (!suppressErrors) {
                                 console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // eslint-disable-line no-console
+                                markLoaded(imgNode, false);
                             }
                         } else {
                             // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
