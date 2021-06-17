@@ -329,4 +329,4 @@ If your content rendered as print media does not automatically break multi-page 
 
 ## Running locally
 
-*NOTE*: Node >=10 is required to build the library locally. We use Node ^14 for our CLI checks.
+*NOTE*: Node >=12 is required to build the library locally. We use Node ^14 for our tests.
