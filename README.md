@@ -226,6 +226,26 @@ Unfortunately there is no standard browser API for interacting with the print di
 
 ## Helpful Style Tips
 
+### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
+
+To set custom margin to the page,
+
+First, create a function to return the page margin,
+
+```js
+const getPageMargins = () => {
+  return `@page { margin: ${marginTop} ${marginRight} ${marginBottom} ${marginLeft} !important; }`;
+};
+```
+
+Now, within the JSX call this function within the style tags,
+
+```jsx
+<style>{getPageMargins()}</style>
+```
+
+PS: This style tag should be inside the component that is being passed in as the content ref.
+
 ### Set landscape printing ([240](https://github.com/gregnb/react-to-print/issues/240))
 
 In the component that is passed in as the content ref, add the following:
