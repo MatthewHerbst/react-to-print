@@ -60,6 +60,8 @@ export interface IReactToPrintProps {
     suppressErrors?: boolean;
     /** Trigger action used to open browser print */
     trigger?: <T>() => React.ReactElement<ITriggerProps<T>>;
+    /** Set the nonce attribute for whitelisting script and style -elements for CSP (content security policy) */
+    nonce?: string;
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
@@ -185,6 +187,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             fonts,
             pageStyle,
             suppressErrors,
+            nonce,
         } = this.props;
 
         const contentEl = content();
@@ -295,6 +298,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     }
                 } else {
                     const styleEl = domDoc.createElement("style");
+                    if (nonce) {
+                        styleEl.setAttribute("nonce", nonce);
+                        domDoc.head.setAttribute("nonce", nonce);
+                    }
                     styleEl.appendChild(domDoc.createTextNode(defaultPageStyle));
                     domDoc.head.appendChild(styleEl);
                 }
@@ -379,6 +386,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                     }
                                 }
                                 newHeadEl.setAttribute("id", `react-to-print-${i}`);
+                                if (nonce) {
+                                    newHeadEl.setAttribute("nonce", nonce);
+                                }
                                 newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
                                 domDoc.head.appendChild(newHeadEl);
                             }
@@ -403,6 +413,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                                 newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
                                 newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
+                                if (nonce) {
+                                    newHeadEl.setAttribute("nonce", nonce);
+                                }
                                 domDoc.head.appendChild(newHeadEl);
                             } else {
                                 if (!suppressErrors) {
