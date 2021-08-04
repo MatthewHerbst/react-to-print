@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.0 (August 4th, 2021)
+
+- FEATURE [402](https://github.com/gregnb/react-to-print/pull/402): support passing a `nonce` property to be used with CSP. Thanks @Arcturus5404 and @nenonja
+
 ## 2.12.6 (May 31st, 2021)
 
 - FIX [379](https://github.com/gregnb/react-to-print/pull/379): `img` tags missing a `src` attribute should not prevent printing
