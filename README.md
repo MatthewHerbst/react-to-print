@@ -41,6 +41,7 @@ The component accepts the following props:
 | **`removeAfterPrint?`** | `boolean` | Remove the print iframe after action. Defaults to `false` |
 | **`suppressErrors?`** | `boolean` | When passed, prevents `console` logging of errors |
 | **`trigger?`** | `function` | A function that returns a React Component or Element. Note: under the hood, we inject a custom `onClick` prop into the returned Component/Element. As such, do not provide an `onClick` prop to the root node returned by `trigger`, as it will be overwritten |
+| **`nonce?`** | `string` | Set the nonce attribute for whitelisting script and style -elements for CSP (content security policy) |
 
 ### `PrintContextConsumer`
 
