@@ -227,6 +227,16 @@ Unfortunately there is no standard browser API for interacting with the print di
 
 ## Helpful Style Tips
 
+### Set the page orientation
+
+While you should be able to place these styles anywhere, sometimes the browser doesn't always pick them up. To force orientation of the page you can include the following in the component being printed:
+
+```jsx
+<style type="text/css" media="print">{"\
+  @page {\ size: landscape;\ }\
+"}</style>
+```
+
 ### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
 
 To set custom margin to the page,

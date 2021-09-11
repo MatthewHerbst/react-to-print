@@ -44,6 +44,9 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
 
     return (
       <div className="relativeCSS">
+        <style type="text/css" media="print">{"\
+   @page {\ size: landscape;\ }\
+"}</style>
         <div className="flash" />
         <img alt="A test image" src={image as string} />
         <img alt="This will warn but not block printing" />
