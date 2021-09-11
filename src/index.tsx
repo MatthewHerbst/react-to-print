@@ -78,7 +78,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             onAfterPrint,
             onPrintError,
             print,
-            suppressErrors,
             documentTitle,
         } = this.props;
 
@@ -92,8 +91,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         .catch((error: Error) => {
                             if (onPrintError) {
                                 onPrintError('print', error);
-                            } else if (!suppressErrors) {
-                                console.error("An error was thrown by the specified `print` function", error);
+                            } else {
+                                this.logMessages(["An error was thrown by the specified `print` function"]);
                             }
                         });
                 } else if (target.contentWindow.print) {
@@ -115,16 +114,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 } else {
                     // Some browsers, such as Firefox Android, do not support printing at all
                     // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
-                    if (!suppressErrors) {
-                        console.error("Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."); // eslint-disable-line no-console
-                    }
+                    this.logMessages(["Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."]);
                 }
 
                 this.handleRemoveIframe();
             } else {
-                if (!suppressErrors) {
-                    console.error("Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"); // eslint-disable-line no-console
-                }
+                this.logMessages(["Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"]);
             }
         }, 500);
     }
@@ -186,23 +181,18 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             copyStyles,
             fonts,
             pageStyle,
-            suppressErrors,
             nonce,
         } = this.props;
 
         const contentEl = content();
 
         if (contentEl === undefined) {
-            if (!suppressErrors) {
-                console.error('For "react-to-print" to work only Class based components can be printed.'); // eslint-disable-line no-console
-            }
+            this.logMessages(['For "react-to-print" to work only Class based components can be printed.']); // eslint-disable-line max-len
             return;
         }
 
         if (contentEl === null) {
-            if (!suppressErrors) {
-                console.error('There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.'); // eslint-disable-line no-console
-            }
+            this.logMessages(['There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.']); // eslint-disable-line max-len
             return;
         }
 
@@ -216,9 +206,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentNodes = findDOMNode(contentEl);
 
         if (!contentNodes) {
-            if (!suppressErrors) {
-                console.error('"react-to-print" could not locate the DOM node corresponding with the `content` prop'); // eslint-disable-line no-console
-            }
+            this.logMessages(['"react-to-print" could not locate the DOM node corresponding with the `content` prop']); // eslint-disable-line max-len
             return;
         }
 
@@ -238,9 +226,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (loaded) {
                 this.linksLoaded.push(linkNode);
             } else {
-                if (!suppressErrors) {
-                    console.error('"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode); // eslint-disable-line no-console
-                }
+                this.logMessages(['"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode]); // eslint-disable-line max-len
                 this.linksErrored.push(linkNode);
             }
 
@@ -278,24 +264,18 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 })
                                 .catch((error: SyntaxError) => {
                                     this.fontsErrored.push(fontFace);
-                                    if (!suppressErrors) {
-                                        console.error('"react-to-print" was unable to load a font. "react-to-print" will continue attempting to print the page. The font that failed to load is:', fontFace, 'The error from loading the font is:', error); // eslint-disable-line no-console
-                                    }
+                                    this.logMessages(['"react-to-print" was unable to load a font. "react-to-print" will continue attempting to print the page. The font that failed to load is:', fontFace, 'The error from loading the font is:', error]); // eslint-disable-line max-len
                                 });
                         });
                     } else {
-                        if (!suppressErrors) {
-                            console.error('"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API'); // eslint-disable-line no-console
-                        }
+                        this.logMessages(['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API']); // eslint-disable-line max-len
                     }
                 }
 
                 const defaultPageStyle = typeof pageStyle === "function" ? pageStyle() : pageStyle;
 
                 if (typeof defaultPageStyle !== 'string') {
-                    if (!suppressErrors) {
-                        console.error(`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`); // eslint-disable-line max-len, no-console
-                    }
+                    this.logMessages([`"react-to-print" expected a "string" from \`pageStyle\` but received "${typeof defaultPageStyle}". Styles from \`pageStyle\` will not be applied.`]); // eslint-disable-line max-len
                 } else {
                     const styleEl = domDoc.createElement("style");
                     if (nonce) {
@@ -328,10 +308,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         const imgSrc = imgNode.getAttribute("src");
 
                         if (!imgSrc) {
-                            if (!suppressErrors) {
-                                console.warn('"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode); // eslint-disable-line no-console
-                                markLoaded(imgNode, false);
-                            }
+                            this.logMessages(['"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode], 'warning'); // eslint-disable-line
+                            markLoaded(imgNode, false);
                         } else {
                             // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                             const img = new Image();
@@ -418,9 +396,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 }
                                 domDoc.head.appendChild(newHeadEl);
                             } else {
-                                if (!suppressErrors) {
-                                    console.warn('"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node); // eslint-disable-line no-console
-                                }
+                                this.logMessages(['"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node], 'warning')
                                 // `true` because we"ve already shown a warning for this
                                 markLoaded(node, true);
                             }
@@ -452,10 +428,23 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
+    public logMessages = (messages: unknown[], level: 'error' | 'warning' = 'error') => {
+        const {
+            suppressErrors,
+        } = this.props;
+
+        if (!suppressErrors) {
+            if (level === 'error') {
+                console.error(messages); // eslint-disable-line no-console
+            } else if (level === 'warning') {
+                console.warn(messages); // eslint-disable-line no-console
+            }
+        }
+    }
+
     public render() {
         const {
             children,
-            suppressErrors,
             trigger,
         } = this.props;
 
@@ -465,9 +454,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             });
         } else {
             if (!PrintContext) {
-                if (!suppressErrors) {
-                    console.error('"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"'); // eslint-disable-line no-console
-                }
+                this.logMessages(['"react-to-print" requires React ^16.3.0 to be able to use "PrintContext"']);
 
                 return null;
             }
