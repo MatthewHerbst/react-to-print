@@ -185,6 +185,12 @@ const Example = () => {
 };
 ```
 
+**Note ([401](https://github.com/gregnb/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
+```
+const componentRef = useRef(null);
+```
+
+
 ## Known Issues
 
 - `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
