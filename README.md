@@ -64,26 +64,23 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 For full examples please see the [`examples`](https://github.com/gregnb/react-to-print/tree/master/examples) folder.
 
 ```jsx
+// Using a class component, everything works without issue
 export class ComponentToPrint extends React.PureComponent {
   render() {
     return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>My cool content here!</div>
     );
   }
 }
+
+// Using a functional component, you must wrap it in React.forwardRef, and then forward the ref to
+// the node you want to be the root of the print (usually the outer most node in the ComponentToPrint)
+// https://reactjs.org/docs/refs-and-the-dom.html#refs-and-function-components
+export const ComponentToPrint = React.forwardRef((props, ref) => {
+  return (
+    <div ref={ref}>My cool content here!</div>
+  );
+});
 ```
 
 ### Calling from class components
@@ -190,6 +187,18 @@ const Example = () => {
 - `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
 
 ## Common Pitfalls
+
+- When printing, only styles that directly target the printed nodes will be applied, since the parent nodes will not exist in the DOM used for the print. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
+
+  ```jsx
+  <div className="parent">
+    <p>Hello</p>
+  </div>
+  ```
+
+  ```css
+  div.parent p { color:red; }
+  ```
 
 - The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
 
