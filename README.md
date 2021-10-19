@@ -204,6 +204,8 @@ const Example = () => {
 
 - Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/gregnb/react-to-print/issues/248) for an example.
 
+- When rendering multiple components to print, for example, if you have a list of charts and want each chart to have its own print icon, ideally you will wrap each component to print + print button in its own component, and just render a list of those components. However, if you cannot do that for some reason, in your `.map` ensure that each component gets a unique `ref` value passed to it, otherwise printing any of the components will always print the last component. See [323](https://github.com/gregnb/react-to-print/issues/323) for more.
+
 ## FAQ
 
 ### Can the `ComponentToPrint` be a functional component?
