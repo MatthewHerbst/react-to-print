@@ -187,7 +187,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentEl = content();
 
         if (contentEl === undefined) {
-            this.logMessages(['For "react-to-print" to work only Class based components can be printed.']); // eslint-disable-line max-len
+            this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRed`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']); // eslint-disable-line max-len
             return;
         }
 
