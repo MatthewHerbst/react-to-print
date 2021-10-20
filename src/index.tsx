@@ -137,7 +137,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     .then(() => {
                         this.startPrint(target);
                     })
-                    .catch((error) => {
+                    .catch((error: Error) => {
                         if (onPrintError) {
                             onPrintError("onBeforePrint", error);
                         }
@@ -161,7 +161,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
                 onBeforeGetContentOutput
                     .then(this.handlePrint)
-                    .catch((error) => {
+                    .catch((error: Error) => {
                         if (onPrintError) {
                             onPrintError("onBeforeGetContent", error);
                         }
