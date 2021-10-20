@@ -55,6 +55,12 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 `react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
 
+### Mobile Browsers in WebView
+
+While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all mobile browsers. Some browsers don't make the correct API available. Others make it available but cause it to no-op when in WebView.
+
+We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/gregnb/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
+
 ### Known Incompatible Browsers
 
 - Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
