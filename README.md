@@ -189,10 +189,10 @@ const Example = () => {
 ```
 
 **Note ([401](https://github.com/gregnb/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
-```
+
+```ts
 const componentRef = useRef(null);
 ```
-
 
 ## Known Issues
 
@@ -222,7 +222,7 @@ const componentRef = useRef(null);
 
 ### Can the `ComponentToPrint` be a functional component?
 
-Officially no, but there are workarounds using the `useRef` hook. See [#96](https://github.com/gregnb/react-to-print/issues/96) and [#181](https://github.com/gregnb/react-to-print/issues/181) for examples. We will officially support this once we release the next major version which will drop React 15 support.
+Yes, but only if you wrap it with [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html). `react-to-print` relies on refs to grab the underlying DOM representation of the component, and functional components [cannot take refs by default](https://reactjs.org/docs/refs-and-the-dom.html#accessing-refs).
 
 ### Why does `onAfterPrint` fire even if the user cancels printing
 
