@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.14.0 (October 20th, 2021)
+
+- FIX [391](https://github.com/gregnb/react-to-print/issues/391): Setting `documentTitle` will now properly set the filename when printing as a PDF in Chrome, Firefox, and Safari
+- FIX: a rare (no reported events) edge case could cause printing to hang if an image failed to load and error logging was not enabled. [This has been fixed](https://github.com/gregnb/react-to-print/pull/418/commits/36baecc00fd68a1efa976c5a982463c78a0dca93#diff-0b5adbfe7b36e4ae2f479291e20152e33e940f7f265162d77f40f6bdb5da7405L333)
+- FEATURE: the UI for running the examples has been massively improved. Try them out! We will be porting this to our official CodeSandbox example soon.
+- CHORE: changed an error message saying only class based components are allowed to be printed to clarify that functional components wrapped in `React.forwardRef` can be printed as well
+- CHORE: refactored logging code to be DRYer and simpler to use
+- CHORE: all `devDependencies` have been upgraded to their latest and greatest
+- DOCS: major improvements to the README, including making some examples more concise, adding information about using functional components to print, adding some new pitfalls, and adding information about known issues when printing in mobile WebViews (see [#384](https://github.com/gregnb/react-to-print/issues/384) for more)
+
 ## 2.13.0 (August 4th, 2021)
 
 - FEATURE [402](https://github.com/gregnb/react-to-print/pull/402): support passing a `nonce` property to be used with CSP. Thanks @Arcturus5404 and @nenonja
