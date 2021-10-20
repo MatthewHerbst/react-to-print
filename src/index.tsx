@@ -96,16 +96,32 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             }
                         });
                 } else if (target.contentWindow.print) {
-                    // NOTE: Overrides the page's title during the print process
-                    const tempTitle = document.title;
+                    const tempContentDocumentTitle = target.contentDocument?.title ?? '';
+                    const tempOwnerDocumentTitle = target.ownerDocument.title;
+
+                    // Override page and various target content titles during print
+                    // NOTE: some browsers seem to take the print title from the highest level
+                    // title, while others take it from the lowest level title. So, we set the title
+                    // in a few places and hope the current browser takes one of them :pray:
                     if (documentTitle) {
-                        document.title  = documentTitle;
+                        // Print filename in Chrome
+                        target.ownerDocument.title = documentTitle;
+
+                        // Print filename in Firefox, Safari
+                        if (target.contentDocument) {
+                            target.contentDocument.title = documentTitle;
+                        }
                     }
 
                     target.contentWindow.print();
 
+                    // Restore the page's original title information
                     if (documentTitle) {
-                        document.title = tempTitle;
+                        target.ownerDocument.title = tempOwnerDocumentTitle;
+
+                        if (target.contentDocument) {
+                            target.contentDocument.title = tempContentDocumentTitle;
+                        }
                     }
 
                     if (onAfterPrint) {
@@ -201,7 +217,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.style.top = "-1000px";
         printWindow.style.left = "-1000px";
         printWindow.id = "printWindow";
-        printWindow.title = "Print Window";
 
         const contentNodes = findDOMNode(contentEl);
 
