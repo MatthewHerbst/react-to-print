@@ -55,6 +55,12 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 `react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
 
+### Mobile Browsers in WebView
+
+While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all mobile browsers. Some browsers don't make the correct API available. Others make it available but cause it to no-op when in WebView.
+
+We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/gregnb/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
+
 ### Known Incompatible Browsers
 
 - Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
@@ -64,26 +70,23 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 For full examples please see the [`examples`](https://github.com/gregnb/react-to-print/tree/master/examples) folder.
 
 ```jsx
+// Using a class component, everything works without issue
 export class ComponentToPrint extends React.PureComponent {
   render() {
     return (
-      <table>
-        <thead>
-          <th>column 1</th>
-          <th>column 2</th>
-          <th>column 3</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>data 1</td>
-            <td>data 2</td>
-            <td>data 3</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>My cool content here!</div>
     );
   }
 }
+
+// Using a functional component, you must wrap it in React.forwardRef, and then forward the ref to
+// the node you want to be the root of the print (usually the outer most node in the ComponentToPrint)
+// https://reactjs.org/docs/refs-and-the-dom.html#refs-and-function-components
+export const ComponentToPrint = React.forwardRef((props, ref) => {
+  return (
+    <div ref={ref}>My cool content here!</div>
+  );
+});
 ```
 
 ### Calling from class components
@@ -197,9 +200,23 @@ const componentRef = useRef(null);
 
 ## Common Pitfalls
 
+- When printing, only styles that directly target the printed nodes will be applied, since the parent nodes will not exist in the DOM used for the print. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
+
+  ```jsx
+  <div className="parent">
+    <p>Hello</p>
+  </div>
+  ```
+
+  ```css
+  div.parent p { color:red; }
+  ```
+
 - The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
 
 - Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/gregnb/react-to-print/issues/248) for an example.
+
+- When rendering multiple components to print, for example, if you have a list of charts and want each chart to have its own print icon, ideally you will wrap each component to print + print button in its own component, and just render a list of those components. However, if you cannot do that for some reason, in your `.map` ensure that each component gets a unique `ref` value passed to it, otherwise printing any of the components will always print the last component. See [323](https://github.com/gregnb/react-to-print/issues/323) for more.
 
 ## FAQ
 
@@ -232,6 +249,16 @@ This will hide `ComponentToPrint` but keep it in the DOM so that it can be copie
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
 
 ## Helpful Style Tips
+
+### Set the page orientation
+
+While you should be able to place these styles anywhere, sometimes the browser doesn't always pick them up. To force orientation of the page you can include the following in the component being printed:
+
+```jsx
+<style type="text/css" media="print">{"\
+  @page {\ size: landscape;\ }\
+"}</style>
+```
 
 ### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
 

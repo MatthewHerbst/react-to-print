@@ -1,7 +1,8 @@
 'use strict';
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -12,10 +13,15 @@ module.exports = {
         path: path.resolve(__dirname, './dist'),
     },
     devServer: {
-        contentBase: './dist',
+        client: {
+            overlay: true,
+            progress: true,
+        },
         hot: true,
         open: true,
-        progress: true,
+        static: {
+            directory: './dist',
+        },
     },
     module: {
         rules: [
@@ -33,10 +39,10 @@ module.exports = {
                 test: /\.(jpg|png)$/i,
                 loader: 'url-loader',
             },
-        ]
+        ],
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.css']
+        extensions: ['.ts', '.tsx', '.js', '.css'],
     },
     plugins: [
         new HtmlWebpackPlugin({ favicon: 'examples/favicon.ico', template: 'index.html' }),

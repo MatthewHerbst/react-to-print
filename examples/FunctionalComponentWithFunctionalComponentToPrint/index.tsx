@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { ComponentToPrint } from "../ComponentToPrint";
+import { FunctionalComponentToPrint } from "../ComponentToPrint";
 import ReactToPrint from "../../src/index";
 
-export const FunctionalComponent = () => {
+export const FunctionalComponentWithFunctionalComponentToPrint = () => {
   const componentRef = React.useRef(null);
 
   const onBeforeGetContentResolve = React.useRef<(() => void) | null>(null);
@@ -53,7 +53,7 @@ export const FunctionalComponent = () => {
     // return <button onClick={() => alert('This will not work')}>Print this out!</button>;
 
     // Good
-    return <button>Print using a Functional Component</button>;
+    return <button>Print a Functional Component (using `forwardRef`) using a Functional Component</button>; // eslint-disable-line max-len
   }, []);
 
   return (
@@ -68,7 +68,7 @@ export const FunctionalComponent = () => {
         trigger={reactToPrintTrigger}
       />
       {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
-      <ComponentToPrint ref={componentRef} text={text} />
+      <FunctionalComponentToPrint ref={componentRef} text={text} />
     </div>
   );
 };

@@ -8,7 +8,7 @@ import * as React from "react";
 import image from '../test_image.png';
 
 type Props = {
-  text: string,
+  text?: string,
 };
 
 type State = {
@@ -38,8 +38,15 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
   private setRef = (ref: HTMLCanvasElement) => this.canvasEl = ref;
 
   public render() {
+    const {
+      text,
+    } = this.props;
+
     return (
       <div className="relativeCSS">
+        <style type="text/css" media="print">{"\
+   @page {\ size: landscape;\ }\
+"}</style>
         <div className="flash" />
         <img alt="A test image" src={image as string} />
         <img alt="This will warn but not block printing" />
@@ -52,7 +59,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
           </thead>
           <tbody>
           <tr>
-            <td>{this.props.text}</td>
+            <td>{text ?? 'Custom Text Here'}</td>
             <td>
               <input
                 checked={this.state.checked}
@@ -119,3 +126,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
     );
   }
 }
+
+export const FunctionalComponentToPrint = React.forwardRef<ComponentToPrint | null, Props>((props, ref) => { // eslint-disable-line max-len
+  return <ComponentToPrint ref={ref} text={props.text} />;
+});
