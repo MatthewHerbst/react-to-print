@@ -363,21 +363,28 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 if (copyStyles) {
                     const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
-
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
                         const node = headEls[i];
-                        if (node.tagName === "STYLE") {
+                        if (node.tagName === "STYLE") { // <style> nodes
                             const newHeadEl = domDoc.createElement(node.tagName);
                             const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
-
                             if (sheet) {
                                 let styleCSS = "";
                                 // NOTE: for-of is not supported by IE
-                                for (let j = 0, cssLen = sheet.cssRules.length; j < cssLen; ++j) {
-                                    if (typeof sheet.cssRules[j].cssText === "string") {
-                                        styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
+                                try {
+                                    // Accessing `sheet.cssRules` on cross-origin sheets can throw
+                                    // security exceptions in some browsers, notably Firefox
+                                    // https://github.com/gregnb/react-to-print/issues/429
+                                    const cssLength = sheet.cssRules.length;
+                                    for (let j = 0; j < cssLength; ++j) {
+                                        if (typeof sheet.cssRules[j].cssText === "string") {
+                                            styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
+                                        }
                                     }
+                                } catch (error) {
+                                    this.logMessages([`A stylesheet could not be accessed. This is likely due to the stylesheet having cross-origin imports, and many browsers block script access to cross-origin stylesheets. See https://github.com/gregnb/react-to-print/issues/429 for details. You may be able to load the sheet by both marking the stylesheet with the cross \`crossorigin\` attribute, and setting the \`Access-Control-Allow-Origin\` header on the server serving the stylesheet. Alternatively, host the stylesheet on your domain to avoid this issue entirely.`, node], 'warning');
                                 }
+
                                 newHeadEl.setAttribute("id", `react-to-print-${i}`);
                                 if (nonce) {
                                     newHeadEl.setAttribute("nonce", nonce);
@@ -385,7 +392,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 newHeadEl.appendChild(domDoc.createTextNode(styleCSS));
                                 domDoc.head.appendChild(newHeadEl);
                             }
-                        } else {
+                        } else { // <link> nodes, and any others
                             // Many browsers will do all sorts of weird things if they encounter an
                             // empty `href` tag (which is invalid HTML). Some will attempt to load
                             // the current page. Some will attempt to load the page"s parent
@@ -395,8 +402,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             if (node.getAttribute("href")) {
                                 const newHeadEl = domDoc.createElement(node.tagName);
 
-                                // node.attributes has NamedNodeMap type that is not an Array and
-                                // can be iterated only via direct [i] access
+                                // Manually re-create the node
+                                // TODO: document why cloning the node won't work? I don't recall
+                                // the reasoning behind why we do it this way
+                                // NOTE: node.attributes has NamedNodeMap type that is not an Array
+                                // and can be iterated only via direct [i] access
                                 for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
                                     const attr = node.attributes[j];
                                     if (attr) {
