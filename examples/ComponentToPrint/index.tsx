@@ -50,6 +50,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
         <div className="flash" />
         <img alt="A test image" src={image as string} />
         <img alt="This will warn but not block printing" />
+        <div className="customFontText">Some Cool Font Text</div>
         <table className="testClass">
           <thead>
           <tr>

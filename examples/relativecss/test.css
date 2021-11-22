@@ -2,6 +2,12 @@
   color: #FF0000;
 }
 
+.customFontText {
+  font-family: "Anton";
+  font-weight: "normal";
+  font-style: "normal";
+}
+
 .indicator {
   font-size: 2rem;
   color: #FF0000;
