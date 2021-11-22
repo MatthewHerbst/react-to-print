@@ -1,48 +1,19 @@
 // Lightly modified from: https://github.com/Microsoft/TypeScript/issues/30984#issuecomment-631991019
+// NOTE: TypeScript 4.4 added partial support for FontFace. As such, only a few missing items now
+// need to be manually specified
+// https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029#issuecomment-869224737
 export {}
 
 declare global {
-  const FontFace: FontFace;
-
   interface Document {
-    fonts: FontFaceSet
+    fonts: FontFaceSet; // https://developer.mozilla.org/en-US/docs/Web/API/Document/fonts
   }
 
   interface Window {
-    FontFace: FontFace;
-  }
-
-  type CSSOMString = string;
-  type FontFaceLoadStatus = 'unloaded' | 'loading' | 'loaded' | 'error';
-  type FontFaceSetStatus = 'loading' | 'loaded';
-
-  interface FontFace extends FontFaceDescriptors {
-    // eslint-disable-next-line @typescript-eslint/no-misused-new
-    new(family: string, source: string | ArrayBuffer, descriptors?: FontFaceDescriptors): FontFace;
-    readonly status: FontFaceLoadStatus;
-    readonly loaded: Promise<FontFace>;
-    variationSettings: CSSOMString;
-    display: CSSOMString;
-    load(): Promise<FontFace>;
-  }
-
-  interface FontFaceDescriptors {
-    family: CSSOMString;
-    style: CSSOMString;
-    weight: CSSOMString;
-    stretch: CSSOMString;
-    unicodeRange: CSSOMString;
-    variant: CSSOMString;
-    featureSettings: CSSOMString;
+    FontFace: FontFace; // https://developer.mozilla.org/en-US/docs/Web/API/FontFace
   }
 
   interface FontFaceSet extends Iterable<FontFace> {
-    readonly status: FontFaceSetStatus;
-    readonly ready: Promise<FontFaceSet>;
-    add(font: FontFace): void;
-    check(font: string, text?: string): boolean; // throws exception
-    load(font: string, text?: string): Promise<FontFace[]>
-    delete(font: FontFace): void;
-    clear(): void;
+    add(font: FontFace): void; // https://developer.mozilla.org/en-US/docs/Web/API/FontFaceSet/add
   }
 }
