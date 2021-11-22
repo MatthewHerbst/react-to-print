@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.14.1 (November 21st, 2021)
+
+- FIX [429](https://github.com/gregnb/react-to-print/issues/429): Attempting to access the contents of a cross-origin stylesheet is forbidden by scripts, and attempting to do so would cause `react-to-print` to crash. Upstream work in the browsers is required to find a proper solution to this, read more in the issue. A `try/catch` has been added around the offending code, along with a warning message with tips on how to resolve. Thanks [@JoshuaKGoldberg](https://github.com/JoshuaKGoldberg) for lots of debugging help
+- FIX [432](https://github.com/gregnb/react-to-print/issues/432): TypeScript 4.4 shipped with `FontFace` support in its [lib definitions](https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029#issuecomment-869224737) which caused `react-to-print` to fail to build locally on versions of TypeScript >= 4.4 since our `FontFace` definitions clashed with those now in TypeScript. This has been resolved, thanks [@oxygen-xx](https://github.com/oxygen-xx)
+- DOCS [422](https://github.com/gregnb/react-to-print/pull/422): The README was updated to properly reflect that functional components can be used so long as they are wrapped with `React.forwardRef`
+- DOCS [430](https://github.com/gregnb/react-to-print/pull/430): A typo was fixed, thanks [@hsusanoo](https://github.com/hsusanoo)
+
 ## 2.14.0 (October 20th, 2021)
 
 - FIX [391](https://github.com/gregnb/react-to-print/issues/391): Setting `documentTitle` will now properly set the filename when printing as a PDF in Chrome, Firefox, and Safari
@@ -12,7 +19,7 @@
 
 ## 2.13.0 (August 4th, 2021)
 
-- FEATURE [402](https://github.com/gregnb/react-to-print/pull/402): support passing a `nonce` property to be used with CSP. Thanks @Arcturus5404 and @nenonja
+- FEATURE [402](https://github.com/gregnb/react-to-print/pull/402): support passing a `nonce` property to be used with CSP. Thanks [@Arcturus5404]((https://github.com/Arcturus5404)) and [@nenonja](https://github.com/nenonja)
 
 ## 2.12.6 (May 31st, 2021)
 
