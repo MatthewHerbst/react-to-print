@@ -11,7 +11,7 @@ So you've created a React component and would love to give end users the ability
 
 ## Demo
 
-[![Edit react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
+[![Run react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
 ## Install
 
@@ -43,11 +43,11 @@ The component accepts the following props:
 
 ### `PrintContextConsumer`
 
-If you need extra control over printing and don't want to specify `trigger` directly, `PrintContextConsumer` allows you to gain direct access to the `handlePrint` method which triggers the print action. Requires React ^16.3.0.
+If you need extra control over printing and don't want to specify `trigger` directly, `PrintContextConsumer` allows you to gain direct access to the `handlePrint` method which triggers the print action. Requires React >=16.3.0. See the examples below for usage.
 
 ### `useReactToPrint`
 
-For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React ^16.8.0.
+For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React >=16.8.0. See the examples below for usage.
 
 ## Compatibility
 
@@ -55,7 +55,7 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 ### Mobile Browsers in WebView
 
-While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all mobile browsers. Some browsers don't make the correct API available. Others make it available but cause it to no-op when in WebView.
+While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all WebViews. Some don't make the correct API available. Others make it available but cause printing to no-op when in WebView.
 
 We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/gregnb/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
 
@@ -65,7 +65,7 @@ We are actively researching resolutions to this issue, but it likely requires ch
 
 ## Examples
 
-For full examples please see the [`examples`](https://github.com/gregnb/react-to-print/tree/master/examples) folder.
+[![Run react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
 ```jsx
 // Using a class component, everything works without issue
@@ -197,6 +197,8 @@ const componentRef = useRef(null);
 - `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
 
 ## Common Pitfalls
+
+- `documentTitle` will not work if `react-to-print` is running within an `iframe`. If `react-to-print` is running within an `iframe` and your script has access to the parent document, you may be able to manually set and then restore the parent document's `title` during the print. This can be done by leveraging the `onBeforeGetContent` and `onAfterPrint` props.
 
 - When printing, only styles that directly target the printed nodes will be applied, since the parent nodes will not exist in the DOM used for the print. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
 
