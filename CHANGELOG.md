@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.2 (December 14th, 2021)
+
+- FIX: As seen in [441](https://github.com/gregnb/react-to-print/issues/441) when using the `useReactToPrint` hook along with TypeScript and strict checking the user is currently required to ensure that the return of `useReactToPrint` isn't `undefined`, since that is what is returned if the user is using a version of React that does not support hooks. To remove the need for this check `useReactToPrint` will now return a function that throws an error if the version of React does not support hooks.
+
 ## 2.14.1 (November 21st, 2021)
 
 - FIX [429](https://github.com/gregnb/react-to-print/issues/429): Attempting to access the contents of a cross-origin stylesheet is forbidden by scripts, and attempting to do so would cause `react-to-print` to crash. Upstream work in the browsers is required to find a proper solution to this, read more in the issue. A `try/catch` has been added around the offending code, along with a warning message with tips on how to resolve. Thanks [@JoshuaKGoldberg](https://github.com/JoshuaKGoldberg) for lots of debugging help
