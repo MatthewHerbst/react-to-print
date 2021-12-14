@@ -229,7 +229,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const isText = contentNodes instanceof Text;
 
         const globalStyleLinkNodes = document.querySelectorAll("link[rel='stylesheet']");
-        const renderComponentImgNodes = isText ? [] : (contentNodes as Element).querySelectorAll("img")
+        const renderComponentImgNodes = isText ? [] : contentNodes.querySelectorAll("img")
 
         this.linkTotal = globalStyleLinkNodes.length + renderComponentImgNodes.length;
         this.linksLoaded = [];
@@ -495,19 +495,24 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     }
 }
 
-export const useReactToPrint = hooksEnabled ?
-    (props: IReactToPrintProps) => {
-        const entity = React.useMemo(
-            // TODO: is there a better way of applying the defaultProps?
-            () => new ReactToPrint({ ...defaultProps, ...props }),
-            [props]
-        );
+type UseReactToPrintHookReturn = () => void;
 
-        return React.useCallback(() => entity.handleClick(), [entity]);
-    } :
-    (props: IReactToPrintProps) => {
+export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookReturn => {
+    if (!hooksEnabled) {
         if (!props.suppressErrors) {
-            console.warn('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // eslint-disable-line no-console
+            console.error('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // eslint-disable-line no-console
         }
-        return undefined;
-    };
+
+        return () => {
+            throw new Error('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"');
+        };
+    }
+
+    const reactToPrint = React.useMemo(
+        // TODO: is there a better way of applying the defaultProps?
+        () => new ReactToPrint({ ...defaultProps, ...props }),
+        [props]
+    );
+
+    return React.useCallback(() => reactToPrint.handleClick(), [reactToPrint]);
+};
