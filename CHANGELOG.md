@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.3 (December 2021)
+
+- CHORE: all `devDependencies` have been upgraded to their latest and greatest
+
 ## 2.14.2 (December 14th, 2021)
 
 - FIX: As seen in [441](https://github.com/gregnb/react-to-print/issues/441) when using the `useReactToPrint` hook along with TypeScript and strict checking the user is currently required to ensure that the return of `useReactToPrint` isn't `undefined`, since that is what is returned if the user is using a version of React that does not support hooks. To remove the need for this check `useReactToPrint` will now return a function that throws an error if the version of React does not support hooks.
