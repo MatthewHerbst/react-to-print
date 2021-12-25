@@ -2,7 +2,11 @@
 
 ## 2.14.3 (December 2021)
 
+- FIX [439](https://github.com/gregnb/react-to-print/issues/439): `react-to-print` now waits for `video` elements to load before printing. While this should work in most cases, we highly recommend setting the [`poster`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-poster) attribute of the `video`, which allows specifying an image to be a placeholder for the video until the video loads.
+- CHORE: cleaned up the examples code a bit, including adding tests for `video` elements
 - CHORE: all `devDependencies` have been upgraded to their latest and greatest
+
+Happy new years!
 
 ## 2.14.2 (December 14th, 2021)
 

@@ -48,79 +48,102 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
    @page {\ size: landscape;\ }\
 "}</style>
         <div className="flash" />
-        <img alt="A test image" src={image as string} />
-        <img alt="This will warn but not block printing" />
-        <div className="customFontText">Some Cool Font Text</div>
         <table className="testClass">
           <thead>
-          <tr>
-            <th className="column1">Column One</th>
-            <th>Column Two</th>
-          </tr>
+            <tr>
+              <th className="column1">Test Name</th>
+              <th>Test</th>
+            </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>{text ?? 'Custom Text Here'}</td>
-            <td>
-              <input
-                checked={this.state.checked}
-                onChange={this.handleCheckboxOnChange}
-                type="checkbox"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <select name="cars" id="cars">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
-              </select>
-            </td>
-            <td>
-              Blue
-              <input type="radio" id="blue" name="color" value="blue" />
-              Red
-              <input type="radio" id="red" name="color" value="red" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="date" />
-            </td>
-            <td>
-              Test Date
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input />
-            </td>
-            <td>
-              <img
-                alt="Google logo"
-                src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-                width="50"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>svg</td>
-            <td>
-              <svg height="100" width="100">
-                <circle cx="50" cy="50" fill="yellow" r="40" stroke="green" strokeWidth="4" />
-              </svg>
-            </td>
-          </tr>
-          <tr>
-            <td>canvas</td>
-            <td>
-              <canvas height="100" id="myCanvas" ref={this.setRef} width="200">
-                Your browser does not support the HTML5 canvas tag.
-              </canvas>
-            </td>
-          </tr>
+            <tr>
+              <td>Canvass</td>
+              <td>
+                <canvas height="100" id="myCanvas" ref={this.setRef} width="200">
+                  Your browser does not support the HTML5 canvas tag.
+                </canvas>
+              </td>
+            </tr>
+            <tr>
+              <td>Dynamic Content From Prop</td>
+              <td>{text ?? 'Custom Text Here'}</td>
+            </tr>
+            <tr>
+              <td>Fonts</td>
+              <td><div className="customFontText">Some Cool Font Text</div></td>
+            </tr>
+            <tr>
+              <td>Image: Local Import</td>
+              <td><img alt="A test image" src={image as string} width="200" /></td>
+            </tr>
+            <tr>
+              <td>Image: URL</td>
+              <td>
+                <img
+                  alt="Google logo"
+                  src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                  width="200"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Input</td>
+              <td><input /></td>
+            </tr>
+            <tr>
+              <td>Input: Checkbox</td>
+              <td>
+                <input
+                  checked={this.state.checked}
+                  onChange={this.handleCheckboxOnChange}
+                  type="checkbox"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Input: Date</td>
+              <td><input type="date" /></td>
+            </tr>
+            <tr>
+              <td>Input: Radio</td>
+              <td>
+                Blue <input type="radio" id="blue" name="color" value="blue" />
+                Red <input type="radio" id="red" name="color" value="red" />
+              </td>
+            </tr>
+            <tr>
+              <td>Select</td>
+              <td>
+                <select name="cars" id="cars">
+                  <option value="volvo">Volvo</option>
+                  <option value="saab">Saab</option>
+                  <option value="mercedes">Mercedes</option>
+                  <option value="audi">Audi</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>SVG</td>
+              <td>
+                <svg height="100" width="100">
+                  <circle cx="50" cy="50" fill="yellow" r="40" stroke="green" strokeWidth="4" />
+                </svg>
+              </td>
+            </tr>
+            <tr>
+              <td>Video</td>
+              <td><video src="https://www.w3schools.com/html/mov_bbb.mp4" width="200" /></td>
+            </tr>
+            <tr>
+              <td>Video: With Poster</td>
+              <td>
+                <video
+                  poster="https://images.freeimages.com/images/large-previews/9a9/tuscany-landscape-4-1500765.jpg"
+                  src="https://www.w3schools.com/html/mov_bbb.mp4"
+                  width="200"
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

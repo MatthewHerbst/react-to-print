@@ -230,7 +230,7 @@ Yes, but only if you wrap it with [`React.forwardRef`](https://reactjs.org/docs/
 
 ### Why does `react-to-print` skip `<link rel="stylesheet" href="">` tags
 
-`<link>`s with empty `href` attributes are [INVALID HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
+`<link>`s with empty `href` attributes are [invalid HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
 
 *Note*: related to the above, `img` tags with empty `src` attributes are also invalid, and we may not attempt to load them.
 
@@ -247,6 +247,10 @@ This will hide `ComponentToPrint` but keep it in the DOM so that it can be copie
 ### Changing print settings in the print dialog
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
+
+### Printing `video` elements
+
+`react-to-print` tries to wait for `video` elements to load before printing but a large part of this is up to the browser. Further, the image displayed will usually be the first frame of the video, which might not be what you expect to show. To ensure the proper image is displayed in the print we highly recommend setting the [`poster`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-poster) attribute of the `video`, which allows specifying an image to be a placeholder for the video until the video loads.
 
 ## Helpful Style Tips
 
