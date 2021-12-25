@@ -22,7 +22,7 @@ export class ClassComponentArray extends React.PureComponent<Props, State> {
 
     this.state = {
       isLoading: false,
-      text: "old boring text",
+      text: "Some cool text from the parent",
     };
   }
 

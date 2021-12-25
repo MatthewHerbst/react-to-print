@@ -9,7 +9,7 @@ export const FunctionalComponentWithHook = () => {
   const onBeforeGetContentResolve = React.useRef<(() => void) | null>(null);
 
   const [loading, setLoading] = React.useState(false);
-  const [text, setText] = React.useState("old boring text");
+  const [text, setText] = React.useState("Some cool text from the parent");
 
   const handleAfterPrint = React.useCallback(() => {
     console.log("`onAfterPrint` called"); // tslint:disable-line no-console

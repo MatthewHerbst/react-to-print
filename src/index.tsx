@@ -226,12 +226,17 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
 
         // React components can return a bare string as a valid JSX response
-        const isText = contentNodes instanceof Text;
+        const clonedContentNodes = contentNodes.cloneNode(true);
+        const isText = clonedContentNodes instanceof Text;
 
         const globalStyleLinkNodes = document.querySelectorAll("link[rel='stylesheet']");
-        const renderComponentImgNodes = isText ? [] : contentNodes.querySelectorAll("img")
+        const renderComponentImgNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("img");
+        const renderComponentVideoNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("video");
 
-        this.linkTotal = globalStyleLinkNodes.length + renderComponentImgNodes.length;
+        this.linkTotal =
+            globalStyleLinkNodes.length +
+            renderComponentImgNodes.length +
+            renderComponentVideoNodes.length;
         this.linksLoaded = [];
         this.linksErrored = [];
         this.fontsLoaded = [];
@@ -266,7 +271,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
 
             if (domDoc) {
-                domDoc.body.appendChild(contentNodes.cloneNode(true));
+                domDoc.body.appendChild(clonedContentNodes);
 
                 if (fonts) {
                     if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
@@ -306,7 +311,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
 
                 if (!isText) {
-                    // Copy all canvases
+                    // Copy canvases
                     const canvasEls = domDoc.querySelectorAll("canvas");
                     const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
                     for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
@@ -317,7 +322,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         }
                     }
 
-                    // Pre-load all images
+                    // Pre-load images
                     for (let i = 0; i < renderComponentImgNodes.length; i++) {
                         const imgNode = renderComponentImgNodes[i];
                         const imgSrc = imgNode.getAttribute("src");
@@ -331,6 +336,37 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             img.onload = markLoaded.bind(null, imgNode, true);
                             img.onerror = markLoaded.bind(null, imgNode, false);
                             img.src = imgSrc;
+                        }
+                    }
+
+                    // Pre-load videos
+                    for (let i = 0; i < renderComponentVideoNodes.length; i++) {
+                        const videoNode = renderComponentVideoNodes[i];
+                        videoNode.preload = 'auto'; // Hint to the browser that it should load this resource
+
+                        const videoPoster = videoNode.getAttribute('poster')
+                        if (videoPoster) {
+                            // If the video has a poster, pre-load the poster image
+                            // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
+                            const img = new Image();
+                            img.onload = markLoaded.bind(null, videoNode, true);
+                            img.onerror = markLoaded.bind(null, videoNode, false);
+                            img.src = videoPoster;
+                        } else {
+                            if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
+                                markLoaded(videoNode, true);
+                            } else {
+                                videoNode.onloadeddata = markLoaded.bind(null, videoNode, true);
+
+                                // TODO: if one if these is called is it possible for another to be called? If so we
+                                // need to add guards to ensure `markLoaded` is only called once for the node
+                                // TODO: why do `onabort` and `onstalled` seem to fire all the time even if
+                                // there is no issue?
+                                // videoNode.onabort = () => { console.log('Video with no poster abort'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onerror = () => { console.log('Video with no poster error'); markLoaded.bind(null, videoNode, false)(); }
+                                // videoNode.onemptied = () => { console.log('Video with no poster emptied'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onstalled = () => { console.log('Video with no poster stalled'); markLoaded.bind(null, videoNode, false)(); }
+                            }
                         }
                     }
 

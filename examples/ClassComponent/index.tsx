@@ -17,7 +17,7 @@ export class ClassComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       isLoading: false,
-      text: "old boring text",
+      text: "Some cool text from the parent",
     };
   }
 
@@ -33,8 +33,10 @@ export class ClassComponent extends React.PureComponent<Props, State> {
     console.log("`onBeforeGetContent` called"); // tslint:disable-line no-console
     this.setState({ text: "Loading new text...", isLoading: true });
 
-    return new Promise((resolve: any) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore `resolve` does not require a parameter be passed
         this.setState({ text: "New, Updated Text!", isLoading: false }, resolve);
       }, 2000);
     });
