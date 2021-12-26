@@ -252,6 +252,10 @@ Unfortunately there is no standard browser API for interacting with the print di
 
 `react-to-print` tries to wait for `video` elements to load before printing but a large part of this is up to the browser. Further, the image displayed will usually be the first frame of the video, which might not be what you expect to show. To ensure the proper image is displayed in the print we highly recommend setting the [`poster`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-poster) attribute of the `video`, which allows specifying an image to be a placeholder for the video until the video loads.
 
+### Electron
+
+`react-to-print` can be used for printing in Electron, but you will need to provide your own `print` method since Electron does not natively support the `window.print` method, which usually results in a no-op when called. There are [multiple issues](https://github.com/gregnb/react-to-print/search?q=electron&type=issues) regarding Electron that have been discussed previously. Please be sure to browse them to see if your question may have already been answered.
+
 ## Helpful Style Tips
 
 ### Set the page orientation
@@ -328,7 +332,7 @@ We often ([#327](https://github.com/gregnb/react-to-print/issues/327), [#343](ht
 
 ### Page Breaks
 
-#### Pattern for Page-Breaking Dynamic React Content
+#### Pattern for Page-Breaking Dynamic Content
 
 Define a page-break class to apply to elements which could be sensibly split into a page.
 
@@ -343,7 +347,7 @@ Define a page-break class to apply to elements which could be sensibly split int
 </div>
 ```
 
-In your styles, define your `@media print` styles, which should include setting your preference for CSS `page-break-` (see [w3's reference](https://www.w3schools.com/cssref/pr_print_pageba.asp) for options) to `auto`, and ensuring that your `page-break` element does not affect non-print style.
+In your styles, define your `@media print` styles, which should include setting your preference for CSS `page-break-` (see [w3's reference](https://www.w3schools.com/cssref/pr_print_pageba.asp) for options) to `auto`, and ensuring that your `page-break` element does not affect non-print styles.
 
 ```css
 @media all {
@@ -377,13 +381,15 @@ In your styles, define your `@media print` styles, which should include setting 
 #### Troubleshooting Page Breaks
 
 If your content rendered as print media does not automatically break multi-page content into multiple pages, the issue may be
-    1) style incompatibilities with print media rendering, **or**
-    2) a need to assign `CSS page-break-` properties to define how your document should behave when printed
+
+- Style incompatibilities with print media rendering
+- A need to assign `CSS page-break-` properties to define how your document should behave when printed
 
 #### Common Page Break Pitfalls
 
-- A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content.
-- A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks.
+- A style of `overflow: scroll`, when rendered to print, will result in cut off content instead of page breaks to include the content
+- A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks
+- Using `flex` may interfere with page breaks, try using `display: block`
 
 ## Running locally
 
