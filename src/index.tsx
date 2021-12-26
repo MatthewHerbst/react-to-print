@@ -313,7 +313,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 if (!isText) {
                     // Copy canvases
                     const canvasEls = domDoc.querySelectorAll("canvas");
-                    const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
+                    const srcCanvasEls = (clonedContentNodes as Element).querySelectorAll("canvas");
                     for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
                         const node = canvasEls[i];
                         const contentDrawImage = node.getContext("2d");
