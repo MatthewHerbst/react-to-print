@@ -254,7 +254,9 @@ Unfortunately there is no standard browser API for interacting with the print di
 
 ### Electron
 
-`react-to-print` can be used for printing in Electron, but you will need to provide your own `print` method since Electron does not natively support the `window.print` method, which usually results in a no-op when called. There are [multiple issues](https://github.com/gregnb/react-to-print/search?q=electron&type=issues) regarding Electron that have been discussed previously. Please be sure to browse them to see if your question may have already been answered.
+`react-to-print` can be used for printing in Electron, but you will need to provide your own `print` method since Electron does not natively support the `window.print` method. Please see [this answer on StackOverflow](https://stackoverflow.com/a/70534565/2518231) for how to do this.
+
+There is a fully-working example of how to use `react-to-print` with Electron available [here](https://github.com/MatthewHerbst/electron-react-to-print-demo).
 
 ## Helpful Style Tips
 
