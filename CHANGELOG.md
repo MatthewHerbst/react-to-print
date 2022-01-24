@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.14.4 (January 24th, 2022)
+
+- FIX [459](https://github.com/gregnb/react-to-print/issues/459): `react-to-print` now ensures that a `DOCTYPE` is set on the print iframe. Without this some browsers could render the print iframe in quirks mode, possibly changing the output
+- CHORE: Removed some debugging statements that made it into a previous production build
+- CHORE: Updated all dependencies
+- DOCS: Added a section with a link to a fully-working Electron example
+
 ## 2.14.3 (December 25th, 2021)
 
 - FIX [439](https://github.com/gregnb/react-to-print/issues/439): `react-to-print` now waits for `video` elements to load before printing. While this should work in most cases, we highly recommend setting the [`poster`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#attr-poster) attribute of the `video`, which allows specifying an image to be a placeholder for the video until the video loads.
