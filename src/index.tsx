@@ -217,6 +217,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.style.top = "-1000px";
         printWindow.style.left = "-1000px";
         printWindow.id = "printWindow";
+        // Ensure we set a DOCTYPE on the iframe's document
+        // https://github.com/gregnb/react-to-print/issues/459
+        printWindow.srcdoc = "<!DOCTYPE html>";
 
         const contentNodes = findDOMNode(contentEl);
 
@@ -312,13 +315,19 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                 if (!isText) {
                     // Copy canvases
-                    const canvasEls = domDoc.querySelectorAll("canvas");
-                    const srcCanvasEls = (contentNodes as HTMLCanvasElement).querySelectorAll("canvas");
-                    for (let i = 0, canvasElsLen = canvasEls.length; i < canvasElsLen; ++i) {
-                        const node = canvasEls[i];
-                        const contentDrawImage = node.getContext("2d");
-                        if (contentDrawImage) {
-                            contentDrawImage.drawImage(srcCanvasEls[i], 0, 0);
+                    // NOTE: must use data from `contentNodes` here as the canvass elements in
+                    // `clonedContentNodes` will not have been redrawn properly yet
+                    const srcCanvasEls = isText ? [] : (contentNodes as Element).querySelectorAll("canvas");
+                    const targetCanvasEls = domDoc.querySelectorAll("canvas");
+
+                    for (let i = 0; i < srcCanvasEls.length; ++i) {
+                        const sourceCanvas = srcCanvasEls[i];
+
+                        const targetCanvas = targetCanvasEls[i];
+                        const targetCanvasContext = targetCanvas.getContext("2d");
+
+                        if (targetCanvasContext) {
+                            targetCanvasContext.drawImage(sourceCanvas, 0, 0);
                         }
                     }
 
@@ -363,9 +372,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 // TODO: why do `onabort` and `onstalled` seem to fire all the time even if
                                 // there is no issue?
                                 // videoNode.onabort = () => { console.log('Video with no poster abort'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onerror = () => { console.log('Video with no poster error'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onerror = markLoaded.bind(null, videoNode, false);
                                 // videoNode.onemptied = () => { console.log('Video with no poster emptied'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onstalled = () => { console.log('Video with no poster stalled'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onstalled = markLoaded.bind(null, videoNode, false);
                             }
                         }
                     }

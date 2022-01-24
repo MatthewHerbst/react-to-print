@@ -30,6 +30,9 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
       ctx.beginPath();
       ctx.arc(95, 50, 40, 0, 2 * Math.PI);
       ctx.stroke();
+      ctx.fillStyle = 'rgb(200, 0, 0)';
+      ctx.fillRect(85, 40, 20, 20);
+      ctx.save();
     }
   }
 
@@ -59,7 +62,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             <tr>
               <td>Canvass</td>
               <td>
-                <canvas height="100" id="myCanvas" ref={this.setRef} width="200">
+                <canvas height="100" ref={this.setRef} width="200">
                   Your browser does not support the HTML5 canvas tag.
                 </canvas>
               </td>
