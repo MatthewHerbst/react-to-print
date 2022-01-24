@@ -372,9 +372,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 // TODO: why do `onabort` and `onstalled` seem to fire all the time even if
                                 // there is no issue?
                                 // videoNode.onabort = () => { console.log('Video with no poster abort'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onerror = () => { console.log('Video with no poster error'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onerror = () => markLoaded.bind(null, videoNode, false);
                                 // videoNode.onemptied = () => { console.log('Video with no poster emptied'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onstalled = () => { console.log('Video with no poster stalled'); markLoaded.bind(null, videoNode, false)(); }
+                                videoNode.onstalled = () => markLoaded.bind(null, videoNode, false);
                             }
                         }
                     }
