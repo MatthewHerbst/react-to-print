@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.5 (March 31st, 2022)
+
+- FIX [479](https://github.com/gregnb/react-to-print/pull/479): React 18 is now a supported `peerDependency`. Thanks [fabb](https://github.com/fabb)
+
 ## 2.14.4 (January 24th, 2022)
 
 - FIX [459](https://github.com/gregnb/react-to-print/issues/459): `react-to-print` now ensures that a `DOCTYPE` is set on the print iframe. Without this some browsers could render the print iframe in quirks mode, possibly changing the output
