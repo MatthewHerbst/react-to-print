@@ -410,7 +410,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
                         const node = headEls[i];
-                        if (node.tagName === "STYLE") { // <style> nodes
+                        if (node.tagName.toLowerCase() === 'style') { // <style> nodes
                             const newHeadEl = domDoc.createElement(node.tagName);
                             const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
                             if (sheet) {
