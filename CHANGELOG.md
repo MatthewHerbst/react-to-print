@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.6 (April 9th, 2022)
+
+- FIX [485](https://github.com/gregnb/react-to-print/issues/485): `react-to-print` assumed that the `tagName` of `<style>` nodes was always `'STYLE'`, however, sometimes it can be `'style'` or possibly other case combinations. Added resiliency to the check so now any casing of `'style'` will pass the check
+
 ## 2.14.5 (March 31st, 2022)
 
 - FIX [479](https://github.com/gregnb/react-to-print/pull/479): React 18 is now a supported `peerDependency`. Thanks [fabb](https://github.com/fabb)
