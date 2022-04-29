@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.14.7 (April 28th, 2022)
+
+- FIX [484](https://github.com/gregnb/react-to-print/issues/484): Previously `onAfterPrint` was not being called if a custom `print` function was passed. Now it will always be called
+- CHORE: a couple `devDependency` updates to make `npm audit` happy
+
 ## 2.14.6 (April 9th, 2022)
 
 - FIX [485](https://github.com/gregnb/react-to-print/issues/485): `react-to-print` assumed that the `tagName` of `<style>` nodes was always `'STYLE'`, however, sometimes it can be `'style'` or possibly other case combinations. Added resiliency to the check so now any casing of `'style'` will pass the check
