@@ -220,6 +220,22 @@ const componentRef = useRef(null);
 
 ## FAQ
 
+### Can `react-to-print` print a PDF?
+
+We simply open the browser's print preview window, so we aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
+
+```tsx
+const handlePrint = useReactToPrint({
+  ...,
+  print: async (printIframe: HTMLIframeElement) => {
+    // Do whatever you want here, including asynchronous work
+    await generateAndSavePDF(printIframe);
+  },
+});
+```
+
+For examples of how others have done this, see [#484](https://github.com/gregnb/react-to-print/issues/484)
+
 ### Can the `ComponentToPrint` be a functional component?
 
 Yes, but only if you wrap it with [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html). `react-to-print` relies on refs to grab the underlying DOM representation of the component, and functional components [cannot take refs by default](https://reactjs.org/docs/refs-and-the-dom.html#accessing-refs).

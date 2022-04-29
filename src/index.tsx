@@ -124,13 +124,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         }
                     }
 
-                    if (onAfterPrint) {
-                        onAfterPrint();
-                    }
                 } else {
                     // Some browsers, such as Firefox Android, do not support printing at all
                     // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
                     this.logMessages(["Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."]);
+                }
+
+                if (onAfterPrint) {
+                    onAfterPrint();
                 }
 
                 this.handleRemoveIframe();
