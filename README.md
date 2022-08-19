@@ -248,7 +248,7 @@ Yes, but only if you wrap it with [`React.forwardRef`](https://reactjs.org/docs/
 
 `<link>`s with empty `href` attributes are [invalid HTML](https://www.w3.org/TR/html50/document-metadata.html#attr-link-href). In addition, they can cause all sorts of [undesirable behavior](https://gtmetrix.com/avoid-empty-src-or-href.html). For example, many browsers - including modern ones, when presented with `<link href="">` will attempt to load the current page. Some even attempt to load the current page's parent directory.
 
-*Note*: related to the above, `img` tags with empty `src` attributes are also invalid, and we may not attempt to load them.
+*Note*: related to the above, [`img` tags](https://www.scaler.com/topics/html/html-image-tag/) with empty `src` attributes are also invalid, and we may not attempt to load them.
 
 ### How do you make `ComponentToPrint` show only while printing
 
