@@ -444,8 +444,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             // the current page. Some will attempt to load the page"s parent
                             // directory. These problems can cause `react-to-print` to stop without
                             // any error being thrown. To avoid such problems we simply do not
-                            // attempt to load these links.
-                            if (node.getAttribute("href")) {
+                            // attempt to load these links. 
+                            if (node.getAttribute("href") && !node.hasAttribute("disabled")) {
                                 const newHeadEl = domDoc.createElement(node.tagName);
 
                                 // Manually re-create the node
