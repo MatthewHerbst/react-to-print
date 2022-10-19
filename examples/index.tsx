@@ -9,7 +9,7 @@ import { ClassComponentText } from "./ClassComponentText";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
 import { FunctionalComponentWithFunctionalComponentToPrint } from './FunctionalComponentWithFunctionalComponentToPrint';
-import "./relativecss/test.css";
+import "./index.css";
 
 type Props = Record<string, unknown>;
 type State = {
