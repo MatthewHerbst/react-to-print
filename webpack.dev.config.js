@@ -45,6 +45,6 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.css'],
     },
     plugins: [
-        new HtmlWebpackPlugin({ favicon: 'examples/favicon.ico', template: 'index.html' }),
+        new HtmlWebpackPlugin({ favicon: 'examples/favicon.ico', template: 'examples/index.html' }),
     ],
 };
