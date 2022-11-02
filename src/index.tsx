@@ -411,6 +411,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
                     for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
                         const node = headEls[i];
+                        
                         if (node.tagName.toLowerCase() === 'style') { // <style> nodes
                             const newHeadEl = domDoc.createElement(node.tagName);
                             const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
@@ -444,30 +445,43 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             // the current page. Some will attempt to load the page"s parent
                             // directory. These problems can cause `react-to-print` to stop without
                             // any error being thrown. To avoid such problems we simply do not
-                            // attempt to load these links. 
-                            if (node.getAttribute("href") && !node.hasAttribute("disabled")) {
-                                const newHeadEl = domDoc.createElement(node.tagName);
+                            // attempt to load these links.
+                            if (node.getAttribute("href")) {
+                                // Browser's don't display `disabled` `link` nodes, so we need to filter them out
+                                // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-disabled
+                                // https://caniuse.com/mdn-html_elements_link_disabled
+                                // TODO: ideally we could just filter these out on selection, by
+                                // using a selector such as: `link[rel='stylesheet']:not([disabled=true][disabled=false])`
+                                // https://stackoverflow.com/questions/27733826/css-selectors-for-excluding-by-attribute-presence
+                                // However, that doesn't seem to work. Why?
+                                if (!node.hasAttribute("disabled")) {
+                                    const newHeadEl = domDoc.createElement(node.tagName);
 
-                                // Manually re-create the node
-                                // TODO: document why cloning the node won't work? I don't recall
-                                // the reasoning behind why we do it this way
-                                // NOTE: node.attributes has NamedNodeMap type that is not an Array
-                                // and can be iterated only via direct [i] access
-                                for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
-                                    const attr = node.attributes[j];
-                                    if (attr) {
-                                        newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
+                                    // Manually re-create the node
+                                    // TODO: document why cloning the node won't work? I don't recall
+                                    // the reasoning behind why we do it this way
+                                    // NOTE: node.attributes has NamedNodeMap type that is not an Array
+                                    // and can be iterated only via direct [i] access
+                                    for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
+                                        const attr = node.attributes[j];
+                                        if (attr) {
+                                            newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
+                                        }
                                     }
+    
+                                    newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
+                                    newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
+                                    if (nonce) {
+                                        newHeadEl.setAttribute("nonce", nonce);
+                                    }
+                                    domDoc.head.appendChild(newHeadEl);
+                                } else {
+                                    this.logMessages(['`react-to-print` encountered a <link> tag with a `disabled` attribute and will ignore it. Note that the `disabled` attribute is deprecated, and some browsers ignore it. You should stop using it. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-disabled. The <link> is:', node], 'warning');
+                                    // `true` because this isn't an error: we are intentionally skipping this node
+                                    markLoaded(node, true);
                                 }
-
-                                newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
-                                newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
-                                if (nonce) {
-                                    newHeadEl.setAttribute("nonce", nonce);
-                                }
-                                domDoc.head.appendChild(newHeadEl);
                             } else {
-                                this.logMessages(['"react-to-print" encountered a <link> tag with an empty "href" attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node], 'warning')
+                                this.logMessages(['`react-to-print` encountered a <link> tag with an empty `href` attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node], 'warning');
                                 // `true` because we"ve already shown a warning for this
                                 markLoaded(node, true);
                             }
@@ -499,7 +513,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public logMessages = (messages: unknown[], level: 'error' | 'warning' = 'error') => {
+    public logMessages = (messages: unknown[], level: 'error' | 'warning' | 'debug' = 'error') => {
         const {
             suppressErrors,
         } = this.props;
@@ -509,6 +523,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 console.error(messages); // eslint-disable-line no-console
             } else if (level === 'warning') {
                 console.warn(messages); // eslint-disable-line no-console
+            } else if (level === 'debug') {
+                console.debug(messages); // eslint-disable-line no-console
             }
         }
     }

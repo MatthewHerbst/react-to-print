@@ -47,6 +47,15 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
 
     return (
       <div className="relativeCSS">
+        <link
+          // This tests that we properly ignore disabled nodes
+          // Learn more: https://github.com/gregnb/react-to-print/pull/537
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          disabled
+          rel="stylesheet"
+          href="../index.css"
+        />
         <style type="text/css" media="print">{"\
    @page {\ size: landscape;\ }\
 "}</style>
