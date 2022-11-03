@@ -47,6 +47,7 @@
     "@typescript-eslint/parser": "^5.10.1",
     "acorn": "^8.7.0",
     "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.5.1",
     "eslint": "^8.7.0",
     "html-webpack-plugin": "^5.5.0",

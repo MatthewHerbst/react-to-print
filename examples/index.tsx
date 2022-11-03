@@ -9,7 +9,7 @@ import { ClassComponentText } from "./ClassComponentText";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
 import { FunctionalComponentWithFunctionalComponentToPrint } from './FunctionalComponentWithFunctionalComponentToPrint';
-import "./index.css";
+import "./styles/index.css";
 
 type Props = Record<string, unknown>;
 type State = {
@@ -20,43 +20,46 @@ type State = {
 class Example extends React.Component<Props, State> {
   render() {
     return (
-      <Tabs>
-        <TabList>
-          <Tab>Class Component</Tab>
-          <Tab>Functional Component</Tab>
-          <Tab>Raw Values</Tab>
-        </TabList>
-        <TabPanel>
-          <Tabs>
-            <TabList>
-              <Tab>Standard</Tab>
-              <Tab>With ContextConsumer</Tab>
-            </TabList>
-            <TabPanel><ClassComponent /></TabPanel>
-            <TabPanel><ClassComponentContextConsumer /></TabPanel>
-          </Tabs>
-        </TabPanel>
-        <TabPanel>
-          <Tabs>
-            <TabList>
-              <Tab>Standard</Tab>
-              <Tab>With Hook</Tab>
-              <Tab>With a functional ComponentToPrint</Tab>
-            </TabList>
-            <TabPanel><FunctionalComponent /></TabPanel>
-            <TabPanel><FunctionalComponentWithHook /></TabPanel>
-            <TabPanel><FunctionalComponentWithFunctionalComponentToPrint /></TabPanel>
-          </Tabs>
-        </TabPanel>
-        <TabPanel>
-          <Tabs>
-            <TabList>
-              <Tab>Text</Tab>
-            </TabList>
-            <TabPanel><ClassComponentText /></TabPanel>
-          </Tabs>
-        </TabPanel>
-      </Tabs>
+      <div>
+        <span className="title">Open the developer console to see lifecycle method logging</span>
+        <Tabs>
+          <TabList>
+            <Tab>Class Component</Tab>
+            <Tab>Functional Component</Tab>
+            <Tab>Raw Values</Tab>
+          </TabList>
+          <TabPanel>
+            <Tabs>
+              <TabList>
+                <Tab>Standard</Tab>
+                <Tab>With ContextConsumer</Tab>
+              </TabList>
+              <TabPanel><ClassComponent /></TabPanel>
+              <TabPanel><ClassComponentContextConsumer /></TabPanel>
+            </Tabs>
+          </TabPanel>
+          <TabPanel>
+            <Tabs>
+              <TabList>
+                <Tab>Standard</Tab>
+                <Tab>With Hook</Tab>
+                <Tab>With a functional ComponentToPrint</Tab>
+              </TabList>
+              <TabPanel><FunctionalComponent /></TabPanel>
+              <TabPanel><FunctionalComponentWithHook /></TabPanel>
+              <TabPanel><FunctionalComponentWithFunctionalComponentToPrint /></TabPanel>
+            </Tabs>
+          </TabPanel>
+          <TabPanel>
+            <Tabs>
+              <TabList>
+                <Tab>Text</Tab>
+              </TabList>
+              <TabPanel><ClassComponentText /></TabPanel>
+            </Tabs>
+          </TabPanel>
+        </Tabs>
+      </div>
     );
   }
 }
