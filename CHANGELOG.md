@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.14.8 (November 3rd, 2022)
+
+- FIX [537](https://github.com/gregnb/react-to-print/pull/537)/[545](https://github.com/gregnb/react-to-print/pull/543) `<link>` nodes marked with the `disabled` attribute were causing printing to hang. Thanks [luckrnx09](https://github.com/luckrnx09)
+- FIX/CHORE [545](https://github.com/gregnb/react-to-print/pull/545) Updated examples to use React 18. This also exposed a minor typing bug (`ReactToPrint` needed to specify a `children` prop to fully support React 18) which was corrected. Other dependencies were also updated, mostly dropping Node 12 support
+- CHORE [538](https://github.com/gregnb/react-to-print/pull/538) The examples had some minor Webpack related refactors
+
 ## 2.14.7 (April 28th, 2022)
 
 - FIX [484](https://github.com/gregnb/react-to-print/issues/484): Previously `onAfterPrint` was not being called if a custom `print` function was passed. Now it will always be called
