@@ -34,6 +34,7 @@ const defaultProps = {
 export interface IReactToPrintProps {
     /** Class to pass to the print window body */
     bodyClass?: string;
+    children?: React.ReactNode;
     /** Content to be printed */
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */

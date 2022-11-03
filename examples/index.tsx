@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as ReactDomClient from 'react-dom/client';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
@@ -64,4 +64,6 @@ class Example extends React.Component<Props, State> {
   }
 }
 
-ReactDOM.render(<Example/>, document.getElementById("app-root"));
+const container = document.getElementById("app-root");
+const root = ReactDomClient.createRoot(container!);
+root.render(<Example/>);
