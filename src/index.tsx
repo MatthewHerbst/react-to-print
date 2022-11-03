@@ -450,8 +450,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 // Browser's don't display `disabled` `link` nodes, so we need to filter them out
                                 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-disabled
                                 // https://caniuse.com/mdn-html_elements_link_disabled
-                                // TODO: ideally we could just filter these out on selection, by
-                                // using a selector such as: `link[rel='stylesheet']:not([disabled=true][disabled=false])`
+                                // TODO: ideally we could just filter these out on selection using
+                                // a selector such as: `link[rel='stylesheet']:not([disabled])`
                                 // https://stackoverflow.com/questions/27733826/css-selectors-for-excluding-by-attribute-presence
                                 // However, that doesn't seem to work. Why?
                                 if (!node.hasAttribute("disabled")) {

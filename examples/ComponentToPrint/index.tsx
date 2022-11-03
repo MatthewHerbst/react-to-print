@@ -54,7 +54,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
           // @ts-ignore
           disabled
           rel="stylesheet"
-          href="../index.css"
+          href="../disabled.css"
         />
         <style type="text/css" media="print">{"\
    @page {\ size: landscape;\ }\

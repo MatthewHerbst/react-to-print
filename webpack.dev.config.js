@@ -2,6 +2,7 @@
 
 const path = require('path');
 
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -45,6 +46,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.css'],
     },
     plugins: [
+        new CopyPlugin({ patterns: [{ from: "./examples/styles", to: "./" }] }),
         new HtmlWebpackPlugin({ favicon: 'examples/favicon.ico', template: 'examples/index.html' }),
     ],
 };
