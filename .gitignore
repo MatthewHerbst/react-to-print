@@ -27,6 +27,9 @@ node_modules
 # Optional npm cache directory
 .npm
 
+# Project npm config file
+.npmrc
+
 # Build Data
 dist/*
 es/*

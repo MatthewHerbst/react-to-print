@@ -15,9 +15,15 @@
 }
 
 .relativeCSS {
- border: solid 1px #FF0000;
+  border: solid 1px #FF0000;
 }
 
 .testClass {
   background: rgba(76, 175, 80, 0.3);
+}
+
+@media (max-width: 600px) {
+  .testClass {
+    color: rebeccapurple;
+  }
 }

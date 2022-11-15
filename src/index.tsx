@@ -215,6 +215,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
 
         const printWindow = document.createElement("iframe");
+        printWindow.width = `${document.documentElement.clientWidth}px`;
+        printWindow.height = `${document.documentElement.clientHeight}px`;
         printWindow.style.position = "absolute";
         printWindow.style.top = "-1000px";
         printWindow.style.left = "-1000px";
