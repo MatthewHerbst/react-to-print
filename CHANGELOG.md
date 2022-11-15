@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.9 (November 14th, 2022)
+
+- FIX [553](https://github.com/gregnb/react-to-print/pull/553) Ensures that the `iframe` used for printing has the same viewport size as the parent window of the node being printed. Prior to this the browser set the default 300px/150px size on the `iframe`, causing code that changes styles based on viewport sizes (such as many grid systems) to sometimes change the display of the elements being printed, requiring CSS hacks to avoid. Thanks [dantecarlo](https://github.com/dantecarlo) for reviving this issue
+
 ## 2.14.8 (November 3rd, 2022)
 
 - FIX [537](https://github.com/gregnb/react-to-print/pull/537)/[545](https://github.com/gregnb/react-to-print/pull/543) `<link>` nodes marked with the `disabled` attribute were causing printing to hang. Thanks [luckrnx09](https://github.com/luckrnx09)
