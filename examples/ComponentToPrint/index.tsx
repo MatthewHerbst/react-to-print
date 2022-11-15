@@ -56,9 +56,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
           rel="stylesheet"
           href="../disabled.css"
         />
-        <style type="text/css" media="print">{"\
-   @page {\ size: landscape;\ }\
-"}</style>
+        <style type="text/css" media="print">{"@page { size: landscape; }"}</style>
         <div className="flash" />
         <table className="testClass">
           <thead>
