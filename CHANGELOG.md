@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.10 (November 17th, 2022)
+
+- FIX [556](https://github.com/gregnb/react-to-print/pull/556) In 2.14.9 we changed the print `iframe` size to be dynamic but didn't take into account the fixed offset we were giving to hide it on the page. This resulted in the print `iframe` being partially visible when printing on wide screens. This has been corrected
+
 ## 2.14.9 (November 14th, 2022)
 
 - FIX [553](https://github.com/gregnb/react-to-print/pull/553) Ensures that the `iframe` used for printing has the same viewport size as the parent window of the node being printed. Prior to this the browser set the default 300px/150px size on the `iframe`, causing code that changes styles based on viewport sizes (such as many grid systems) to sometimes change the display of the elements being printed, requiring CSS hacks to avoid. Thanks [dantecarlo](https://github.com/dantecarlo) for reviving this issue
