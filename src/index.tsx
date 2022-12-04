@@ -19,6 +19,8 @@ export interface ITriggerProps<T> {
 type Font = {
     family: string;
     source: string;
+    weight?: string;
+    style?: string;
 };
 
 type PropertyFunction<T> = () => T;
@@ -298,7 +300,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 if (fonts) {
                     if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
                         fonts.forEach((font) => {
-                            const fontFace = new FontFace(font.family, font.source);
+                            const fontFace = new FontFace(font.family, font.source, { weight: font.weight, style: font.style });
                             printWindow.contentDocument!.fonts.add(fontFace);
                             fontFace.loaded
                                 .then(() => {
