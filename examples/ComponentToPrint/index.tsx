@@ -80,7 +80,12 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             </tr>
             <tr>
               <td>Fonts</td>
-              <td><div className="customFontText">Some Cool Font Text</div></td>
+              <td>
+                <div className="customFontInterBlackItalic">123456789</div>
+                <div className="customFontInterThin">
+                  Some Cool Font Text
+                </div>
+              </td>
             </tr>
             <tr>
               <td>Image: Local Import</td>

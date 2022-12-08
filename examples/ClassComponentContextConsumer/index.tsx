@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ComponentToPrint } from "../ComponentToPrint";
 import ReactToPrint, { PrintContextConsumer } from "../../src/index";
+import { CUSTOM_FONTS } from "../fonts";
 
 type Props = Record<string, unknown>;
 type State = {
@@ -60,6 +61,7 @@ export class ClassComponentContextConsumer extends React.PureComponent<Props, St
           onBeforeGetContent={this.handleOnBeforeGetContent}
           onBeforePrint={this.handleBeforePrint}
           removeAfterPrint
+          fonts={CUSTOM_FONTS}
         >
           <PrintContextConsumer>
             {({ handlePrint }) => (

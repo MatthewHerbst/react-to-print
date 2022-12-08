@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { FunctionalComponentToPrint } from "../ComponentToPrint";
 import ReactToPrint from "../../src/index";
+import { CUSTOM_FONTS } from "../fonts";
 
 export const FunctionalComponentWithFunctionalComponentToPrint = () => {
   const componentRef = React.useRef(null);
@@ -66,6 +67,7 @@ export const FunctionalComponentWithFunctionalComponentToPrint = () => {
         onBeforePrint={handleBeforePrint}
         removeAfterPrint
         trigger={reactToPrintTrigger}
+        fonts={CUSTOM_FONTS}
       />
       {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
       <FunctionalComponentToPrint ref={componentRef} text={text} />

@@ -2,10 +2,17 @@
   color: #FF0000;
 }
 
-.customFontText {
-  font-family: "Anton";
-  font-weight: "normal";
-  font-style: "normal";
+.customFontInterBlackItalic {
+  font-family: "Inter";
+  font-weight: 900;
+  font-style: italic;
+  font-feature-settings: "ss01" on;
+}
+.customFontInterThin {
+  font-family: "Inter";
+  font-weight: 100;
+  font-style: normal;
+  font-feature-settings: "ss02" on;
 }
 
 .indicator {
