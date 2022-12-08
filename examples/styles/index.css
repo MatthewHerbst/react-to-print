@@ -1,3 +1,20 @@
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(../fonts/Inter-BlackItalic.woff2)
+    format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url(../fonts/Inter-Thin.woff2)
+    format("woff2");
+}
+
 .column1 {
   color: #FF0000;
 }
