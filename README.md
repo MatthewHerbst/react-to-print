@@ -286,6 +286,18 @@ While you should be able to place these styles anywhere, sometimes the browser d
 "}</style>
 ```
 
+### Set the page size
+
+The default page size is usually A4. Most browsers do not allow JavaScript or CSS to set the page size. For the browsers that do, it is usually done using the CSS page [`size`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page/size) property. Check [`caniuse`](https://caniuse.com/mdn-css_at-rules_page_size) to see if the browsers you develop against support this.
+
+```css
+@media print {
+  @page {
+    size: 50mm 150mm;
+  }
+}
+```
+
 ### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
 
 To set custom margin to the page,
@@ -322,27 +334,7 @@ Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 
 
 ### Using the `pageStyle` prop
 
-The `pageStyle` prop can be used to set anything from simple to complex styles. For example:
-
-```js
-const pageStyle = `
-  @page {
-    size: 80mm 50mm;
-  }
-
-  @media all {
-    .pagebreak {
-      display: none;
-    }
-  }
-
-  @media print {
-    .pagebreak {
-      page-break-before: always;
-    }
-  }
-`;
-```
+The `pageStyle` prop should be a CSS string. For example: `".divider { break-after: always; }"`
 
 ### Getting a blank page when printing
 
