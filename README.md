@@ -365,6 +365,12 @@ We often ([#327](https://github.com/gregnb/react-to-print/issues/327), [#343](ht
 
 ### Page Breaks
 
+What to know:
+
+- [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) (replaces [`page-break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-inside))
+- [`break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-before) (replaces [`page-break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before))
+- [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) (replaces [`page-break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-after))
+
 #### Pattern for Page-Breaking Dynamic Content
 
 Define a page-break class to apply to elements which could be sensibly split into a page.
