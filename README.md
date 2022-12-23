@@ -351,6 +351,10 @@ Many have found setting the following CSS helpful. See [#26](https://github.com/
 }
 ```
 
+#### When you've set the `removeAfterPrint` prop to `true`
+
+If you are getting a blank page while setting `removeAfterPrint` to `true`, try setting it to `false`. This will tell the browser not to remove the `iframe` that we use to print, which it may be doing by mistake, especially on mobile browsers.
+
 ### Styles incorrect in print dialog when using grid system
 
 We often ([#327](https://github.com/gregnb/react-to-print/issues/327), [#343](https://github.com/gregnb/react-to-print/issues/343), [#382](https://github.com/gregnb/react-to-print/issues/382)) see issues reported where the developer is using Bootstrap or a similar grid system, and everything works great until the user goes to print and suddenly it seems the styles are off. We've found that often the issue is the grid library uses the smallest sized columns during printing, such as the `xs` size on Bootstrap's grid, a size developers often don't plan for. The simplest solution is to ensure your grid will adapt to this size appropriately, though this may not be acceptable since you may want the large view to print rather than the smaller view. Another solution is to [override the grid column definition](https://stackoverflow.com/questions/22199429/bootstrap-grid-for-printing/28152320). Some newer versions of libraries have specific tools for dealing with printing, for example, [Bootstrap 4's Display property](https://getbootstrap.com/docs/4.3/utilities/display/).
