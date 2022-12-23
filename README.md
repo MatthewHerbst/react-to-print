@@ -220,9 +220,9 @@ const componentRef = useRef(null);
 
 ## FAQ
 
-### Can `react-to-print` print a PDF?
+### Can `react-to-print` be used to download a PDF without using the Print Preview window?
 
-We simply open the browser's print preview window, so we aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
+No. We aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
 
 ```tsx
 const handlePrint = useReactToPrint({
@@ -342,6 +342,21 @@ const pageStyle = `
     }
   }
 `;
+```
+
+### Getting a blank page when printing
+
+Many have found setting the following CSS helpful. See [#26](https://github.com/gregnb/react-to-print/issues/26) for more.
+
+```css
+@media print {
+  html, body {
+    height: 100vh; /* Use 100% here to support printing more than a single page*/
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}
 ```
 
 ### Styles incorrect in print dialog when using grid system
