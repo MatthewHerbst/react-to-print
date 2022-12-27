@@ -260,6 +260,43 @@ If you've created a component that is intended only for printing and should not 
 
 This will hide `ComponentToPrint` but keep it in the DOM so that it can be copied for printing.
 
+### Setting state in `onBeforeGetContent`
+
+Recall that setting state is asynchronous. As such, you need to pass a `Promise` and wait for the state to update.
+
+```tsx
+const [isPrinting, setIsPrinting] = useState(false);
+const printRef = useRef(null);
+
+// We store the resolve Promise being used in `onBeforeGetContent` here
+const promiseResolveRef = useRef(null);
+
+// We watch for the state to change here, and for the Promise resolve to be available
+useEffect(() => {
+  if (isPrinting && promiseResolveRef.current) {
+    // Resolves the Promise, letting `react-to-print` know that the DOM updates are completed
+    promiseResolveRef.current();
+  }
+}, [isPrinting]);
+
+const handlePrint = useReactToPrint({
+  content: () => printRef.current,
+  onBeforeGetContent: () => {
+    return new Promise((resolve) => {
+      promiseResolveRef.current = resolve;
+      setIsPrinting(true);
+    });
+  },
+  onAfterPrint: () => {
+    // Reset the Promise resolve so we can print again
+    promiseResolveRef.current = null;
+    setIsPrinting(false);
+  }
+});
+```
+
+Note: for Class components, just pass the `resolve` to the callback for `this.setState`: `this.setState({ isPrinting: false }, resolve)`
+
 ### Changing print settings in the print dialog
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
