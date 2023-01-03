@@ -133,6 +133,12 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
               </td>
             </tr>
             <tr>
+              <td>TextArea</td>
+              <td>
+                <textarea />
+              </td>
+            </tr>
+            <tr>
               <td>SVG</td>
               <td>
                 <svg height="100" width="100">

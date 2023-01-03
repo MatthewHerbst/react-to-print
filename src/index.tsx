@@ -26,7 +26,19 @@ type PropertyFunction<T> = () => T;
 // NOTE: https://github.com/Microsoft/TypeScript/issues/23812
 const defaultProps = {
     copyStyles: true,
-    pageStyle: "@page { size: auto;  margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }", // remove date/time from top
+    pageStyle: `
+        @page {
+            /* Remove browser default header (title) and footer (url) */
+            margin: 0;
+        }
+        @media print {
+            body {
+                /* Tell browsers to print background colors */
+                -webkit-print-color-adjust: exact; /* Chrome/Safari/Edge/Opera */
+                color-adjust: exact; /* Firefox */
+            }
+        }
+    `,
     removeAfterPrint: false,
     suppressErrors: false,
 };
@@ -66,11 +78,9 @@ export interface IReactToPrintProps {
 }
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
-    private linkTotal!: number;
-    private linksLoaded!: Element[];
-    private linksErrored!: Element[];
-    private fontsLoaded!: FontFace[];
-    private fontsErrored!: FontFace[];
+    private numResourcesToLoad!: number;
+    private resourcesLoaded!: (Element | Font | FontFace)[];
+    private resourcesErrored!: (Element | Font | FontFace)[];
 
     static defaultProps = defaultProps;
 
@@ -205,12 +215,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentEl = content();
 
         if (contentEl === undefined) {
-            this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']); // eslint-disable-line max-len
+            this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']);
             return;
         }
 
         if (contentEl === null) {
-            this.logMessages(['There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.']); // eslint-disable-line max-len
+            this.logMessages(['There is nothing to print because the "content" prop returned "null". Please ensure "content" is renderable before allowing "react-to-print" to be called.']);
             return;
         }
 
@@ -228,7 +238,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const contentNodes = findDOMNode(contentEl);
 
         if (!contentNodes) {
-            this.logMessages(['"react-to-print" could not locate the DOM node corresponding with the `content` prop']); // eslint-disable-line max-len
+            this.logMessages(['"react-to-print" could not locate the DOM node corresponding with the `content` prop']);
             return;
         }
 
@@ -240,32 +250,37 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const renderComponentImgNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("img");
         const renderComponentVideoNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("video");
 
-        this.linkTotal =
+        const numFonts = fonts ? fonts.length : 0;
+
+        this.numResourcesToLoad =
             globalStyleLinkNodes.length +
             renderComponentImgNodes.length +
-            renderComponentVideoNodes.length;
-        this.linksLoaded = [];
-        this.linksErrored = [];
-        this.fontsLoaded = [];
-        this.fontsErrored = [];
+            renderComponentVideoNodes.length +
+            numFonts;
+        this.resourcesLoaded = [];
+        this.resourcesErrored = [];
 
-        const markLoaded = (linkNode: Element, loaded: boolean) => {
-            if (loaded) {
-                this.linksLoaded.push(linkNode);
+        const markLoaded = (resource: Element | Font | FontFace, errorMessages?: unknown[]) => {
+            if (this.resourcesLoaded.includes(resource)) {
+                this.logMessages(["Tried to mark a resource that has already been handled", resource], "debug");
+                return;
+            }
+
+            if (!errorMessages) {
+                this.resourcesLoaded.push(resource);
             } else {
-                this.logMessages(['"react-to-print" was unable to load a linked node. It may be invalid. "react-to-print" will continue attempting to print the page. The linked node that errored was:', linkNode]); // eslint-disable-line max-len
-                this.linksErrored.push(linkNode);
+                this.logMessages([
+                    '"react-to-print" was unable to load a resource but will continue attempting to print the page',
+                    ...errorMessages
+                ]);
+                this.resourcesErrored.push(resource);
             }
 
             // We may have errors, but attempt to print anyways - maybe they are trivial and the
             // user will be ok ignoring them
-            const numResourcesManaged =
-                this.linksLoaded.length +
-                this.linksErrored.length +
-                this.fontsLoaded.length +
-                this.fontsErrored.length;
+            const numResourcesManaged = this.resourcesLoaded.length + this.resourcesErrored.length;
 
-            if (numResourcesManaged === this.linkTotal) {
+            if (numResourcesManaged === this.numResourcesToLoad) {
                 this.triggerPrint(printWindow);
             }
         };
@@ -286,16 +301,16 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             const fontFace = new FontFace(font.family, font.source);
                             printWindow.contentDocument!.fonts.add(fontFace);
                             fontFace.loaded
-                                .then((loadedFontFace) => {
-                                    this.fontsLoaded.push(loadedFontFace);
+                                .then(() => {
+                                    markLoaded(fontFace);
                                 })
-                                .catch((error: SyntaxError) => {
-                                    this.fontsErrored.push(fontFace);
-                                    this.logMessages(['"react-to-print" was unable to load a font. "react-to-print" will continue attempting to print the page. The font that failed to load is:', fontFace, 'The error from loading the font is:', error]); // eslint-disable-line max-len
+                                .catch((error: Error) => {
+                                    markLoaded(fontFace, ['Failed loading the font:', fontFace, 'Load error:', error]);
                                 });
                         });
                     } else {
-                        this.logMessages(['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API']); // eslint-disable-line max-len
+                        fonts.forEach(font => markLoaded(font)); // Pretend we loaded the fonts to allow printing to continue
+                        this.logMessages(['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API but will continue attempting to print the page']);
                     }
                 }
 
@@ -341,13 +356,12 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         const imgSrc = imgNode.getAttribute("src");
 
                         if (!imgSrc) {
-                            this.logMessages(['"react-to-print" encountered an <img> tag with an empty "src" attribute. It will not attempt to pre-load it. The <img> is:', imgNode], 'warning'); // eslint-disable-line
-                            markLoaded(imgNode, false);
+                            markLoaded(imgNode, ['Found an <img> tag with an empty "src" attribute. This prevents pre-loading it. The <img> is:', imgNode]);
                         } else {
                             // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                             const img = new Image();
-                            img.onload = markLoaded.bind(null, imgNode, true);
-                            img.onerror = markLoaded.bind(null, imgNode, false);
+                            img.onload = () => markLoaded(imgNode);
+                            img.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(imgNode, ["Error loading <img>", imgNode, "Error", error]);
                             img.src = imgSrc;
                         }
                     }
@@ -362,23 +376,20 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             // If the video has a poster, pre-load the poster image
                             // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                             const img = new Image();
-                            img.onload = markLoaded.bind(null, videoNode, true);
-                            img.onerror = markLoaded.bind(null, videoNode, false);
+                            img.onload = () => markLoaded(videoNode);
+                            img.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(videoNode, ["Error loading video poster", videoPoster, "for video", videoNode, "Error:", error]);
                             img.src = videoPoster;
                         } else {
                             if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
-                                markLoaded(videoNode, true);
+                                markLoaded(videoNode);
                             } else {
-                                videoNode.onloadeddata = markLoaded.bind(null, videoNode, true);
+                                videoNode.onloadeddata = () => markLoaded(videoNode);
 
-                                // TODO: if one if these is called is it possible for another to be called? If so we
-                                // need to add guards to ensure `markLoaded` is only called once for the node
-                                // TODO: why do `onabort` and `onstalled` seem to fire all the time even if
-                                // there is no issue?
-                                // videoNode.onabort = () => { console.log('Video with no poster abort'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onerror = markLoaded.bind(null, videoNode, false);
-                                // videoNode.onemptied = () => { console.log('Video with no poster emptied'); markLoaded.bind(null, videoNode, false)(); }
-                                videoNode.onstalled = markLoaded.bind(null, videoNode, false);
+                                // TODO: why do `onabort` and `onstalled` seem to fire all the time even if there is no issue?
+                                // videoNode.onabort = () => markLoaded(videoNode, ["Loading video aborted", videoNode]);
+                                videoNode.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(videoNode, ["Error loading video", videoNode, "Error", error]);
+                                // videoNode.onemptied = () => markLoaded(videoNode, ["Loading video emptied, skipping", videoNode]);
+                                videoNode.onstalled = () => markLoaded(videoNode, ["Loading video stalled, skipping", videoNode]);
                             }
                         }
                     }
@@ -386,7 +397,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     // Copy input values
                     // This covers most input types, though some need additional work (further down)
                     const inputSelector = 'input';
-                    const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector); // eslint-disable-line max-len
+                    const originalInputs = (contentNodes as HTMLElement).querySelectorAll(inputSelector);
                     const copiedInputs = domDoc.querySelectorAll(inputSelector);
                     for (let i = 0; i < originalInputs.length; i++) {
                         copiedInputs[i].value = originalInputs[i].value;
@@ -394,7 +405,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                     // Copy checkbox, radio checks
                     const checkedSelector = 'input[type=checkbox],input[type=radio]';
-                    const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector); // eslint-disable-line max-len
+                    const originalCRs = (contentNodes as HTMLElement).querySelectorAll(checkedSelector);
                     const copiedCRs = domDoc.querySelectorAll(checkedSelector);
                     for (let i = 0; i < originalCRs.length; i++) {
                         (copiedCRs[i] as HTMLInputElement).checked =
@@ -403,7 +414,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                     // Copy select states
                     const selectSelector = 'select';
-                    const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector); // eslint-disable-line max-len
+                    const originalSelects = (contentNodes as HTMLElement).querySelectorAll(selectSelector);
                     const copiedSelects = domDoc.querySelectorAll(selectSelector);
                     for (let i = 0; i < originalSelects.length; i++) {
                         copiedSelects[i].value = originalSelects[i].value;
@@ -465,15 +476,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                     // the reasoning behind why we do it this way
                                     // NOTE: node.attributes has NamedNodeMap type that is not an Array
                                     // and can be iterated only via direct [i] access
-                                    for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) { // eslint-disable-line max-len
+                                    for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
                                         const attr = node.attributes[j];
                                         if (attr) {
                                             newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
                                         }
                                     }
     
-                                    newHeadEl.onload = markLoaded.bind(null, newHeadEl, true);
-                                    newHeadEl.onerror = markLoaded.bind(null, newHeadEl, false);
+                                    newHeadEl.onload = () => markLoaded(newHeadEl);
+                                    newHeadEl.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(newHeadEl, ["Failed to load", newHeadEl, "Error:", error]);
                                     if (nonce) {
                                         newHeadEl.setAttribute("nonce", nonce);
                                     }
@@ -481,24 +492,26 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 } else {
                                     this.logMessages(['`react-to-print` encountered a <link> tag with a `disabled` attribute and will ignore it. Note that the `disabled` attribute is deprecated, and some browsers ignore it. You should stop using it. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-disabled. The <link> is:', node], 'warning');
                                     // `true` because this isn't an error: we are intentionally skipping this node
-                                    markLoaded(node, true);
+                                    markLoaded(node);
                                 }
                             } else {
                                 this.logMessages(['`react-to-print` encountered a <link> tag with an empty `href` attribute. In addition to being invalid HTML, this can cause problems in many browsers, and so the <link> was not loaded. The <link> is:', node], 'warning');
                                 // `true` because we"ve already shown a warning for this
-                                markLoaded(node, true);
+                                markLoaded(node);
                             }
                         }
                     }
                 }
             }
 
-            if (this.linkTotal === 0 || !copyStyles) {
+            if (this.numResourcesToLoad === 0 || !copyStyles) {
                 this.triggerPrint(printWindow);
             }
         };
 
+        // Ensure we remove any pre-existing print windows before adding a new one
         this.handleRemoveIframe(true);
+
         document.body.appendChild(printWindow);
     }
 

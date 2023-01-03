@@ -220,9 +220,9 @@ const componentRef = useRef(null);
 
 ## FAQ
 
-### Can `react-to-print` print a PDF?
+### Can `react-to-print` be used to download a PDF without using the Print Preview window?
 
-We simply open the browser's print preview window, so we aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
+No. We aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
 
 ```tsx
 const handlePrint = useReactToPrint({
@@ -260,6 +260,43 @@ If you've created a component that is intended only for printing and should not 
 
 This will hide `ComponentToPrint` but keep it in the DOM so that it can be copied for printing.
 
+### Setting state in `onBeforeGetContent`
+
+Recall that setting state is asynchronous. As such, you need to pass a `Promise` and wait for the state to update.
+
+```tsx
+const [isPrinting, setIsPrinting] = useState(false);
+const printRef = useRef(null);
+
+// We store the resolve Promise being used in `onBeforeGetContent` here
+const promiseResolveRef = useRef(null);
+
+// We watch for the state to change here, and for the Promise resolve to be available
+useEffect(() => {
+  if (isPrinting && promiseResolveRef.current) {
+    // Resolves the Promise, letting `react-to-print` know that the DOM updates are completed
+    promiseResolveRef.current();
+  }
+}, [isPrinting]);
+
+const handlePrint = useReactToPrint({
+  content: () => printRef.current,
+  onBeforeGetContent: () => {
+    return new Promise((resolve) => {
+      promiseResolveRef.current = resolve;
+      setIsPrinting(true);
+    });
+  },
+  onAfterPrint: () => {
+    // Reset the Promise resolve so we can print again
+    promiseResolveRef.current = null;
+    setIsPrinting(false);
+  }
+});
+```
+
+Note: for Class components, just pass the `resolve` to the callback for `this.setState`: `this.setState({ isPrinting: false }, resolve)`
+
 ### Changing print settings in the print dialog
 
 Unfortunately there is no standard browser API for interacting with the print dialog. All `react-to-print` is able to do is open the dialog and give it the desired content to print. We cannot modify settings such as the default paper size, if the user has background graphics selected or not, etc.
@@ -284,6 +321,18 @@ While you should be able to place these styles anywhere, sometimes the browser d
 <style type="text/css" media="print">{"\
   @page {\ size: landscape;\ }\
 "}</style>
+```
+
+### Set the page size
+
+The default page size is usually A4. Most browsers do not allow JavaScript or CSS to set the page size. For the browsers that do, it is usually done using the CSS page [`size`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page/size) property. Check [`caniuse`](https://caniuse.com/mdn-css_at-rules_page_size) to see if the browsers you develop against support this.
+
+```css
+@media print {
+  @page {
+    size: 50mm 150mm;
+  }
+}
 ```
 
 ### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
@@ -322,33 +371,38 @@ Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 
 
 ### Using the `pageStyle` prop
 
-The `pageStyle` prop can be used to set anything from simple to complex styles. For example:
+The `pageStyle` prop should be a CSS string. For example: `".divider { break-after: always; }"`
 
-```js
-const pageStyle = `
-  @page {
-    size: 80mm 50mm;
-  }
+### Getting a blank page when printing
 
-  @media all {
-    .pagebreak {
-      display: none;
-    }
-  }
+Many have found setting the following CSS helpful. See [#26](https://github.com/gregnb/react-to-print/issues/26) for more.
 
-  @media print {
-    .pagebreak {
-      page-break-before: always;
-    }
+```css
+@media print {
+  html, body {
+    height: 100vh; /* Use 100% here to support printing more than a single page*/
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
   }
-`;
+}
 ```
+
+#### When you've set the `removeAfterPrint` prop to `true`
+
+If you are getting a blank page while setting `removeAfterPrint` to `true`, try setting it to `false`. This will tell the browser not to remove the `iframe` that we use to print, which it may be doing by mistake, especially on mobile browsers.
 
 ### Styles incorrect in print dialog when using grid system
 
 We often ([#327](https://github.com/gregnb/react-to-print/issues/327), [#343](https://github.com/gregnb/react-to-print/issues/343), [#382](https://github.com/gregnb/react-to-print/issues/382)) see issues reported where the developer is using Bootstrap or a similar grid system, and everything works great until the user goes to print and suddenly it seems the styles are off. We've found that often the issue is the grid library uses the smallest sized columns during printing, such as the `xs` size on Bootstrap's grid, a size developers often don't plan for. The simplest solution is to ensure your grid will adapt to this size appropriately, though this may not be acceptable since you may want the large view to print rather than the smaller view. Another solution is to [override the grid column definition](https://stackoverflow.com/questions/22199429/bootstrap-grid-for-printing/28152320). Some newer versions of libraries have specific tools for dealing with printing, for example, [Bootstrap 4's Display property](https://getbootstrap.com/docs/4.3/utilities/display/).
 
 ### Page Breaks
+
+What to know:
+
+- [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) (replaces [`page-break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-inside))
+- [`break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-before) (replaces [`page-break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before))
+- [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) (replaces [`page-break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-after))
 
 #### Pattern for Page-Breaking Dynamic Content
 
