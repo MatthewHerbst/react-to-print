@@ -79,8 +79,8 @@ export interface IReactToPrintProps {
 
 export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     private numResourcesToLoad!: number;
-    private resourcesLoaded!: (Element | FontFace)[];
-    private resourcesErrored!: (Element | FontFace)[];
+    private resourcesLoaded!: (Element | Font | FontFace)[];
+    private resourcesErrored!: (Element | Font | FontFace)[];
 
     static defaultProps = defaultProps;
 
@@ -260,7 +260,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         this.resourcesLoaded = [];
         this.resourcesErrored = [];
 
-        const markLoaded = (resource: Element | FontFace, errorMessages?: unknown[]) => {
+        const markLoaded = (resource: Element | Font | FontFace, errorMessages?: unknown[]) => {
             if (this.resourcesLoaded.includes(resource)) {
                 this.logMessages(["Tried to mark a resource that has already been handled", resource], "debug");
                 return;
@@ -270,7 +270,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 this.resourcesLoaded.push(resource);
             } else {
                 this.logMessages([
-                    '"react-to-print" was unable to load a resource but will continue attempting to print the page.',
+                    '"react-to-print" was unable to load a resource but will continue attempting to print the page',
                     ...errorMessages
                 ]);
                 this.resourcesErrored.push(resource);
@@ -309,7 +309,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 });
                         });
                     } else {
-                        this.logMessages(['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API']);
+                        fonts.forEach(font => markLoaded(font)); // Pretend we loaded the fonts to allow printing to continue
+                        this.logMessages(['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API but will continue attempting to print the page']);
                     }
                 }
 
