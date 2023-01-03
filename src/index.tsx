@@ -510,7 +510,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
         };
 
+        // Ensure we remove any pre-existing print windows before adding a new one
         this.handleRemoveIframe(true);
+        
         document.body.appendChild(printWindow);
     }
 
