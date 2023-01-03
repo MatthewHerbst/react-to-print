@@ -252,10 +252,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const renderComponentImgNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("img");
         const renderComponentVideoNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("video");
 
+        const numFonts = fonts ? fonts.length : 0;
+
         this.linkTotal =
             globalStyleLinkNodes.length +
             renderComponentImgNodes.length +
-            renderComponentVideoNodes.length;
+            renderComponentVideoNodes.length +
+            numFonts;
         this.linksLoaded = [];
         this.linksErrored = [];
         this.fontsLoaded = [];
@@ -512,7 +515,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         // Ensure we remove any pre-existing print windows before adding a new one
         this.handleRemoveIframe(true);
-        
+
         document.body.appendChild(printWindow);
     }
 
