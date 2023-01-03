@@ -261,6 +261,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         this.resourcesErrored = [];
 
         const markLoaded = (resource: Element | FontFace, errorMessages?: unknown[]) => {
+            if (this.resourcesLoaded.includes(resource)) {
+                this.logMessages(["Tried to mark a resource that has already been handled", resource], "debug");
+                return;
+            }
+
             if (!errorMessages) {
                 this.resourcesLoaded.push(resource);
             } else {
@@ -379,10 +384,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                             } else {
                                 videoNode.onloadeddata = () => markLoaded(videoNode);
 
-                                // TODO: if one if these is called is it possible for another to be called? If so we
-                                // need to add guards to ensure `markLoaded` is only called once for the node
-                                // TODO: why do `onabort` and `onstalled` seem to fire all the time even if
-                                // there is no issue?
+                                // TODO: why do `onabort` and `onstalled` seem to fire all the time even if there is no issue?
                                 // videoNode.onabort = () => markLoaded(videoNode, ["Loading video aborted", videoNode]);
                                 videoNode.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(videoNode, ["Error loading video", videoNode, "Error", error]);
                                 // videoNode.onemptied = () => markLoaded(videoNode, ["Loading video emptied, skipping", videoNode]);
