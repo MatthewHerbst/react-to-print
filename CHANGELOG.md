@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.14.11 (January 3rd, 2023)
+
+Happy new year! We can't wait to see what 2023 brings
+
+- FIX: Ensure we wait for `fonts` to print if they are given
+- FIX: Ensure we continue trying to print when `fonts` are passed by the browser doesn't support the `FontFace` API
+- FIX: Improved chances of FireFox printing backgrounds by default in the Print Preview window
+- FIX: Ensure we only process resources once
+- CHORE: Simplified loading logic, including improved error messages when a resource fails to load
+- CHORE: Removed unused TravisCI config
+- CHORE: Updated all `devDependencies`
+- CHORE: License year updated for 2023 :)
+- DOCS: A bunch of examples and gotchas were added to the README, improved example
+
 ## 2.14.10 (November 17th, 2022)
 
 - FIX [556](https://github.com/gregnb/react-to-print/pull/556) In 2.14.9 we changed the print `iframe` size to be dynamic but didn't take into account the fixed offset we were giving to hide it on the page. This resulted in the print `iframe` being partially visible when printing on wide screens. This has been corrected
