@@ -304,7 +304,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 .then((loadedFontFace) => {
                                     this.fontsLoaded.push(loadedFontFace);
                                 })
-                                .catch((error: SyntaxError) => {
+                                .catch((error: Error) => {
                                     this.fontsErrored.push(fontFace);
                                     this.logMessages(['"react-to-print" was unable to load a font. "react-to-print" will continue attempting to print the page. The font that failed to load is:', fontFace, 'The error from loading the font is:', error]); // eslint-disable-line max-len
                                 });
