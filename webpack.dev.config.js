@@ -37,7 +37,7 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(jpg|png|woff2)$/i,
+                test: /\.(jpg|png)$/i,
                 loader: 'url-loader',
             },
         ],
@@ -46,7 +46,7 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js', '.css'],
     },
     plugins: [
-        new CopyPlugin({ patterns: [{ from: "./examples/styles", to: "./" }] }),
+        new CopyPlugin({ patterns: [{ from: "./examples/styles", to: "./" }, { from: "./examples/fonts", to: "./fonts" }] }),
         new HtmlWebpackPlugin({ favicon: 'examples/favicon.ico', template: 'examples/index.html' }),
     ],
 };
