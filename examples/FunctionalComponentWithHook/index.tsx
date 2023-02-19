@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ComponentToPrint } from "../ComponentToPrint";
 import { useReactToPrint } from "../../src/index";
+import { CUSTOM_FONTS } from "../fonts";
 
 export const FunctionalComponentWithHook = () => {
   const componentRef = React.useRef(null);
@@ -46,6 +47,7 @@ export const FunctionalComponentWithHook = () => {
     onBeforePrint: handleBeforePrint,
     onAfterPrint: handleAfterPrint,
     removeAfterPrint: true,
+    fonts: CUSTOM_FONTS
   });
 
   React.useEffect(() => {

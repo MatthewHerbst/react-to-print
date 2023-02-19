@@ -29,7 +29,7 @@ The component accepts the following props:
 | **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
-| **`fonts?`** | `{ family: string, source: string }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
+| **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
 | **`onAfterPrint?`** | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel |
 | **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing |
 | **`onBeforePrint?`** | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead |

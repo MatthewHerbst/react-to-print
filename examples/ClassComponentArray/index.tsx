@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import ReactToPrint from "../../src/index";
+import { CUSTOM_FONTS } from "../fonts";
 
 type Props = Record<string, unknown>;
 type State = {
@@ -53,6 +54,7 @@ export class ClassComponentArray extends React.PureComponent<Props, State> {
           documentTitle="AwesomeFileName"
           removeAfterPrint
           trigger={this.reactToPrintTrigger}
+          fonts={CUSTOM_FONTS}
         />
         {this.state.isLoading && <p className="indicator">onBeforeGetContent: Loading...</p>}
         <TextComponent ref={this.setComponentRef} />
