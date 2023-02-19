@@ -300,7 +300,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 if (fonts) {
                     if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
                         fonts.forEach((font) => {
-                            const fontFace = new FontFace(font.family, font.source, { weight: font.weight, style: font.style });
+                            const fontFace = new FontFace(
+                                font.family,
+                                font.source,
+                                { weight: font.weight, style: font.style }
+                            );
                             printWindow.contentDocument!.fonts.add(fontFace);
                             fontFace.loaded
                                 .then(() => {
