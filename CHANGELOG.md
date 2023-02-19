@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.14.12 (February 18th, 2023)
+
+- FIX [565](https://github.com/gregnb/react-to-print/pull/565): Support font-weight and font-style for custom fonts (and add more font examples). Thanks [gauthierrodaro](https://github.com/gauthierrodaro)
+- CHORE: Updated all `devDependencies`
+
 ## 2.14.11 (January 3rd, 2023)
 
 Happy new year! We can't wait to see what 2023 brings
