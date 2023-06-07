@@ -6,6 +6,7 @@ import 'react-tabs/style/react-tabs.css';
 import { ClassComponent } from "./ClassComponent";
 import { ClassComponentContextConsumer } from "./ClassComponentContextConsumer";
 import { ClassComponentText } from "./ClassComponentText";
+import { CustomPrint } from "./CustomPrint";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
 import { FunctionalComponentWithFunctionalComponentToPrint } from './FunctionalComponentWithFunctionalComponentToPrint';
@@ -26,7 +27,7 @@ class Example extends React.Component<Props, State> {
           <TabList>
             <Tab>Class Component</Tab>
             <Tab>Functional Component</Tab>
-            <Tab>Raw Values</Tab>
+            <Tab>Other Examples</Tab>
           </TabList>
           <TabPanel>
             <Tabs>
@@ -53,9 +54,11 @@ class Example extends React.Component<Props, State> {
           <TabPanel>
             <Tabs>
               <TabList>
-                <Tab>Text</Tab>
+                <Tab>Raw Value: Text</Tab>
+                <Tab>Custom Print Function</Tab>
               </TabList>
               <TabPanel><ClassComponentText /></TabPanel>
+              <TabPanel><CustomPrint /></TabPanel>
             </Tabs>
           </TabPanel>
         </Tabs>

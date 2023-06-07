@@ -53,9 +53,12 @@ export interface IReactToPrintProps {
     content: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
-    /** Set the title for printing when saving as a file */
+    /**
+     * Set the title for printing when saving as a file.
+     * Will result in the calling page's `<title>` being temporarily changed while printing.
+     */
     documentTitle?: string;
-    /** */
+    /** Pre-load these fonts to ensure availability when printing */
     fonts?: Font[];
     /** Callback function to trigger after print */
     onAfterPrint?: () => void;
@@ -69,7 +72,10 @@ export interface IReactToPrintProps {
     pageStyle?: string | PropertyFunction<string>;
     /** Override the default `window.print` method that is used for printing */
     print?: (target: HTMLIFrameElement) => Promise<any>;
-    /** Remove the iframe after printing. */
+    /**
+     * Remove the iframe after printing.
+     * NOTE: `onAfterPrint` will run before the iframe is removed
+     */
     removeAfterPrint?: boolean;
     /** Suppress error messages */
     suppressErrors?: boolean;
@@ -94,13 +100,15 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             documentTitle,
         } = this.props;
 
+        // Some browsers such as Safari don't always behave well without this timeout
         setTimeout(() => {
             if (target.contentWindow) {
                 target.contentWindow.focus(); // Needed for IE 11
 
                 if (print) {
                     print(target)
-                        .then(this.handleRemoveIframe)
+                        .then(() => onAfterPrint?.())
+                        .then(() => this.handleRemoveIframe())
                         .catch((error: Error) => {
                             if (onPrintError) {
                                 onPrintError('print', error);
@@ -108,46 +116,44 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 this.logMessages(["An error was thrown by the specified `print` function"]);
                             }
                         });
-                } else if (target.contentWindow.print) {
-                    const tempContentDocumentTitle = target.contentDocument?.title ?? '';
-                    const tempOwnerDocumentTitle = target.ownerDocument.title;
-
-                    // Override page and various target content titles during print
-                    // NOTE: some browsers seem to take the print title from the highest level
-                    // title, while others take it from the lowest level title. So, we set the title
-                    // in a few places and hope the current browser takes one of them :pray:
-                    if (documentTitle) {
-                        // Print filename in Chrome
-                        target.ownerDocument.title = documentTitle;
-
-                        // Print filename in Firefox, Safari
-                        if (target.contentDocument) {
-                            target.contentDocument.title = documentTitle;
-                        }
-                    }
-
-                    target.contentWindow.print();
-
-                    // Restore the page's original title information
-                    if (documentTitle) {
-                        target.ownerDocument.title = tempOwnerDocumentTitle;
-
-                        if (target.contentDocument) {
-                            target.contentDocument.title = tempContentDocumentTitle;
-                        }
-                    }
-
                 } else {
-                    // Some browsers, such as Firefox Android, do not support printing at all
-                    // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
-                    this.logMessages(["Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."]);
-                }
+                    if (target.contentWindow.print) {
+                        const tempContentDocumentTitle = target.contentDocument?.title ?? '';
+                        const tempOwnerDocumentTitle = target.ownerDocument.title;
+    
+                        // Override page and various target content titles during print
+                        // NOTE: some browsers seem to take the print title from the highest level
+                        // title, while others take it from the lowest level title. So, we set the title
+                        // in a few places and hope the current browser takes one of them :pray:
+                        if (documentTitle) {
+                            // Print filename in Chrome
+                            target.ownerDocument.title = documentTitle;
+    
+                            // Print filename in Firefox, Safari
+                            if (target.contentDocument) {
+                                target.contentDocument.title = documentTitle;
+                            }
+                        }
+    
+                        target.contentWindow.print();
+    
+                        // Restore the page's original title information
+                        if (documentTitle) {
+                            target.ownerDocument.title = tempOwnerDocumentTitle;
+    
+                            if (target.contentDocument) {
+                                target.contentDocument.title = tempContentDocumentTitle;
+                            }
+                        }
+                    } else {
+                        // Some browsers, such as Firefox Android, do not support printing at all
+                        // https://developer.mozilla.org/en-US/docs/Web/API/Window/print
+                        this.logMessages(["Printing for this browser is not currently possible: the browser does not have a `print` method available for iframes."]);
+                    }
 
-                if (onAfterPrint) {
-                    onAfterPrint();
+                    onAfterPrint?.();
+                    this.handleRemoveIframe();
                 }
-
-                this.handleRemoveIframe();
             } else {
                 this.logMessages(["Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"]);
             }
