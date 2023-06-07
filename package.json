@@ -1,6 +1,6 @@
 {
   "name": "react-to-print",
-  "version": "2.14.12",
+  "version": "2.14.13",
   "description": "Print React components in the browser",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

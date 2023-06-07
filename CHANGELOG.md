@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.14.13 (June 7th, 2023)
+
+- FIX [616](https://github.com/gregnb/react-to-print/issues/616): When passing a custom `print` function we were not waiting for that function to resolve its promise before removing the printing iframe if `removeAfterPrint={true}` was set. Further, we were not calling `onAfterPrint` at all when a custom printing function was passed. While not strictly needed since the caller knows when the printing has completed by resolving the promise, we now call `onAfterPrint` when that promise has resolved and before removing the print iframe
+- DEPENDENCIES: Removed our long unused single prod dependency, `prop-types`. The package now has zero `dependencies` 🪓
+- CHORE: Updated all `devDependencies` to their latest versions
+- CHORE: Removed a bunch of old unused files including `require.d.ts`, `.babelrc`, and an unused example
+
 ## 2.14.12 (February 18th, 2023)
 
 - FIX [565](https://github.com/gregnb/react-to-print/pull/565): Support font-weight and font-style for custom fonts (and add more font examples). Thanks [gauthierrodaro](https://github.com/gauthierrodaro)
