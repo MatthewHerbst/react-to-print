@@ -463,6 +463,60 @@ If your content rendered as print media does not automatically break multi-page 
 - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks
 - Using `flex` may interfere with page breaks, try using `display: block`
 
+### Handling Scrolling ([603](https://github.com/gregnb/react-to-print/issues/603))
+
+[![Edit react-to-print (Handling Scrolling)](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-to-print-handling-scrolling-n4mxyj?fontsize=14&hidenavigation=1&theme=dark)
+
+If you need to print the content of a scrolling container, you may encounter the following issues:
+
+- [Unable to control the scroll position](https://github.com/gregnb/react-to-print/issues/603#issue-1647664811), so the printed content may not be what you want.
+- [Overflow content is truncated](https://github.com/gregnb/react-to-print/issues/603#issuecomment-1649604330), resulting in missing printed content.
+
+To solve these problems, you need to modify the properties of the scrolling container when printing. You can pass a function to the `print` property, which will be called when printing. In this function, you can use the DOM API to query the scrolling container that needs to be modified, and then modify its properties to **control the scroll position**.
+
+```javascript
+const customToPrint = (printWindow) => {
+  const printContent = printWindow.contentDocument || printWindow.contentWindow?.document;
+  const printedScrollContainer = printContent.querySelector('.scroll-container');
+
+  const originScrollContainer = document.querySelector('.scroll-container');
+
+  // Set the scroll position of the printed container to match the origin container
+  printedScrollContainer.scrollTop = originScrollContainer.scrollTop;
+
+  // You can also set the `overflow` and `height` properties of the printed container to show all content.
+  // printedScrollContainer.style.overflow = "visible";
+  // printedScrollContainer.style.height = "fit-content";
+
+  printWindow.contentWindow.print();
+}
+
+const handlePrint = useReactToPrint({
+  // ...
+  print: customToPrint,
+});
+```
+
+#### Simple Show All Content
+
+In addition to the methods in the above example, you can also simply add a CSS class name to the scrolling container when printing to **show all content**.
+
+Set the container to `overflow: visible; height: fit-content` when printing, cancel the scrolling behavior when the content overflows, and make the height adapt to the content.
+
+```css
+@media print {
+  .scroll-container {
+    overflow: visible;
+    height: fit-content;
+  }
+}
+```
+
+> Note:
+> 
+> - If the styles do not take effect, you can try using the `!important` modifier.
+> - The styles provided in the above instructions are for reference only. Complex situations may require more styles to achieve the desired result.
+
 ## Running locally
 
 *NOTE*: Node >=12 is required to build the library locally. We use Node ^14 for our tests.
