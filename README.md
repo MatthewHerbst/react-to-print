@@ -465,7 +465,7 @@ If your content rendered as print media does not automatically break multi-page 
 
 ### Handling Scrolling ([603](https://github.com/gregnb/react-to-print/issues/603))
 
-> The online example for this section can be found at [react-to-print (Handling Scrolling)](https://codesandbox.io/s/react-to-print-handling-scrolling-n4mxyj).
+[![Edit react-to-print (Handling Scrolling)](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-to-print-handling-scrolling-n4mxyj?fontsize=14&hidenavigation=1&theme=dark)
 
 If you need to print the content of a scrolling container, you may encounter the following issues:
 
