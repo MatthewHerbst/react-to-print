@@ -140,29 +140,6 @@ class Example extends React.PureComponent {
 }
 ```
 
-### Calling from functional components
-
-```jsx
-import React, { useRef } from 'react';
-import ReactToPrint from 'react-to-print';
-
-import { ComponentToPrint } from './ComponentToPrint';
-
-const Example = () => {
-  const componentRef = useRef();
-
-  return (
-    <div>
-      <ReactToPrint
-        trigger={() => <button>Print this out!</button>}
-        content={() => componentRef.current}
-      />
-      <ComponentToPrint ref={componentRef} />
-    </div>
-  );
-};
-```
-
 ### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html)
 
 ```jsx
@@ -310,6 +287,10 @@ Unfortunately there is no standard browser API for interacting with the print di
 `react-to-print` can be used for printing in Electron, but you will need to provide your own `print` method since Electron does not natively support the `window.print` method. Please see [this answer on StackOverflow](https://stackoverflow.com/a/70534565/2518231) for how to do this.
 
 There is a fully-working example of how to use `react-to-print` with Electron available [here](https://github.com/MatthewHerbst/electron-react-to-print-demo).
+
+### `link` elements not displaying styles properly
+
+Some frameworks such as Ruby on Rails will set `media="screen"` on `<link>` elements that don't have `screen` set. This can cause styles to appear incorrectly when printing. To fix, explicitly set `media="screen"` on your `<link>` elements. For `<link>` elements meant to apply only when printing, set `media="print"`.
 
 ## Helpful Style Tips
 
