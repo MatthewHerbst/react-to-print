@@ -254,14 +254,14 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         const clonedContentNodes = contentNodes.cloneNode(true);
         const isText = clonedContentNodes instanceof Text;
 
-        const globalStyleLinkNodes = document.querySelectorAll("link[rel='stylesheet']");
+        const globalLinkNodes = document.querySelectorAll("link[rel~='stylesheet'], link[as='style']");
         const renderComponentImgNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("img");
         const renderComponentVideoNodes = isText ? [] : (clonedContentNodes as Element).querySelectorAll("video");
 
         const numFonts = fonts ? fonts.length : 0;
 
         this.numResourcesToLoad =
-            globalStyleLinkNodes.length +
+            globalLinkNodes.length +
             renderComponentImgNodes.length +
             renderComponentVideoNodes.length +
             numFonts;
@@ -434,9 +434,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 }
 
                 if (copyStyles) {
-                    const headEls = document.querySelectorAll("style, link[rel='stylesheet']");
-                    for (let i = 0, headElsLen = headEls.length; i < headElsLen; ++i) {
-                        const node = headEls[i];
+                    const styleAndLinkNodes = document.querySelectorAll("style, link[rel~='stylesheet'], link[as='style']");
+
+                    for (let i = 0, styleAndLinkNodesLen = styleAndLinkNodes.length; i < styleAndLinkNodesLen; ++i) {
+                        const node = styleAndLinkNodes[i];
                         
                         if (node.tagName.toLowerCase() === 'style') { // <style> nodes
                             const newHeadEl = domDoc.createElement(node.tagName);
