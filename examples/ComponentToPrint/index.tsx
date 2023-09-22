@@ -57,6 +57,7 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
           href="../disabled.css"
         />
         <style type="text/css" media="print">{"@page { size: landscape; }"}</style>
+        <link href="./as-style.css" rel="stylesheet" />
         <div className="flash" />
         <table className="testClass">
           <thead>
@@ -66,6 +67,22 @@ export class ComponentToPrint extends React.PureComponent<Props, State> {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>
+                Test loading {"<link>"}s with multi-value `rel`
+              </td>
+              <td>
+                <div className="multi-rel">Purple Background</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Test loading {"<link>"}s with `as="style"`
+              </td>
+              <td>
+                <div className="as-style">Blue Background</div>
+              </td>
+            </tr>
             <tr>
               <td>Canvass</td>
               <td>
