@@ -1,6 +1,6 @@
 {
   "name": "react-to-print",
-  "version": "2.14.13",
+  "version": "2.14.14",
   "description": "Print React components in the browser",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -23,9 +23,9 @@
     "reactjs",
     "react-to-print"
   ],
-  "author": "gregnb <gregnb@gmail.com>",
+  "author": "Matthew Herbst <MatthewHerbst.com>",
   "contributors": [
-    "Matthew Herbst <MatthewHerbst.com>"
+    "gregnb <gregnb@gmail.com>"
   ],
   "license": "MIT",
   "bugs": {

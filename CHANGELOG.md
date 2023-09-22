@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.14.14 (September 22nd, 2023)
+
+- FIX [635](https://github.com/gregnb/react-to-print/issues/635): Ensure proper handling of `<link>` nodes that have multiple value `rel` attributes set such as `rel="prefetch stylesheet"`, and, ensure proper handling of `<link>` nodes using `rel="preload" + as="style"`
+- DOCS [637](https://github.com/gregnb/react-to-print/issues/637): Added README section regarding having proper a `media` attribute set on `<link>` nodes
+- DOCS [633](https://github.com/gregnb/react-to-print/pull/633) Added README section regarding proper printing of scrolled containers. Thanks [siaikin](https://github.com/siaikin)!
+- DEPENDENCIES: Upgrade all `devDependencies` to their latest versions
+
 ## 2.14.13 (June 7th, 2023)
 
 - FIX [616](https://github.com/gregnb/react-to-print/issues/616): When passing a custom `print` function we were not waiting for that function to resolve its promise before removing the printing iframe if `removeAfterPrint={true}` was set. Further, we were not calling `onAfterPrint` at all when a custom printing function was passed. While not strictly needed since the caller knows when the printing has completed by resolving the promise, we now call `onAfterPrint` when that promise has resolved and before removing the print iframe
