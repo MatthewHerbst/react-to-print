@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.15 (October 2nd, 2023)
+
+This is a republish of 2.14.14 since that version got screwed up by some [downtime at npm](https://status.npmjs.org/incidents/b54856c1ljt7) and seems to be in an unrecoverable state.
+
 ## 2.14.14 (September 22nd, 2023)
 
 - FIX [635](https://github.com/gregnb/react-to-print/issues/635): Ensure proper handling of `<link>` nodes that have multiple value `rel` attributes set such as `rel="prefetch stylesheet"`, and, ensure proper handling of `<link>` nodes using `rel="preload" + as="style"`
