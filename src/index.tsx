@@ -210,7 +210,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handlePrint = () => {
+    public handlePrint = (lazyOption?: { content: (() => React.ReactInstance) }) => {
         const {
             bodyClass,
             content,
@@ -220,7 +220,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             nonce,
         } = this.props;
 
-        const contentEl = content();
+        const contentEl = lazyOption && typeof lazyOption.content === "function" ? lazyOption.content() : content();
 
         if (contentEl === undefined) {
             this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']);
