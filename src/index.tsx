@@ -186,7 +186,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick = () => {
+    public handleClick = (lazyOption?: { content: (() => React.ReactInstance) }) => {
         const {
             onBeforeGetContent,
             onPrintError,
@@ -203,10 +203,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                         }
                     });
             } else {
-                this.handlePrint();
+                this.handlePrint(lazyOption);
             }
         } else {
-            this.handlePrint();
+            this.handlePrint(lazyOption);
         }
     }
 
@@ -566,7 +566,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (trigger) {
             return React.cloneElement(trigger(), {
-                onClick: this.handleClick,
+                onClick: () => this.handleClick(),
             });
         } else {
             if (!PrintContext) {
@@ -575,7 +575,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 return null;
             }
 
-            const value = { handlePrint: this.handleClick };
+            const value = { handlePrint: (lazyOption?: { content: (() => React.ReactInstance) }) => this.handleClick(lazyOption) };
 
             return (
                 <PrintContext.Provider value={value as IPrintContextProps}>
@@ -605,5 +605,5 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
         [props]
     );
 
-    return React.useCallback(() => reactToPrint.handleClick(), [reactToPrint]);
+    return React.useCallback((lazyOption?: { content: (() => React.ReactInstance) }) => reactToPrint.handleClick(lazyOption), [reactToPrint]);
 };
