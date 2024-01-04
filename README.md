@@ -165,8 +165,9 @@ const Example = () => {
 
 ### Calling from functional components within a custom hook
 
+>./hooks/useUICommands.jsx
 ```jsx
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 /* NOTE: `navigator.clipboard` is undefined in Safari 12.1.x as well as the earlier versions 
@@ -198,28 +199,30 @@ function copyTextFactory() {
  */
 function printPageFactory(printer) {
   return (componentRef = null) => {
-    if (componentRef === null) {
+    if (!componentRef) {
       window.print();
     } else {
-      printer(undefined, { content: () => componentRef })
+      printer(undefined, { content: () => componentRef.current })
     }
   };
 }
 
 /* @NOTE: A ReactJS hook to house command design pattern actions for copying, printing e.t.c on a React app */
 export const useUICommands = (options = {
-  print: {
-    documentTitle: "AwesomeFileName",
-    onBeforeGetContent: () => Promise.resolve(undefined),
-    onBeforePrint: () => undefined,
-    onAfterPrint: () => undefined,
-    removeAfterPrint: true,
-  },
-  copy: {}
+  print: {},
+  //copy: {}
 }) => {
   /* @HINT: COMMAND DESIGN PATTERN - ReactJS hook */
 
-  const printer = useReactToPrint(options.print);
+  const printer = useReactToPrint(
+    Object.assign({
+      documentTitle: ".",
+      onBeforeGetContent: () => Promise.resolve(undefined),
+      onBeforePrint: () => undefined,
+      onAfterPrint: () => undefined,
+      removeAfterPrint: true,
+    }, options.print)
+  );
   const commands = useRef({
     copy: copyTextFactory(),
     print: printPageFactory(printer)
@@ -240,6 +243,36 @@ export const useUICommands = (options = {
     []
   );
 };
+```
+
+```jsx
+import React, { useRef } from 'react';
+import { useUICommands } from './hooks/useUICommands.jsx';
+
+const PRINT_COMMAND = "print";
+//const COPY_COMMAND = "copy";
+
+export const AnotherExample = () => {
+  const contentToPrint = useRef(null);
+  const uiCommands = useUICommands({
+    print: {
+      documentTitle: "Print - Document",
+      onBeforePrint: () => console.log("before printing..."),
+      onAfterPrint: () => console.log("after printing..."),
+    }
+  });
+
+  return (
+    <>
+      <div ref={contentToPrint}>Hello Again</div>
+      <button onClick={() => {
+        uiCommands.hub.exceute(PRINT_COMMAND, contentToPrint);
+      }}>
+        PRINT
+      </button>
+    </>
+  )
+}
 ```
 
 **Note ([401](https://github.com/gregnb/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
