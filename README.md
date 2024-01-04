@@ -244,7 +244,7 @@ export const useUICommands = (options = {
   );
 };
 ```
-
+>./src/AnotherExample.jsx
 ```jsx
 import React, { useRef } from 'react';
 import { useUICommands } from './hooks/useUICommands.jsx';

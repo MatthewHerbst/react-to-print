@@ -36,12 +36,12 @@ export const FunctionalComponentWithHook = () => {
     });
   }, [setLoading, setText]);
 
-  // const reactToPrintContent = React.useCallback(() => {
-  //   return componentRef.current;
-  // }, [componentRef.current]);
+  const reactToPrintContent = React.useCallback(() => {
+    return componentRef.current;
+  }, [componentRef.current]);
 
   const handlePrint = useReactToPrint({
-    //content: reactToPrintContent,
+    content: reactToPrintContent,
     documentTitle: "AwesomeFileName",
     onBeforeGetContent: handleOnBeforeGetContent,
     onBeforePrint: handleBeforePrint,
@@ -59,7 +59,7 @@ export const FunctionalComponentWithHook = () => {
   return (
     <div>
       {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
-      <button onClick={() => handlePrint(undefined, { content: () => componentRef.current })}>
+      <button onClick={handlePrint}>
         Print using a Functional Component with the useReactToPrint hook
       </button>
       <ComponentToPrint ref={componentRef} text={text} />
