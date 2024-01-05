@@ -266,7 +266,7 @@ export const AnotherExample = () => {
     <>
       <div ref={contentToPrint}>Hello Again</div>
       <button onClick={() => {
-        uiCommands.hub.exceute(PRINT_COMMAND, contentToPrint);
+        uiCommands.hub.execute(PRINT_COMMAND, contentToPrint);
       }}>
         PRINT
       </button>
