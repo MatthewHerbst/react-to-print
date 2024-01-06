@@ -247,10 +247,7 @@ export const useUICommands = (options = {
 >./src/AnotherExample.jsx
 ```jsx
 import React, { useRef } from 'react';
-import { useUICommands } from './hooks/useUICommands.jsx';
-
-const PRINT_COMMAND = "print";
-//const COPY_COMMAND = "copy";
+import { useUICommands, PRINT_COMMAND } from 'react-busser';
 
 export const AnotherExample = () => {
   const contentToPrint = useRef(null);
