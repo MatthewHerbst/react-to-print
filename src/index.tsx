@@ -212,25 +212,24 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             onPrintError,
         } = this.props;
 
-        // NOTE: `event` is a no-use argument (necessary for backward compatibility with older versions)
-        const __handlePrint = wrapCallbackWithArgs(this, this.handlePrint, event);
-
         if (onBeforeGetContent) {
             const onBeforeGetContentOutput = onBeforeGetContent();
             if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
                 onBeforeGetContentOutput
-                    .then(() => __handlePrint(content))
+                    .then(() => this.handlePrint(content))
                     .catch((error: Error) => {
                         if (onPrintError) {
                             onPrintError("onBeforeGetContent", error);
                         }
                     });
             } else {
-                __handlePrint(content);
+                this.handlePrint(content);
             }
         } else {
-            __handlePrint(content);
+            this.handlePrint(content);
         }
+
+        return Boolean(event);
     }
 
     public handlePrint = (optionalContent?: (() => React.ReactInstance | null)) => {
@@ -607,10 +606,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                     event: React.MouseEvent,
                     content: (() => React.ReactInstance | null)
                 ) => {
-                    /* eslint-disable-next-line @typescript-eslint/unbound-method */
-                    const __handlePrint = wrapCallbackWithArgs(this, this.handleClick, content);
-                    // NOTE: `event` is a no-use argument (necessary for backward compatibility with older versions)
-                    return __handlePrint(event);
+                    return this.handleClick(event, content);
                 }
             };
 

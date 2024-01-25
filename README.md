@@ -198,11 +198,11 @@ function copyTextFactory() {
  * @returns {void}
  */
 function printPageFactory(printer) {
-  return (componentRef = null) => {
+  return (event, componentRef = null) => {
     if (!componentRef) {
       window.print();
     } else {
-      printer(undefined, { content: () => componentRef.current })
+      printer(event, () => componentRef.current)
     }
   };
 }
@@ -261,8 +261,8 @@ export const AnotherExample = () => {
   return (
     <>
       <div ref={contentToPrint}>Hello Again</div>
-      <button onClick={() => {
-        uiCommands.hub.execute(PRINT_COMMAND, contentToPrint);
+      <button onClick={(event) => {
+        uiCommands.hub.execute(PRINT_COMMAND, event, contentToPrint);
       }}>
         PRINT
       </button>
