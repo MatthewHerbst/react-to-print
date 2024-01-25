@@ -11,7 +11,7 @@ const PrintContext = contextEnabled ? React.createContext({} as IPrintContextPro
 export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
 
 export interface ITriggerProps<T> {
-    onClick: (event?: React.MouseEvent) => void;
+    onClick: (event: React.MouseEvent) => void;
     ref: (v: T) => void;
 }
 
@@ -206,7 +206,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick (event?: React.MouseEvent, content?: (() => React.ReactInstance | null)) {
+    public handleClick (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) {
         const {
             onBeforeGetContent,
             onPrintError,
@@ -624,8 +624,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 }
 
 type UseReactToPrintHookReturn = (
-    event?: React.MouseEvent,
-    lazyOption?: { content: (() => React.ReactInstance | null) }
+    event: React.MouseEvent,
+    content?: (() => React.ReactInstance | null)
 ) => void;
 
 export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookReturn => {
@@ -646,9 +646,9 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
     );
 
     return React.useCallback(
-        (event?: React.MouseEvent, lazyOption?: { content: (() => React.ReactInstance | null) }) => {
+        (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) => {
         /* eslint-disable-next-line @typescript-eslint/unbound-method */
-        const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, lazyOption);
+        const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, content);
         // NOTE: `event` is a no-use argument
         // (necessary for backward compatibility with older versions)
         return triggerPrint(event);
