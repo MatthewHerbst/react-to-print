@@ -209,8 +209,7 @@ function printPageFactory(printer) {
 
 /* @NOTE: A ReactJS hook to house command design pattern actions for copying, printing e.t.c on a React app */
 export const useUICommands = (options = {
-  print: {},
-  //copy: {}
+  print: {}
 }) => {
   /* @HINT: COMMAND DESIGN PATTERN - ReactJS hook */
 

@@ -5,7 +5,7 @@ const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContex
 const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
 
 export interface IPrintContextProps {
-    handlePrint: (event: React.MouseEvent, lazyOption?: { content: (() => React.ReactInstance) }) => void,
+    handlePrint: (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) => void,
 }
 const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
 export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
@@ -25,7 +25,21 @@ type Font = {
 
 type PropertyFunction<T> = () => T;
 
-function partialEnd<R, O>(thisArg: O, callback: (...curryArgs: any[]) => R, ...predefinedArgs: unknown[]) {
+/**
+ * This function helps to curry arguments to a bound function
+ * and partially apply them at the end of the argument list. 
+ * 
+ * @param {Object} thisArg 
+ * @param {Function} callback 
+ * @param {Array.<*>} predefinedArgs
+ * 
+ * @returns {*}
+ */
+function wrapCallbackWithArgs<CallbackReturnValue, BoundObject>(
+    thisArg: BoundObject,
+    callback: (...curryArgs: any[]) => CallbackReturnValue,
+    ...predefinedArgs: unknown[]
+) {
     return function (...args: unknown[]) {
       return callback.apply(thisArg, [...args, ...predefinedArgs]);
     };
@@ -192,34 +206,34 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick (event?: React.MouseEvent, lazyOption?: { content: (() => React.ReactInstance | null) }) {
+    public handleClick (event?: React.MouseEvent, content?: (() => React.ReactInstance | null)) {
         const {
             onBeforeGetContent,
             onPrintError,
         } = this.props;
 
         // NOTE: `event` is a no-use argument (necessary for backward compatibility with older versions)
-        const __handlePrint = partialEnd(this, this.handlePrint, event);
+        const __handlePrint = wrapCallbackWithArgs(this, this.handlePrint, event);
 
         if (onBeforeGetContent) {
             const onBeforeGetContentOutput = onBeforeGetContent();
             if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
                 onBeforeGetContentOutput
-                    .then(() => __handlePrint(lazyOption))
+                    .then(() => __handlePrint(content))
                     .catch((error: Error) => {
                         if (onPrintError) {
                             onPrintError("onBeforeGetContent", error);
                         }
                     });
             } else {
-                __handlePrint(lazyOption);
+                __handlePrint(content);
             }
         } else {
-            __handlePrint(lazyOption);
+            __handlePrint(content);
         }
     }
 
-    public handlePrint = (lazyOption?: { content: (() => React.ReactInstance) }) => {
+    public handlePrint = (optionalContent?: (() => React.ReactInstance | null)) => {
         const {
             bodyClass,
             content,
@@ -229,12 +243,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             nonce,
         } = this.props;
 
-        let contentEl = lazyOption && typeof lazyOption.content === "function" ? lazyOption.content() : null;
+        let contentEl = typeof optionalContent === "function" ? optionalContent() : null;
         
-        if (!contentEl) {
-            if (typeof content === "function") {
-                contentEl = content();
-            }
+        if (!contentEl && typeof content === "function") {
+            contentEl = content();
         }
 
         if (contentEl === undefined) {
@@ -593,10 +605,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const value = { 
                 handlePrint: (
                     event: React.MouseEvent,
-                    lazyOption?: { content: (() => React.ReactInstance | null) }
+                    content: (() => React.ReactInstance | null)
                 ) => {
                     /* eslint-disable-next-line @typescript-eslint/unbound-method */
-                    const __handlePrint = partialEnd(this, this.handleClick, lazyOption);
+                    const __handlePrint = wrapCallbackWithArgs(this, this.handleClick, content);
                     // NOTE: `event` is a no-use argument (necessary for backward compatibility with older versions)
                     return __handlePrint(event);
                 }
@@ -636,7 +648,7 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
     return React.useCallback(
         (event?: React.MouseEvent, lazyOption?: { content: (() => React.ReactInstance | null) }) => {
         /* eslint-disable-next-line @typescript-eslint/unbound-method */
-        const triggerPrint = partialEnd(reactToPrint, reactToPrint.handleClick, lazyOption);
+        const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, lazyOption);
         // NOTE: `event` is a no-use argument
         // (necessary for backward compatibility with older versions)
         return triggerPrint(event);
