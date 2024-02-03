@@ -163,106 +163,27 @@ const Example = () => {
 };
 ```
 
-### Calling from functional components within a custom hook
+### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html) using `content` passed to `handlePrint()`
 
->./hooks/useUICommands.jsx
-```jsx
-import React, { useRef, useMemo } from 'react';
-import { useReactToPrint } from 'react-to-print';
-
-/* NOTE: `navigator.clipboard` is undefined in Safari 12.1.x as well as the earlier versions 
-  of other browsers like Chrome (Webkit), Firefox, Edge (EdgeHTML) */
-/* SEE: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard#clipboard_availability */
-import "clipboard-polyfill/overwrite-globals"; /* @_SHIM: # */
-
-/**
- * copyTextFactory
- *
- * @param {void}
- * @returns {void}
- */
-function copyTextFactory() {
-  return (textString = "") => {
-    /* NOTE: `navigator.clipboard.writeText(...)` throws vague error in Safari 13.1.x (and above) even when called in a real user context */
-    /* SEE: https://developer.apple.com/forums/thread/691873 */
-    try {
-      navigator.clipboard.writeText(textString);
-    } catch(_) { }
-  };
-}
-
-/**
- * printPageFactory
- *
- * @param {Function} printer
- * @returns {void}
- */
-function printPageFactory(printer) {
-  return (event, componentRef = null) => {
-    if (!componentRef) {
-      window.print();
-    } else {
-      printer(event, () => componentRef.current)
-    }
-  };
-}
-
-/* @NOTE: A ReactJS hook to house command design pattern actions for copying, printing e.t.c on a React app */
-export const useUICommands = (options = {
-  print: {}
-}) => {
-  /* @HINT: COMMAND DESIGN PATTERN - ReactJS hook */
-
-  const printer = useReactToPrint(
-    Object.assign({
-      documentTitle: ".",
-      onBeforeGetContent: () => Promise.resolve(undefined),
-      onBeforePrint: () => undefined,
-      onAfterPrint: () => undefined,
-      removeAfterPrint: true,
-    }, options.print)
-  );
-  const commands = useRef({
-    copy: copyTextFactory(),
-    print: printPageFactory(printer)
-  }).current;
-
-  return useMemo(
-    () => ({
-      hub: {
-        execute(commandName = "", ...args) {
-          if (typeof commands[commandName] === "function") {
-            const commandRoutine = commands[commandName];
-            return commandRoutine.apply(null, args);
-          }
-        }
-      }
-    }),
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    []
-  );
-};
-```
->./src/AnotherExample.jsx
 ```jsx
 import React, { useRef } from 'react';
-import { useUICommands, PRINT_COMMAND } from 'react-busser';
+import { useReactToPrint } from 'react-to-print';
 
 export const AnotherExample = () => {
   const contentToPrint = useRef(null);
-  const uiCommands = useUICommands({
-    print: {
-      documentTitle: "Print - Document",
-      onBeforePrint: () => console.log("before printing..."),
-      onAfterPrint: () => console.log("after printing..."),
-    }
+  const handlePrint = useReactToPrint({
+    documentTitle: "Print This Document",
+    onBeforeGetContent: () => Promise.resolve(null),
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+    removeAfterPrint: true,
   });
 
   return (
     <>
       <div ref={contentToPrint}>Hello Again</div>
       <button onClick={(event) => {
-        uiCommands.hub.execute(PRINT_COMMAND, event, contentToPrint);
+        handlePrint(event, () => contentToPrint.current);
       }}>
         PRINT
       </button>
