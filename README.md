@@ -26,7 +26,7 @@ The component accepts the following props:
 | Name | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
-| **`content`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
+| **`content?`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
 | **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
@@ -173,7 +173,6 @@ export const AnotherExample = () => {
   const contentToPrint = useRef(null);
   const handlePrint = useReactToPrint({
     documentTitle: "Print This Document",
-    onBeforeGetContent: () => Promise.resolve(null),
     onBeforePrint: () => console.log("before printing..."),
     onAfterPrint: () => console.log("after printing..."),
     removeAfterPrint: true,
