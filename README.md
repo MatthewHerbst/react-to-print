@@ -181,8 +181,8 @@ export const AnotherExample = () => {
   return (
     <>
       <div ref={contentToPrint}>Hello Again</div>
-      <button onClick={(event) => {
-        handlePrint(event, () => contentToPrint.current);
+      <button onClick={() => {
+        handlePrint(null, () => contentToPrint.current);
       }}>
         PRINT
       </button>

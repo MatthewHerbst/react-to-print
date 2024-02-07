@@ -58,7 +58,7 @@ export const FunctionalComponentWithHookAndLazyContent = () => {
   return (
     <div>
       {loading && <p className="indicator">onBeforeGetContent: Loading...</p>}
-      <button onClick={(e) => handlePrint(e, reactToPrintContent)}>
+      <button onClick={() => handlePrint(null, reactToPrintContent)}>
         Print using a Functional Component with the useReactToPrint hook without `content` option
       </button>
       <ComponentToPrint ref={componentRef} text={text} />

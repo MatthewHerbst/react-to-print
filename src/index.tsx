@@ -5,13 +5,13 @@ const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContex
 const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
 
 export interface IPrintContextProps {
-    handlePrint: (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) => void,
+    handlePrint: (event: unknown, content?: (() => React.ReactInstance | null)) => void,
 }
 const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
 export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
 
 export interface ITriggerProps<T> {
-    onClick: (event: React.MouseEvent) => void;
+    onClick: (event: unknown) => void;
     ref: (v: T) => void;
 }
 
@@ -206,7 +206,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) {
+    public handleClick (event: unknown, content?: (() => React.ReactInstance | null)) {
         const {
             onBeforeGetContent,
             onPrintError,
@@ -229,7 +229,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             this.handlePrint(content);
         }
 
-        return Boolean(event);
+        return Boolean(event), true;
     }
 
     public handlePrint = (optionalContent?: (() => React.ReactInstance | null)) => {
@@ -603,8 +603,8 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
             const value = { 
                 handlePrint: (
-                    event: React.MouseEvent,
-                    content: (() => React.ReactInstance | null)
+                    event: unknown,
+                    content?: (() => React.ReactInstance | null)
                 ) => {
                     return this.handleClick(event, content);
                 }
@@ -620,7 +620,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 }
 
 type UseReactToPrintHookReturn = (
-    event: React.MouseEvent,
+    event: unknown,
     content?: (() => React.ReactInstance | null)
 ) => void;
 
@@ -642,7 +642,7 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
     );
 
     return React.useCallback(
-        (event: React.MouseEvent, content?: (() => React.ReactInstance | null)) => {
+        (event: unknown, content?: (() => React.ReactInstance | null)) => {
         /* eslint-disable-next-line @typescript-eslint/unbound-method */
         const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, content);
         // NOTE: `event` is a no-use argument
