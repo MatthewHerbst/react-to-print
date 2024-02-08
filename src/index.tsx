@@ -206,7 +206,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick (event: unknown, content?: (() => React.ReactInstance | null)) {
+    
+    public handleClick (
+        /* eslint-disable-next-line no-unused-vars */
+        // @ts-expect-error variable is unused
+        event: unknown, 
+        content?: (() => React.ReactInstance | null)
+    ) {
         const {
             onBeforeGetContent,
             onPrintError,
@@ -228,8 +234,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         } else {
             this.handlePrint(content);
         }
-
-        return Boolean(event), true;
     }
 
     public handlePrint = (optionalContent?: (() => React.ReactInstance | null)) => {
@@ -602,12 +606,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             }
 
             const value = { 
-                handlePrint: (
-                    event: unknown,
-                    content?: (() => React.ReactInstance | null)
-                ) => {
-                    return this.handleClick(event, content);
-                }
+                handlePrint: this.handleClick.bind(this)
             };
 
             return (
