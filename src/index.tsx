@@ -5,13 +5,13 @@ const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContex
 const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
 
 export interface IPrintContextProps {
-    handlePrint: () => void,
+    handlePrint: (event: unknown, content?: (() => React.ReactInstance | null)) => void,
 }
 const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
 export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
 
 export interface ITriggerProps<T> {
-    onClick: () => void;
+    onClick: (event: unknown) => void;
     ref: (v: T) => void;
 }
 
@@ -24,6 +24,26 @@ type Font = {
 };
 
 type PropertyFunction<T> = () => T;
+
+/**
+ * This function helps to curry arguments to a bound function
+ * and partially apply them at the end of the argument list. 
+ * 
+ * @param {Object} thisArg 
+ * @param {Function} callback 
+ * @param {Array.<*>} predefinedArgs
+ * 
+ * @returns {*}
+ */
+function wrapCallbackWithArgs<CallbackReturnValue, BoundObject>(
+    thisArg: BoundObject,
+    callback: (...curryArgs: any[]) => CallbackReturnValue,
+    ...predefinedArgs: unknown[]
+) {
+    return function (...args: unknown[]) {
+      return callback.apply(thisArg, [...args, ...predefinedArgs]);
+    };
+}
 
 // NOTE: https://github.com/Microsoft/TypeScript/issues/23812
 const defaultProps = {
@@ -50,7 +70,7 @@ export interface IReactToPrintProps {
     bodyClass?: string;
     children?: React.ReactNode;
     /** Content to be printed */
-    content: () => React.ReactInstance | null;
+    content?: () => React.ReactInstance | null;
     /** Copy styles over into print window. default: true */
     copyStyles?: boolean;
     /**
@@ -186,7 +206,13 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 
-    public handleClick = () => {
+    
+    public handleClick (
+        /* eslint-disable-next-line no-unused-vars */
+        // @ts-expect-error variable is unused
+        event: unknown, 
+        content?: (() => React.ReactInstance | null)
+    ) {
         const {
             onBeforeGetContent,
             onPrintError,
@@ -196,21 +222,21 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             const onBeforeGetContentOutput = onBeforeGetContent();
             if (onBeforeGetContentOutput && typeof onBeforeGetContentOutput.then === "function") {
                 onBeforeGetContentOutput
-                    .then(this.handlePrint)
+                    .then(() => this.handlePrint(content))
                     .catch((error: Error) => {
                         if (onPrintError) {
                             onPrintError("onBeforeGetContent", error);
                         }
                     });
             } else {
-                this.handlePrint();
+                this.handlePrint(content);
             }
         } else {
-            this.handlePrint();
+            this.handlePrint(content);
         }
     }
 
-    public handlePrint = () => {
+    public handlePrint = (optionalContent?: (() => React.ReactInstance | null)) => {
         const {
             bodyClass,
             content,
@@ -220,7 +246,11 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             nonce,
         } = this.props;
 
-        const contentEl = content();
+        let contentEl = typeof optionalContent === "function" ? optionalContent() : null;
+        
+        if (!contentEl && typeof content === "function") {
+            contentEl = content();
+        }
 
         if (contentEl === undefined) {
             this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']);
@@ -566,7 +596,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
         if (trigger) {
             return React.cloneElement(trigger(), {
-                onClick: this.handleClick,
+                onClick: this.handleClick.bind(this),
             });
         } else {
             if (!PrintContext) {
@@ -575,7 +605,9 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
                 return null;
             }
 
-            const value = { handlePrint: this.handleClick };
+            const value = { 
+                handlePrint: this.handleClick.bind(this)
+            };
 
             return (
                 <PrintContext.Provider value={value as IPrintContextProps}>
@@ -586,7 +618,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
     }
 }
 
-type UseReactToPrintHookReturn = () => void;
+type UseReactToPrintHookReturn = (
+    event: unknown,
+    content?: (() => React.ReactInstance | null)
+) => void;
 
 export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookReturn => {
     if (!hooksEnabled) {
@@ -605,5 +640,12 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
         [props]
     );
 
-    return React.useCallback(() => reactToPrint.handleClick(), [reactToPrint]);
+    return React.useCallback(
+        (event: unknown, content?: (() => React.ReactInstance | null)) => {
+        /* eslint-disable-next-line @typescript-eslint/unbound-method */
+        const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, content);
+        // NOTE: `event` is a no-use argument
+        // (necessary for backward compatibility with older versions)
+        return triggerPrint(event);
+    }, [reactToPrint]);
 };

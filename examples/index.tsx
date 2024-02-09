@@ -9,6 +9,7 @@ import { ClassComponentText } from "./ClassComponentText";
 import { CustomPrint } from "./CustomPrint";
 import { FunctionalComponent } from "./FunctionalComponent";
 import { FunctionalComponentWithHook } from "./FunctionalComponentWithHook";
+import { FunctionalComponentWithHookAndLazyContent } from "./FunctionalComponentWithHookAndLazyContent";
 import { FunctionalComponentWithFunctionalComponentToPrint } from './FunctionalComponentWithFunctionalComponentToPrint';
 import "./styles/index.css";
 
@@ -44,10 +45,12 @@ class Example extends React.Component<Props, State> {
               <TabList>
                 <Tab>Standard</Tab>
                 <Tab>With Hook</Tab>
+                <Tab>With Hook And Lazy Content</Tab>
                 <Tab>With a functional ComponentToPrint</Tab>
               </TabList>
               <TabPanel><FunctionalComponent /></TabPanel>
               <TabPanel><FunctionalComponentWithHook /></TabPanel>
+              <TabPanel><FunctionalComponentWithHookAndLazyContent /></TabPanel>
               <TabPanel><FunctionalComponentWithFunctionalComponentToPrint /></TabPanel>
             </Tabs>
           </TabPanel>
