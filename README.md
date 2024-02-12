@@ -26,7 +26,7 @@ The component accepts the following props:
 | Name | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
-| **`content?`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print |
+| **`content?`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print. Alternatively, pass the content directly to the callback returned by `useReactToPrint` |
 | **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
 | **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
 | **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
@@ -47,7 +47,7 @@ If you need extra control over printing and don't want to specify `trigger` dire
 
 ### `useReactToPrint`
 
-For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React >=16.8.0. See the examples below for usage.
+For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React >=16.8.0. See the examples below for usage. Additionally, for-fine tuned control, the `handlePrint` callback can accept an optional `content` prop which will can be used instead of passing a `content` prop to the hook itself.
 
 ## Compatibility
 
@@ -528,4 +528,4 @@ Set the container to `overflow: visible; height: fit-content` when printing, can
 
 ## Running locally
 
-*NOTE*: Node >=12 is required to build the library locally. We use Node ^14 for our tests.
+*NOTE*: The library is tested and built locally using Node >= 20.
