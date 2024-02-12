@@ -1,111 +1,13 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 
-const contextEnabled = Object.prototype.hasOwnProperty.call(React, "createContext");
-const hooksEnabled = Object.prototype.hasOwnProperty.call(React, "useMemo") && Object.prototype.hasOwnProperty.call(React, "useCallback");
+import { PrintContext } from "./PrintContext";
+import type { IPrintContextProps } from "./PrintContext";
+import { defaultProps } from "../consts/defaultProps";
+import type { Font } from "../types/font";
+import type { IReactToPrintProps } from "../types/reactToPrintProps";
 
-export interface IPrintContextProps {
-    handlePrint: (event: unknown, content?: (() => React.ReactInstance | null)) => void,
-}
-const PrintContext = contextEnabled ? React.createContext({} as IPrintContextProps) : null;
-export const PrintContextConsumer = PrintContext ? PrintContext.Consumer : () => null;
-
-export interface ITriggerProps<T> {
-    onClick: (event: unknown) => void;
-    ref: (v: T) => void;
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/API/FontFace/FontFace
-type Font = {
-    family: string;
-    source: string;
-    weight?: string;
-    style?: string;
-};
-
-type PropertyFunction<T> = () => T;
-
-/**
- * This function helps to curry arguments to a bound function
- * and partially apply them at the end of the argument list. 
- * 
- * @param {Object} thisArg 
- * @param {Function} callback 
- * @param {Array.<*>} predefinedArgs
- * 
- * @returns {*}
- */
-function wrapCallbackWithArgs<CallbackReturnValue, BoundObject>(
-    thisArg: BoundObject,
-    callback: (...curryArgs: any[]) => CallbackReturnValue,
-    ...predefinedArgs: unknown[]
-) {
-    return function (...args: unknown[]) {
-      return callback.apply(thisArg, [...args, ...predefinedArgs]);
-    };
-}
-
-// NOTE: https://github.com/Microsoft/TypeScript/issues/23812
-const defaultProps = {
-    copyStyles: true,
-    pageStyle: `
-        @page {
-            /* Remove browser default header (title) and footer (url) */
-            margin: 0;
-        }
-        @media print {
-            body {
-                /* Tell browsers to print background colors */
-                -webkit-print-color-adjust: exact; /* Chrome/Safari/Edge/Opera */
-                color-adjust: exact; /* Firefox */
-            }
-        }
-    `,
-    removeAfterPrint: false,
-    suppressErrors: false,
-};
-
-export interface IReactToPrintProps {
-    /** Class to pass to the print window body */
-    bodyClass?: string;
-    children?: React.ReactNode;
-    /** Content to be printed */
-    content?: () => React.ReactInstance | null;
-    /** Copy styles over into print window. default: true */
-    copyStyles?: boolean;
-    /**
-     * Set the title for printing when saving as a file.
-     * Will result in the calling page's `<title>` being temporarily changed while printing.
-     */
-    documentTitle?: string;
-    /** Pre-load these fonts to ensure availability when printing */
-    fonts?: Font[];
-    /** Callback function to trigger after print */
-    onAfterPrint?: () => void;
-    /** Callback function to trigger before page content is retrieved for printing */
-    onBeforeGetContent?: () => void | Promise<any>;
-    /** Callback function to trigger before print */
-    onBeforePrint?: () => void | Promise<any>;
-    /** Callback function to listen for printing errors */
-    onPrintError?: (errorLocation: "onBeforeGetContent" | "onBeforePrint" | "print", error: Error) => void;
-    /** Override default print window styling */
-    pageStyle?: string | PropertyFunction<string>;
-    /** Override the default `window.print` method that is used for printing */
-    print?: (target: HTMLIFrameElement) => Promise<any>;
-    /**
-     * Remove the iframe after printing.
-     * NOTE: `onAfterPrint` will run before the iframe is removed
-     */
-    removeAfterPrint?: boolean;
-    /** Suppress error messages */
-    suppressErrors?: boolean;
-    /** Trigger action used to open browser print */
-    trigger?: <T>() => React.ReactElement<ITriggerProps<T>>;
-    /** Set the nonce attribute for whitelisting script and style -elements for CSP (content security policy) */
-    nonce?: string;
-}
-
-export default class ReactToPrint extends React.Component<IReactToPrintProps> {
+export class ReactToPrint extends React.Component<IReactToPrintProps> {
     private numResourcesToLoad!: number;
     private resourcesLoaded!: (Element | Font | FontFace)[];
     private resourcesErrored!: (Element | Font | FontFace)[];
@@ -205,7 +107,6 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
             this.startPrint(target);
         }
     }
-
     
     public handleClick (
         /* eslint-disable-next-line no-unused-vars */
@@ -247,6 +148,10 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         } = this.props;
 
         let contentEl = typeof optionalContent === "function" ? optionalContent() : null;
+
+        if (contentEl && typeof content === "function") {
+            this.logMessages(['"react-to-print" received a `content` prop and a content param passed the callback return by `useReactToPrint. The `content` prop will be ignored.'], "warning");
+        }
         
         if (!contentEl && typeof content === "function") {
             contentEl = content();
@@ -468,7 +373,7 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
 
                     for (let i = 0, styleAndLinkNodesLen = styleAndLinkNodes.length; i < styleAndLinkNodesLen; ++i) {
                         const node = styleAndLinkNodes[i];
-                        
+
                         if (node.tagName.toLowerCase() === 'style') { // <style> nodes
                             const newHeadEl = domDoc.createElement(node.tagName);
                             const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
@@ -617,35 +522,3 @@ export default class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
     }
 }
-
-type UseReactToPrintHookReturn = (
-    event: unknown,
-    content?: (() => React.ReactInstance | null)
-) => void;
-
-export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookReturn => {
-    if (!hooksEnabled) {
-        if (!props.suppressErrors) {
-            console.error('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"'); // eslint-disable-line no-console
-        }
-
-        return () => {
-            throw new Error('"react-to-print" requires React ^16.8.0 to be able to use "useReactToPrint"');
-        };
-    }
-
-    const reactToPrint = React.useMemo(
-        // TODO: is there a better way of applying the defaultProps?
-        () => new ReactToPrint({ ...defaultProps, ...props }),
-        [props]
-    );
-
-    return React.useCallback(
-        (event: unknown, content?: (() => React.ReactInstance | null)) => {
-        /* eslint-disable-next-line @typescript-eslint/unbound-method */
-        const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, content);
-        // NOTE: `event` is a no-use argument
-        // (necessary for backward compatibility with older versions)
-        return triggerPrint(event);
-    }, [reactToPrint]);
-};
