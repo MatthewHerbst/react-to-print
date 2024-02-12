@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.15.0 (February 11th, 2024)
+
+- FEATURE [652](https://github.com/gregnb/react-to-print/issues/652): When using the `useReactToPrint` hook it is now possible to pass the returned callback the `content` ref at call time, rather than needing to pass it to the hook directly. This allows for generating the content to be printed closer to when the print occurs. Thanks [isocroft](https://github.com/isocroft)
+- DEPENDENCIES: Upgraded all `devDependencies` to their latest versions
+- CHORE: broke up the single file in the repo, started organizing things a bit
+
 ## 2.14.15 (October 2nd, 2023)
 
 This is a republish of 2.14.14 since that version got screwed up by some [downtime at npm](https://status.npmjs.org/incidents/b54856c1ljt7) and seems to be in an unrecoverable state.
