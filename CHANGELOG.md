@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.15.1 (February 13th, 2024)
+
+- FIX [686](https://github.com/gregnb/react-to-print/pull/686) A breaking type error was mistakenly introduced as part of [652](https://github.com/gregnb/react-to-print/issues/652). This has been fixed.
+
 ## 2.15.0 (February 11th, 2024)
 
 - FEATURE [652](https://github.com/gregnb/react-to-print/issues/652): When using the `useReactToPrint` hook it is now possible to pass the returned callback the `content` ref at call time, rather than needing to pass it to the hook directly. This allows for generating the content to be printed closer to when the print occurs. Thanks [isocroft](https://github.com/isocroft)
