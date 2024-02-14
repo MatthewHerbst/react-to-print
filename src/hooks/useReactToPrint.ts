@@ -6,7 +6,7 @@ import type { IReactToPrintProps } from "../types/reactToPrintProps";
 import { wrapCallbackWithArgs } from "../utils/wrapCallbackWithArgs";
 
 type UseReactToPrintHookReturn = (
-    event: unknown,
+    event?: unknown,
     content?: (() => React.ReactInstance | null)
 ) => void;
 
@@ -30,11 +30,10 @@ export const useReactToPrint = (props: IReactToPrintProps): UseReactToPrintHookR
     );
 
     return React.useCallback(
-        (event: unknown, content?: (() => React.ReactInstance | null)) => {
+        (event?: unknown, content?: (() => React.ReactInstance | null)) => {
         /* eslint-disable-next-line @typescript-eslint/unbound-method */
         const triggerPrint = wrapCallbackWithArgs(reactToPrint, reactToPrint.handleClick, content);
-        // NOTE: `event` is a no-use argument
-        // (necessary for backward compatibility with older versions)
+        // NOTE: `event` is an unused argument, necessary for backward compatibility with older versions
         return triggerPrint(event);
     }, [reactToPrint]);
 };
