@@ -1,7 +1,7 @@
 import type { Font } from "./font";
 
 export interface ITriggerProps<T> {
-    onClick: (event: unknown) => void;
+    onClick: (event?: unknown) => void;
     ref: (v: T) => void;
 }
 

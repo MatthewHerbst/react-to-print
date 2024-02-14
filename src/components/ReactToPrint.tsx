@@ -109,9 +109,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
     }
     
     public handleClick (
-        /* eslint-disable-next-line no-unused-vars */
-        // @ts-expect-error variable is unused
-        event: unknown, 
+        _event?: unknown, 
         content?: (() => React.ReactInstance | null)
     ) {
         const {
