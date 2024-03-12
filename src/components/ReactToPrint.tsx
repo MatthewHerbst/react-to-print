@@ -77,7 +77,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
                     this.handleRemoveIframe();
                 }
             } else {
-                this.logMessages(["Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/gregnb/react-to-print/issues/"]);
+                this.logMessages(["Printing failed because the `contentWindow` of the print iframe did not load. This is possibly an error with `react-to-print`. Please file an issue: https://github.com/MatthewHerbst/react-to-print/issues/"]);
             }
         }, 500);
     }
@@ -156,7 +156,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
         }
 
         if (contentEl === undefined) {
-            this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/gregnb/react-to-print#examples']);
+            this.logMessages(['To print a functional component ensure it is wrapped with `React.forwardRef`, and ensure the forwarded ref is used. See the README for an example: https://github.com/MatthewHerbst/react-to-print#examples']);
             return;
         }
 
@@ -173,7 +173,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
         printWindow.style.left = `-${document.documentElement.clientWidth + 100}px`;
         printWindow.id = "printWindow";
         // Ensure we set a DOCTYPE on the iframe's document
-        // https://github.com/gregnb/react-to-print/issues/459
+        // https://github.com/MatthewHerbst/react-to-print/issues/459
         printWindow.srcdoc = "<!DOCTYPE html>";
 
         const contentNodes = findDOMNode(contentEl);
@@ -381,7 +381,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
                                 try {
                                     // Accessing `sheet.cssRules` on cross-origin sheets can throw
                                     // security exceptions in some browsers, notably Firefox
-                                    // https://github.com/gregnb/react-to-print/issues/429
+                                    // https://github.com/MatthewHerbst/react-to-print/issues/429
                                     const cssLength = sheet.cssRules.length;
                                     for (let j = 0; j < cssLength; ++j) {
                                         if (typeof sheet.cssRules[j].cssText === "string") {
@@ -389,7 +389,7 @@ export class ReactToPrint extends React.Component<IReactToPrintProps> {
                                         }
                                     }
                                 } catch (error) {
-                                    this.logMessages([`A stylesheet could not be accessed. This is likely due to the stylesheet having cross-origin imports, and many browsers block script access to cross-origin stylesheets. See https://github.com/gregnb/react-to-print/issues/429 for details. You may be able to load the sheet by both marking the stylesheet with the cross \`crossorigin\` attribute, and setting the \`Access-Control-Allow-Origin\` header on the server serving the stylesheet. Alternatively, host the stylesheet on your domain to avoid this issue entirely.`, node], 'warning');
+                                    this.logMessages([`A stylesheet could not be accessed. This is likely due to the stylesheet having cross-origin imports, and many browsers block script access to cross-origin stylesheets. See https://github.com/MatthewHerbst/react-to-print/issues/429 for details. You may be able to load the sheet by both marking the stylesheet with the cross \`crossorigin\` attribute, and setting the \`Access-Control-Allow-Origin\` header on the server serving the stylesheet. Alternatively, host the stylesheet on your domain to avoid this issue entirely.`, node], 'warning');
                                 }
 
                                 newHeadEl.setAttribute("id", `react-to-print-${i}`);

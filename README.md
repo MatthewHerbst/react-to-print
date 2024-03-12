@@ -57,7 +57,7 @@ For functional components, use the `useReactToPrint` hook, which accepts an obje
 
 While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all WebViews. Some don't make the correct API available. Others make it available but cause printing to no-op when in WebView.
 
-We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/gregnb/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
+We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/MatthewHerbst/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
 
 ### Known Incompatible Browsers
 
@@ -191,7 +191,7 @@ export const AnotherExample = () => {
 }
 ```
 
-**Note ([401](https://github.com/gregnb/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
+**Note ([401](https://github.com/MatthewHerbst/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
 
 ```ts
 const componentRef = useRef(null);
@@ -217,11 +217,11 @@ const componentRef = useRef(null);
   div.parent p { color:red; }
   ```
 
-- The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/gregnb/react-to-print/issues/280) for more.
+- The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/MatthewHerbst/react-to-print/issues/280) for more.
 
-- Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/gregnb/react-to-print/issues/248) for an example.
+- Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/MatthewHerbst/react-to-print/issues/248) for an example.
 
-- When rendering multiple components to print, for example, if you have a list of charts and want each chart to have its own print icon, ideally you will wrap each component to print + print button in its own component, and just render a list of those components. However, if you cannot do that for some reason, in your `.map` ensure that each component gets a unique `ref` value passed to it, otherwise printing any of the components will always print the last component. See [323](https://github.com/gregnb/react-to-print/issues/323) for more.
+- When rendering multiple components to print, for example, if you have a list of charts and want each chart to have its own print icon, ideally you will wrap each component to print + print button in its own component, and just render a list of those components. However, if you cannot do that for some reason, in your `.map` ensure that each component gets a unique `ref` value passed to it, otherwise printing any of the components will always print the last component. See [323](https://github.com/MatthewHerbst/react-to-print/issues/323) for more.
 
 ## FAQ
 
@@ -239,7 +239,7 @@ const handlePrint = useReactToPrint({
 });
 ```
 
-For examples of how others have done this, see [#484](https://github.com/gregnb/react-to-print/issues/484)
+For examples of how others have done this, see [#484](https://github.com/MatthewHerbst/react-to-print/issues/484)
 
 ### Can the `ComponentToPrint` be a functional component?
 
@@ -344,7 +344,7 @@ The default page size is usually A4. Most browsers do not allow JavaScript or CS
 }
 ```
 
-### Set custom margin to the page ([29](https://github.com/gregnb/react-to-print/issues/29))
+### Set custom margin to the page ([29](https://github.com/MatthewHerbst/react-to-print/issues/29))
 
 To set custom margin to the page,
 
@@ -364,7 +364,7 @@ Now, within the JSX call this function within the style tags,
 
 PS: This style tag should be inside the component that is being passed in as the content ref.
 
-### Set landscape printing ([240](https://github.com/gregnb/react-to-print/issues/240))
+### Set landscape printing ([240](https://github.com/MatthewHerbst/react-to-print/issues/240))
 
 In the component that is passed in as the content ref, add the following:
 
@@ -374,7 +374,7 @@ In the component that is passed in as the content ref, add the following:
 }
 ```
 
-### Printing elements that are not displayed ([159](https://github.com/gregnb/react-to-print/issues/159))
+### Printing elements that are not displayed ([159](https://github.com/MatthewHerbst/react-to-print/issues/159))
 
 Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 0; }`
 
@@ -384,7 +384,7 @@ The `pageStyle` prop should be a CSS string. For example: `".divider { break-aft
 
 ### Getting a blank page when printing
 
-Many have found setting the following CSS helpful. See [#26](https://github.com/gregnb/react-to-print/issues/26) for more.
+Many have found setting the following CSS helpful. See [#26](https://github.com/MatthewHerbst/react-to-print/issues/26) for more.
 
 ```css
 @media print {
@@ -403,7 +403,7 @@ If you are getting a blank page while setting `removeAfterPrint` to `true`, try 
 
 ### Styles incorrect in print dialog when using grid system
 
-We often ([#327](https://github.com/gregnb/react-to-print/issues/327), [#343](https://github.com/gregnb/react-to-print/issues/343), [#382](https://github.com/gregnb/react-to-print/issues/382)) see issues reported where the developer is using Bootstrap or a similar grid system, and everything works great until the user goes to print and suddenly it seems the styles are off. We've found that often the issue is the grid library uses the smallest sized columns during printing, such as the `xs` size on Bootstrap's grid, a size developers often don't plan for. The simplest solution is to ensure your grid will adapt to this size appropriately, though this may not be acceptable since you may want the large view to print rather than the smaller view. Another solution is to [override the grid column definition](https://stackoverflow.com/questions/22199429/bootstrap-grid-for-printing/28152320). Some newer versions of libraries have specific tools for dealing with printing, for example, [Bootstrap 4's Display property](https://getbootstrap.com/docs/4.3/utilities/display/).
+We often ([#327](https://github.com/MatthewHerbst/react-to-print/issues/327), [#343](https://github.com/MatthewHerbst/react-to-print/issues/343), [#382](https://github.com/MatthewHerbst/react-to-print/issues/382)) see issues reported where the developer is using Bootstrap or a similar grid system, and everything works great until the user goes to print and suddenly it seems the styles are off. We've found that often the issue is the grid library uses the smallest sized columns during printing, such as the `xs` size on Bootstrap's grid, a size developers often don't plan for. The simplest solution is to ensure your grid will adapt to this size appropriately, though this may not be acceptable since you may want the large view to print rather than the smaller view. Another solution is to [override the grid column definition](https://stackoverflow.com/questions/22199429/bootstrap-grid-for-printing/28152320). Some newer versions of libraries have specific tools for dealing with printing, for example, [Bootstrap 4's Display property](https://getbootstrap.com/docs/4.3/utilities/display/).
 
 ### Page Breaks
 
@@ -472,14 +472,14 @@ If your content rendered as print media does not automatically break multi-page 
 - A style of `position: absolute`, when rendered to print, may result in reformatted, rotated, or re-scaled content, causing unintended affects to print page layout and page breaks
 - Using `flex` may interfere with page breaks, try using `display: block`
 
-### Handling Scrolling ([603](https://github.com/gregnb/react-to-print/issues/603))
+### Handling Scrolling ([603](https://github.com/MatthewHerbst/react-to-print/issues/603))
 
 [![Edit react-to-print (Handling Scrolling)](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-to-print-handling-scrolling-n4mxyj?fontsize=14&hidenavigation=1&theme=dark)
 
 If you need to print the content of a scrolling container, you may encounter the following issues:
 
-- [Unable to control the scroll position](https://github.com/gregnb/react-to-print/issues/603#issue-1647664811), so the printed content may not be what you want.
-- [Overflow content is truncated](https://github.com/gregnb/react-to-print/issues/603#issuecomment-1649604330), resulting in missing printed content.
+- [Unable to control the scroll position](https://github.com/MatthewHerbst/react-to-print/issues/603#issue-1647664811), so the printed content may not be what you want.
+- [Overflow content is truncated](https://github.com/MatthewHerbst/react-to-print/issues/603#issuecomment-1649604330), resulting in missing printed content.
 
 To solve these problems, you need to modify the properties of the scrolling container when printing. You can pass a function to the `print` property, which will be called when printing. In this function, you can use the DOM API to query the scrolling container that needs to be modified, and then modify its properties to **control the scroll position**.
 

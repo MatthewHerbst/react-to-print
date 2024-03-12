@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gregnb/react-to-print.git"
+    "url": "git+https://github.com/MatthewHerbst/react-to-print.git"
   },
   "keywords": [
     "react",
@@ -29,9 +29,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gregnb/react-to-print/issues"
+    "url": "https://github.com/MatthewHerbst/react-to-print/issues"
   },
-  "homepage": "https://github.com/gregnb/react-to-print#readme",
+  "homepage": "https://github.com/MatthewHerbst/react-to-print#readme",
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0"
