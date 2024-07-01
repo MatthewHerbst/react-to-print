@@ -227,7 +227,7 @@ const componentRef = useRef(null);
 
 ### Can `react-to-print` be used to download a PDF without using the Print Preview window?
 
-No. We aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need an pass it to a library that can generate a PDF.
+No. We aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need and pass it to a library that can generate a PDF.
 
 ```tsx
 const handlePrint = useReactToPrint({
