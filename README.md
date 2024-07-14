@@ -7,7 +7,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dt/react-to-print.svg?style=flat)](https://npmcharts.com/compare/react-to-print?minimal=true)
 [![npm version](https://badge.fury.io/js/react-to-print.svg)](https://badge.fury.io/js/react-to-print)
 
-So you've created a React component and would love to give end users the ability to print out the contents of that component. This package aims to solve that by popping up a print window with CSS styles copied over as well.
+Print the content of a React component.
 
 ## Demo
 
@@ -19,193 +19,65 @@ So you've created a React component and would love to give end users the ability
 
 ## API
 
-### &lt;ReactToPrint />
+### Usage
 
-The component accepts the following props:
+```tsx
+const contentRef = useRef<HTMLDivElement>(null);
+const handlePrint = useReactToPrint({ contentRef });
 
-| Name | Type | Description |
+return (
+  <div>
+    <button onClick={handlePrint}>Print</button>
+    <div ref={contentRef}>Content to print</div>
+  </div>
+);
+```
+
+### Options
+
+| Option | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
-| **`content?`** | `function` | A function that returns a component reference value. The content of this reference value is then used for print. Alternatively, pass the content directly to the callback returned by `useReactToPrint` |
-| **`copyStyles?`** | `boolean` | Copy all `<style>` and `<link type="stylesheet" />` tags from `<head>` inside the parent window into the print window. (default: `true`) |
-| **`documentTitle?`** | `string` | Set the title for printing when saving as a file |
-| **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | You may optionally provide a list of fonts which will be loaded into the printing iframe. This is useful if you are using custom fonts |
-| **`onAfterPrint?`** | `function` | Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel |
-| **`onBeforeGetContent?`** | `function` | Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing |
-| **`onBeforePrint?`** | `function` | Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered. To modify content before printing, use `onBeforeGetContent` instead |
-| **`onPrintError?`** | `function` | Callback function (signature: `function(errorLocation: 'onBeforePrint' \| 'onBeforeGetContent' \| 'print', error: Error)`) that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforeGetContent`, `onBeforePrint`, and `print`. Use this to attempt to print again. `errorLocation` will tell you in which callback the Promise was rejected |
-| **`pageStyle?`** | `string` or `function` | We set some basic styles to help improve page printing. Use this to override them and provide your own. If given as a function it must return a `string` |
-| **`print?`** | `function` | If passed, this function will be used instead of `window.print` to print the content. This function is passed the `HTMLIFrameElement` which is the iframe used internally to gather content for printing. When finished, this function must return a Promise. Use this to print in non-browser environments such as Electron |
-| **`removeAfterPrint?`** | `boolean` | Remove the print iframe after action. Defaults to `false` |
+| **`contentRef?`** | `React.RefObject<Element \| Text>` | The ref pointing to the content to be printed. Alternatively, pass the ref directly to the callback returned by `useReactToPrint` |
+| **`documentTitle?`** | `string` | Set the title for printing when saving as a file. Ignored when passing a custom `print` option |
+| **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | A list of fonts to load into the printing iframe. This is useful if you are using custom fonts |
+| **`ignoreGlobalStyles?`** | `boolean` | Ignore all `<style>` and `<link type="stylesheet" />` tags from `<head>` |
+| **`nonce?`** | `string` | Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute for allow-listing script and style elements for Content Security Policy (CSP) |
+| **`onAfterPrint?`** | `() => void` | Callback function that triggers after the print dialog is closed _regardless of if the user selected to print or cancel_ |
+| **`onBeforePrint?`** | `() => Promise<void>` | Callback function that triggers before print. This can be used to change the content on the page before printing as an alternative to, or in conjunction with `@media print` queries |
+| **`onPrintError?`** | `(errorLocation: 'onBeforePrint' \| 'print', error: Error) => void` | Called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforePrint`, and `print`. Use this to attempt to print again. `errorLocation` will tell you where the Promise was rejected |
+| **`pageStyle?`** | `string` | `react-to-print` sets some basic styles to help improve page printing, notably, removing the header and footer that most browsers add. Use this to override these styles and provide your own |
+| **`preserveAfterPrint?`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
+| **`print?`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
 | **`suppressErrors?`** | `boolean` | When passed, prevents `console` logging of errors |
-| **`trigger?`** | `function` | A function that returns a React Component or Element. Note: under the hood, we inject a custom `onClick` prop into the returned Component/Element. As such, do not provide an `onClick` prop to the root node returned by `trigger`, as it will be overwritten |
-| **`nonce?`** | `string` | Set the nonce attribute for whitelisting script and style -elements for CSP (content security policy) |
 
-### `PrintContextConsumer`
-
-If you need extra control over printing and don't want to specify `trigger` directly, `PrintContextConsumer` allows you to gain direct access to the `handlePrint` method which triggers the print action. Requires React >=16.3.0. See the examples below for usage.
-
-### `useReactToPrint`
-
-For functional components, use the `useReactToPrint` hook, which accepts an object with the same configuration props as `<ReactToPrint />` and returns a `handlePrint` function which when called will trigger the print action. Requires React >=16.8.0. See the examples below for usage. Additionally, for-fine tuned control, the `handlePrint` callback can accept an optional `content` prop which will can be used instead of passing a `content` prop to the hook itself.
+The hook returns a function that will initiate the print process when called. This function can also be optionally passed the `content` when called, allowing for its use in conditional rendering logic (where hooks are not allowed) and/or in non-React code such as a util function. See the repo examples for more.
 
 ## Compatibility
 
-`react-to-print` should be compatible with most major browsers. We also do our best to support IE11.
+`react-to-print` should be compatible with most modern browsers.
 
 ### Mobile Browsers in WebView
 
-While printing on mobile browsers should work, printing within a WebView (when your page is opened by another app such as Facebook or Slack, but not by the full browser itself) is known to not work on many if not all WebViews. Some don't make the correct API available. Others make it available but cause printing to no-op when in WebView.
+While printing on mobile browsers generally works, printing within a WebView (when your page is opened by an app such as Facebook or Slack, but not by the full browser itself) is known to generally not work. Some WebViews don't make the correct API available. Others make it available but cause printing to no-op.
 
-We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/MatthewHerbst/react-to-print/issues/384) for more information. If you know of a way we can solve this, your help would be greatly appreciated.
+We are actively researching resolutions to this issue, but it likely requires changes by Google/Chromium and Apple/WebKit. See [#384](https://github.com/MatthewHerbst/react-to-print/issues/384) for more information. If you know of a way we can solve this your help would be greatly appreciated.
 
 ### Known Incompatible Browsers
 
 - Firefox Android (does not support [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print))
 
-## Examples
-
-[![Run react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
-
-```jsx
-// Using a class component, everything works without issue
-export class ComponentToPrint extends React.PureComponent {
-  render() {
-    return (
-      <div>My cool content here!</div>
-    );
-  }
-}
-
-// Using a functional component, you must wrap it in React.forwardRef, and then forward the ref to
-// the node you want to be the root of the print (usually the outer most node in the ComponentToPrint)
-// https://reactjs.org/docs/refs-and-the-dom.html#refs-and-function-components
-export const ComponentToPrint = React.forwardRef((props, ref) => {
-  return (
-    <div ref={ref}>My cool content here!</div>
-  );
-});
-```
-
-### Calling from class components
-
-```jsx
-import React from 'react';
-import ReactToPrint from 'react-to-print';
-
-import { ComponentToPrint } from './ComponentToPrint';
-
-class Example extends React.PureComponent {
-  render() {
-    return (
-      <div>
-        <ReactToPrint
-          trigger={() => {
-            // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-            // to the root node of the returned component as it will be overwritten.
-            return <a href="#">Print this out!</a>;
-          }}
-          content={() => this.componentRef}
-        />
-        <ComponentToPrint ref={el => (this.componentRef = el)} />
-      </div>
-    );
-  }
-}
-```
-
-### Calling from class components with `PrintContextConsumer`
-
-```jsx
-import React from 'react';
-import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
-
-import { ComponentToPrint } from './ComponentToPrint';
-
-class Example extends React.PureComponent {
-  render() {
-    return (
-      <div>
-        <ReactToPrint content={() => this.componentRef}>
-          <PrintContextConsumer>
-            {({ handlePrint }) => (
-              <button onClick={handlePrint}>Print this out!</button>
-            )}
-          </PrintContextConsumer>
-        </ReactToPrint>
-        <ComponentToPrint ref={el => (this.componentRef = el)} />
-      </div>
-    );
-  }
-}
-```
-
-### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html)
-
-```jsx
-import React, { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
-
-import { ComponentToPrint } from './ComponentToPrint';
-
-const Example = () => {
-  const componentRef = useRef();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  return (
-    <div>
-      <ComponentToPrint ref={componentRef} />
-      <button onClick={handlePrint}>Print this out!</button>
-    </div>
-  );
-};
-```
-
-### Calling from functional components with [useReactToPrint](https://reactjs.org/docs/hooks-intro.html) using `content` passed to `handlePrint()`
-
-```jsx
-import React, { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
-
-export const AnotherExample = () => {
-  const contentToPrint = useRef(null);
-  const handlePrint = useReactToPrint({
-    documentTitle: "Print This Document",
-    onBeforePrint: () => console.log("before printing..."),
-    onAfterPrint: () => console.log("after printing..."),
-    removeAfterPrint: true,
-  });
-
-  return (
-    <>
-      <div ref={contentToPrint}>Hello Again</div>
-      <button onClick={() => {
-        handlePrint(null, () => contentToPrint.current);
-      }}>
-        PRINT
-      </button>
-    </>
-  )
-}
-```
-
-**Note ([401](https://github.com/MatthewHerbst/react-to-print/issues/401)):** In TypeScript, if you encounter `componentRef.current` error such as: `Type 'undefined' is not assignable to type 'ReactInstance | null'.`, add `null` inside the `useRef()`:
-
-```ts
-const componentRef = useRef(null);
-```
-
 ## Known Issues
 
+- Some mobile browser may, instead of printing, open the native Share action instead
 - `onAfterPrint` may fire immediately (before the print dialog is closed) on newer versions of Safari where [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) does not block
+- ([401](https://github.com/MatthewHerbst/react-to-print/issues/401)): TypeScript errors such as `Type 'undefined' is not assignable to type 'ReactInstance | null'.`. You likely need to set your ref to initially be `null`: `useRef(null)`
 
 ## Common Pitfalls
 
-- `documentTitle` will not work if `react-to-print` is running within an `iframe`. If `react-to-print` is running within an `iframe` and your script has access to the parent document, you may be able to manually set and then restore the parent document's `title` during the print. This can be done by leveraging the `onBeforeGetContent` and `onAfterPrint` props.
+- `documentTitle` will not work if `react-to-print` is run within an `iframe`. If `react-to-print` is run within an `iframe` and your script has access to the parent document, you may be able to manually set and then restore the parent document's `title` during the print. This can be done by leveraging the `onBeforePrint` and `onAfterPrint` callbacks.
 
-- When printing, only styles that directly target the printed nodes will be applied, since the parent nodes will not exist in the DOM used for the print. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
+- When printing, only styles that directly target the printed nodes will be applied as the parent nodes of the printed nodes will not exist in the print DOM. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
 
   ```jsx
   <div className="parent">
@@ -217,11 +89,9 @@ const componentRef = useRef(null);
   div.parent p { color:red; }
   ```
 
-- The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `content` props' callback in `react-to-print`. To use a component wrapped in `connect` within `content` create an intermediate class component that simply renders your component wrapped in `connect`. See [280](https://github.com/MatthewHerbst/react-to-print/issues/280) for more.
+- The `connect` method from `react-redux` returns a functional component that cannot be assigned a reference to be used within the `contentRef`. To use a component wrapped in `connect` within `contentRef`, create an intermediate component that simply renders your component wrapped in `connect`. See [280](https://github.com/MatthewHerbst/react-to-print/issues/280) for more.
 
-- Using a custom component as the return for the `trigger` props is possible, just ensure you pass along the `onClick` prop. See [248](https://github.com/MatthewHerbst/react-to-print/issues/248) for an example.
-
-- When rendering multiple components to print, for example, if you have a list of charts and want each chart to have its own print icon, ideally you will wrap each component to print + print button in its own component, and just render a list of those components. However, if you cannot do that for some reason, in your `.map` ensure that each component gets a unique `ref` value passed to it, otherwise printing any of the components will always print the last component. See [323](https://github.com/MatthewHerbst/react-to-print/issues/323) for more.
+- When rendering multiple components to print, ensure each is passed a unique ref. Then, either use a unique `useReactToPrint` call for each component, or, using a single `useReactToPrint` call pass the refs at print-time to the printing function returned by the hook. If you share refs across components only the last component will be printed. See [323](https://github.com/MatthewHerbst/react-to-print/issues/323) for more.
 
 ## FAQ
 
@@ -241,9 +111,37 @@ const handlePrint = useReactToPrint({
 
 For examples of how others have done this, see [#484](https://github.com/MatthewHerbst/react-to-print/issues/484)
 
-### Can the `ComponentToPrint` be a functional component?
+### Can `react-to-print` be used to change the settings within the print preview dialog?
 
-Yes, but only if you wrap it with [`React.forwardRef`](https://reactjs.org/docs/forwarding-refs.html). `react-to-print` relies on refs to grab the underlying DOM representation of the component, and functional components [cannot take refs by default](https://reactjs.org/docs/refs-and-the-dom.html#accessing-refs).
+No. The [`window.print`](https://developer.mozilla.org/en-US/docs/Web/API/Window/print) API does not provide a way to change these settings. Only various CSS hints can be provided, with each browser potentially treating them differently.
+
+### Can the `ComponentToPrint` be a Class component?
+
+Not directly. To print a Class based component you will need to manually forward the `contentRef` as a prop:
+
+```tsx
+class ComponentToPrint extends Component {
+  render() {
+    return (
+      <div ref={this.props.innerRef}>
+        Print content
+      </div>
+    )
+  }
+}
+
+function App {
+  const contentRef = useRef(null);
+  const handlePrint = useReactToPrint({ contentRef });
+
+  return (
+    <div>
+      <button onClick={handlePrint}>Print</button>
+      <ComponentToPrint innerRef={contentRef} />
+    </div>
+  );
+}
+```
 
 ### Why does `onAfterPrint` fire even if the user cancels printing
 
@@ -265,7 +163,7 @@ If you've created a component that is intended only for printing and should not 
 
 This will hide `ComponentToPrint` but keep it in the DOM so that it can be copied for printing.
 
-### Setting state in `onBeforeGetContent`
+### Setting state in `onBeforePrint`
 
 Recall that setting state is asynchronous. As such, you need to pass a `Promise` and wait for the state to update.
 
@@ -273,7 +171,7 @@ Recall that setting state is asynchronous. As such, you need to pass a `Promise`
 const [isPrinting, setIsPrinting] = useState(false);
 const printRef = useRef(null);
 
-// We store the resolve Promise being used in `onBeforeGetContent` here
+// We store the resolve Promise being used in `onBeforePrint` here
 const promiseResolveRef = useRef(null);
 
 // We watch for the state to change here, and for the Promise resolve to be available
@@ -286,7 +184,7 @@ useEffect(() => {
 
 const handlePrint = useReactToPrint({
   content: () => printRef.current,
-  onBeforeGetContent: () => {
+  onBeforePrint: () => {
     return new Promise((resolve) => {
       promiseResolveRef.current = resolve;
       setIsPrinting(true);
@@ -378,9 +276,9 @@ In the component that is passed in as the content ref, add the following:
 
 Instead of using `{ display: 'none'; }`, try using `{ overflow: hidden; height: 0; }`
 
-### Using the `pageStyle` prop
+### Using `pageStyle`
 
-The `pageStyle` prop should be a CSS string. For example: `".divider { break-after: always; }"`
+`pageStyle` should be a CSS string. For example: `".divider { break-after: always; }"`
 
 ### Getting a blank page when printing
 
@@ -397,9 +295,7 @@ Many have found setting the following CSS helpful. See [#26](https://github.com/
 }
 ```
 
-#### When you've set the `removeAfterPrint` prop to `true`
-
-If you are getting a blank page while setting `removeAfterPrint` to `true`, try setting it to `false`. This will tell the browser not to remove the `iframe` that we use to print, which it may be doing by mistake, especially on mobile browsers.
+Another thing to try, especially if you are seeing this issue on mobile browsers, is to set `preserveAfterPrint: true` as it's possible the browser is causing the print iframe to be removed before printing has completed.
 
 ### Styles incorrect in print dialog when using grid system
 

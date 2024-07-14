@@ -5,24 +5,26 @@ import { CUSTOM_FONTS } from "../fonts";
 import { useReactToPrint } from "../../src/hooks/useReactToPrint";
 
 /**
- * A basic example showing how to pass a custom `print` function 
+ * A basic printing example printing a component
  */
-export const CustomPrint = () => {
+export const BasicComponent = () => {
   const componentRef = React.useRef(null);
+
+  const handleAfterPrint = React.useCallback(() => {
+    console.log("`onAfterPrint` called"); // tslint:disable-line no-console
+  }, []);
+
+  const handleBeforePrint = React.useCallback(() => {
+    console.log("`onBeforePrint` called"); // tslint:disable-line no-console
+    return Promise.resolve();
+  }, []);
 
   const printFn = useReactToPrint({
     contentRef: componentRef,
     documentTitle: "AwesomeFileName",
     fonts: CUSTOM_FONTS,
-    print: (iframe) => {
-      return new Promise<void>((resolve) => {
-          console.log("Custom printing, 1.5 second mock delay...");
-          setTimeout(() => {
-              console.log("Mock custom print of iframe complete", iframe);
-              resolve();
-          }, 1500);
-      });
-    },
+    onAfterPrint: handleAfterPrint,
+    onBeforePrint: handleBeforePrint,
   }); 
 
   const handleOnClick = React.useCallback(() => {
@@ -31,7 +33,6 @@ export const CustomPrint = () => {
 
   return (
     <div>
-      <h3>See console for output: print window will not open</h3>
       <button onClick={handleOnClick}>Print</button>
       <ComponentToPrint ref={componentRef} />
     </div>
