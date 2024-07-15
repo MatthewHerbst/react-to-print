@@ -1,18 +1,32 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    // Project options
     "declaration": true,
-    "downlevelIteration": true,
-    "importHelpers": true,
     "jsx": "react",
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "lib",
-    "removeComments": true,
-    // "sourceMap": true,
+    "lib": [
+      "ES6",
+      "dom"
+    ], // Specifies which default set of type definitions to use ("DOM", "ES6", etc)
+    "moduleResolution": "node",
+    "outDir": "lib", // .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.,
+    "removeComments": true, // Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space
+    "target": "ES6", // Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)
+    
+    // Strict Checks
     "strict": true,
-    "target": "ES5",
+    "alwaysStrict": true, // Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.
+    "allowUnreachableCode": false, // Pick up dead code paths
+    "noImplicitAny": true, // In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type.
+    "strictNullChecks": true, // When strictNullChecks is true, null and undefined have their own distinct types and you’ll get a type error if you try to use them where a concrete value is expected.
+  
+    // Linter Checks
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true, // Non-empty switch cases must break, return, or throw
+    "noImplicitReturns": true,
+    // "noUncheckedIndexedAccess": true, // Accessing index must always check for undefined
+    "noUnusedLocals": true, // Report errors on unused local variables.
+    "noUnusedParameters": true, // Report errors on unused parameters in functions
   },
   "include": [
     "./src"
