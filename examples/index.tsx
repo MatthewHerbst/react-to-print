@@ -8,6 +8,7 @@ import { CustomPrint } from "./CustomPrint";
 import { LazyContent } from "./LazyContent/index";
 import "./styles/index.css";
 import { OnBeforePrint } from './OnBeforePrint';
+import {CopyShadowRootContent} from "./CopyShadowRootContent";
 
 function Example() {
   return (
@@ -19,11 +20,13 @@ function Example() {
           <Tab>Custom Print</Tab>
           <Tab>Lazy Content</Tab>
           <Tab>On Before Print</Tab>
+          <Tab>Copy Shadow Root Content</Tab>
         </TabList>
         <TabPanel><BasicComponent /></TabPanel>
         <TabPanel><CustomPrint /></TabPanel>
         <TabPanel><LazyContent /></TabPanel>
         <TabPanel><OnBeforePrint /></TabPanel>
+        <TabPanel><CopyShadowRootContent /></TabPanel>
       </Tabs>
     </div>
   );

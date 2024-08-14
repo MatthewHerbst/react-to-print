@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { Font } from "../types/Font";
+import { Font } from "../types/font";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 import { getContentNode } from "../utils/getContentNode";
 import { generatePrintWindow } from "../utils/generatePrintWindow";

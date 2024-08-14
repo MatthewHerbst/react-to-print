@@ -1,7 +1,8 @@
 import { logMessages } from "./logMessage";
 import { startPrint } from "./startPrint";
-import { Font } from "../types/Font";
+import { Font } from "../types/font";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
+import {cloneShadowRoots} from "./clone";
 
 type HandlePrintWindowOnLoadData = {
     clonedContentNode: Node;
@@ -61,7 +62,10 @@ export function handlePrintWindowOnLoad(
     const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
 
     if (domDoc) {
-        domDoc.body.appendChild(clonedContentNode);
+        const appendedContentNode = domDoc.body.appendChild(clonedContentNode);
+        if(options.copyShadowRoots) {
+            cloneShadowRoots(contentNode, appendedContentNode);
+        }
 
         if (fonts) {
             if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
