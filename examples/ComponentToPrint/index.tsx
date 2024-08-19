@@ -15,11 +15,6 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
   const { text } = props;
 
   const canvasEl = React.useRef<HTMLCanvasElement>(null);
-  const [checked, setChecked] = React.useState(false);
-
-  const handleCheckboxOnChange = React.useCallback(() => {
-    setChecked(!!checked);
-  }, [checked]);
 
   React.useEffect(() => {
     const ctx = canvasEl.current?.getContext("2d");
@@ -115,11 +110,7 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
           <tr>
             <td>Input: Checkbox</td>
             <td>
-              <input
-                checked={checked}
-                onChange={handleCheckboxOnChange}
-                type="checkbox"
-              />
+              <input type="checkbox" />
             </td>
           </tr>
           <tr>

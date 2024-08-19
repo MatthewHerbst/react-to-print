@@ -7,7 +7,8 @@ type LogMessagesArgs = {
     suppressErrors?: boolean;
 }
 
-export function logMessages({level = 'error', messages, suppressErrors = false }: LogMessagesArgs) {
+/** Logs messages to the console. Uses `console.error` by default. */
+export function logMessages({ level = 'error', messages, suppressErrors = false }: LogMessagesArgs) {
     if (!suppressErrors) {
         if (level === 'error') {
             console.error(messages); // eslint-disable-line no-console
