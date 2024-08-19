@@ -1,8 +1,12 @@
 # CHANGELOG
 
-## (BETA) 3.0.0 (15 Jul 2024)
+## (BETA) 3.0.0 (Upcoming)
+
+- `3.0.0-beta-2` (19 Aug 2024)
+- `3.0.0-beta-1` (15 Jul 2024)
 
 - FEATURE [717](https://github.com/MatthewHerbst/react-to-print/pull/717): React 19 support + API modernization
+- FEATURE [707](https://github.com/MatthewHerbst/react-to-print/issues/707): Improved error handling when `canvas` elements have not properly loaded
 - CHORE: package size reduced by 18.7kb (34%)
 
 ### BREAKING CHANGES
