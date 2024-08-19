@@ -1,3 +1,5 @@
+import {logMessages} from "./logMessage";
+
 function collectElements(root: HTMLElement): HTMLElement[] {
     const elements: HTMLElement[] = [];
     const walker: TreeWalker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, null);
@@ -11,10 +13,18 @@ function collectElements(root: HTMLElement): HTMLElement[] {
     return elements;
 }
 
-export function cloneShadowRoots(sourceNode: Node, targetNode: Node) {
+export function cloneShadowRoots(sourceNode: Node, targetNode: Node, suppressErrors: boolean): void {
 
     const sourceElements = collectElements(sourceNode as HTMLElement);
     const targetElements = collectElements(targetNode as HTMLElement);
+
+    if (sourceElements.length !== targetElements.length) {
+        logMessages({
+            messages: ["When cloning shadow root content, source and target elements have different size. `onBeforePrint` likely resolved too early.", sourceNode, targetNode],
+            suppressErrors,
+        });
+        return;
+    }
 
     for (let i = 0; i < sourceElements.length; i++) {
         const sourceElement = sourceElements[i];
@@ -24,11 +34,10 @@ export function cloneShadowRoots(sourceNode: Node, targetNode: Node) {
         if (shadowRoot !== null) {
             const copiedShadowRoot = targetElement.attachShadow({mode: shadowRoot.mode});
 
-            const originalShadowContent = shadowRoot.innerHTML;
-            copiedShadowRoot.innerHTML = originalShadowContent;
+            copiedShadowRoot.innerHTML = shadowRoot.innerHTML;
 
             // Recursively clone any nested Shadow DOMs within this Shadow DOM content
-            cloneShadowRoots(shadowRoot, copiedShadowRoot);
+            cloneShadowRoots(shadowRoot, copiedShadowRoot, suppressErrors);
         }
     }
 }
