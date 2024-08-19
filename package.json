@@ -1,6 +1,6 @@
 {
   "name": "react-to-print",
-  "version": "3.0.0-beta-1",
+  "version": "3.0.0-beta-2",
   "description": "Print React components in the browser",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",
-    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint": "eslint ./src",
     "prepare": "npm run build && husky install",
     "start": "NODE_ENV=development webpack serve"
   },

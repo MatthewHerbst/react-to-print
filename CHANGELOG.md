@@ -1,20 +1,26 @@
 # CHANGELOG
 
-## (BETA) 3.0.0 (15 Jul 2024)
+## (BETA) 3.0.0 (Upcoming)
 
-React 19 support + API modernization [717](https://github.com/MatthewHerbst/react-to-print/pull/717)
+- `3.0.0-beta-2` (19 Aug 2024)
+- `3.0.0-beta-1` (15 Jul 2024)
+
+- FEATURE [717](https://github.com/MatthewHerbst/react-to-print/pull/717): React 19 support + API modernization
+- FEATURE [707](https://github.com/MatthewHerbst/react-to-print/issues/707): Improved error handling when `canvas` elements have not properly loaded
+- CHORE: package size reduced by 18.7kb (34%)
 
 ### BREAKING CHANGES
 
 - `content` renamed to `contentRef` and type changed from `() => React.ReactInstance` to `RefObject<Element | Text>`. The core impact here is that Class components now need to have the ref forwarded via props internally to a DOM node
-- React ^16.8.0 required (dropped support for React versions that don't support hooks)
-- `onBeforeGetContent` removed. Use `onBeforePrint`
+- React >= 16.8.0 required (dropped support for React versions that don't support hooks)
+- `onBeforeGetContent` removed. Use `onBeforePrint`, which similar to `onBeforeGetContent`, now runs before the print iframe is loaded
 - `removeAfterPrint` renamed to `preserveAfterPrint` which defaults to `false`
 - `ReactToPrint` removed. Use `useReactToPrint`
 - `PrintContextConsumer` removed. Use `useReactToPrint`
-- `trigger`removed, call the function returned by `useReactToPrint`
+- `trigger` removed, use the function returned by `useReactToPrint`
 - `IReactToPrintProps` renamed to `UseReactToPrintOptions`
 - Default package export removed, use named `useReactToPrint` export
+- Removed `event?: unknown` type from `useReactToPrint` callback. `optionalContent` is now the only (optional) argument
 - Build is now ES6 code. Previously it was ES5
 - No longer officially support IE11 (will still try but no promises)
 
