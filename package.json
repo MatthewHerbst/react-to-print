@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production webpack --progress",
-    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint": "eslint ./src",
     "prepare": "npm run build && husky install",
     "start": "NODE_ENV=development webpack serve"
   },
