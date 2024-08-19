@@ -1,5 +1,5 @@
 export function cloneShadowRoots(sourceNode: Node, targetNode: Node) {
-    if(sourceNode instanceof Element && targetNode instanceof Element) {
+    if (sourceNode instanceof Element && targetNode instanceof Element) {
         const shadowRoot = sourceNode.shadowRoot;
         if (shadowRoot !== null) {
             // Create a new Shadow Root for the target element
