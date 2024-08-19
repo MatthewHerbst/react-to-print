@@ -65,7 +65,7 @@ export function handlePrintWindowOnLoad(
     if (domDoc) {
         const appendedContentNode = domDoc.body.appendChild(clonedContentNode);
         if (copyShadowRoots) {
-            cloneShadowRoots(contentNode, appendedContentNode);
+            cloneShadowRoots(contentNode, appendedContentNode, !!suppressErrors);
         }
 
         if (fonts) {
