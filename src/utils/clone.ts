@@ -3,7 +3,7 @@ export function cloneShadowRoots(sourceNode: Node, targetNode: Node) {
         const shadowRoot = sourceNode.shadowRoot;
         if (shadowRoot !== null) {
             // Create a new Shadow Root for the target element
-            const copiedShadowRoot = targetNode.attachShadow({mode: shadowRoot.mode});
+            const copiedShadowRoot = targetNode.attachShadow({ mode: shadowRoot.mode. });
 
             // Clone the contents of the original ShadowRoot manually
             const originalShadowContent = shadowRoot.innerHTML;
