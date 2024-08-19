@@ -50,6 +50,7 @@ return (
 | **`preserveAfterPrint?`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
 | **`print?`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
 | **`suppressErrors?`** | `boolean` | When passed, prevents `console` logging of errors |
+| **`copyShadowRoots?`** | `boolean` | When passed, shadow root content will be copied to print window. WARNING: Use with care if you print large documents. TreeWalker's are used to traverse source and target documents. |
 
 The hook returns a function that will initiate the print process when called. This function can also be optionally passed the `content` when called, allowing for its use in conditional rendering logic (where hooks are not allowed) and/or in non-React code such as a util function. See the repo examples for more.
 

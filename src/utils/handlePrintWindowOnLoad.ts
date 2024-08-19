@@ -1,9 +1,12 @@
-import { logMessages } from "./logMessage";
-import { startPrint } from "./startPrint";
-import { Font } from "../types/Font";
-import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
+import {logMessages} from "./logMessage";
+import {startPrint} from "./startPrint";
+import {Font} from "../types/font";
+import type {UseReactToPrintOptions} from "../types/UseReactToPrintOptions";
+import { cloneShadowRoots } from "./clone";
 
 export type HandlePrintWindowOnLoadData = {
+    /** The content. */
+    contentNode: Node,
     /** The cloned content. This will be inserted into the print iframe */
     clonedContentNode: Node;
     /** Cloned image nodes. Used for pre-loading */
@@ -43,6 +46,7 @@ export function handlePrintWindowOnLoad(
     options: UseReactToPrintOptions
 ) {
     const {
+        contentNode,
         clonedContentNode,
         clonedImgNodes,
         clonedVideoNodes,
@@ -57,6 +61,7 @@ export function handlePrintWindowOnLoad(
         pageStyle,
         nonce,
         suppressErrors,
+        copyShadowRoots
     } = options;
 
     // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
@@ -66,7 +71,10 @@ export function handlePrintWindowOnLoad(
     const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
 
     if (domDoc) {
-        domDoc.body.appendChild(clonedContentNode);
+        const appendedContentNode = domDoc.body.appendChild(clonedContentNode);
+        if (copyShadowRoots) {
+            cloneShadowRoots(contentNode, appendedContentNode, !!suppressErrors);
+        }
 
         if (fonts) {
             if (printWindow.contentDocument?.fonts && printWindow.contentWindow?.FontFace) {
@@ -74,7 +82,7 @@ export function handlePrintWindowOnLoad(
                     const fontFace = new FontFace(
                         font.family,
                         font.source,
-                        { weight: font.weight, style: font.style }
+                        {weight: font.weight, style: font.style}
                     );
                     printWindow.contentDocument!.fonts.add(fontFace);
                     fontFace.loaded
@@ -125,7 +133,7 @@ export function handlePrintWindowOnLoad(
                 });
                 continue;
             }
-            
+
             const targetCanvasContext = targetCanvas.getContext("2d");
 
             if (targetCanvasContext) {

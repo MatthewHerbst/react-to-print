@@ -15,10 +15,11 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
   const { text } = props;
 
   const canvasEl = React.useRef<HTMLCanvasElement>(null);
+  const shadowRootHostEl = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const ctx = canvasEl.current?.getContext("2d");
-    
+
     if (ctx) {
       ctx.beginPath();
       ctx.arc(95, 50, 40, 0, 2 * Math.PI);
@@ -26,6 +27,15 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
       ctx.fillStyle = 'rgb(200, 0, 0)';
       ctx.fillRect(85, 40, 20, 20);
       ctx.save();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const shadowRoot = shadowRootHostEl.current?.attachShadow({ mode: 'open' });
+    if (shadowRoot) {
+      const div = document.createElement('div');
+      div.innerHTML = 'Shadow DOM Content';
+      shadowRoot.appendChild(div);
     }
   }, []);
 
@@ -165,6 +175,7 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
           </tr>
         </tbody>
       </table>
+      <div ref={shadowRootHostEl}/>
     </div>
   );
 });

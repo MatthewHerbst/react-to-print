@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import type { Font } from "./Font";
+import type { Font } from "./font";
 
 /** Options for `useReactToPrint` */
 export interface UseReactToPrintOptions {
@@ -16,7 +16,7 @@ export interface UseReactToPrintOptions {
     fonts?: Font[];
     /** Ignore all `<style>` and `<link type="stylesheet" />` tags from `<head>` */
     ignoreGlobalStyles?: boolean;
-    /** 
+    /**
      * Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce)
      * attribute for allow-listing script and style elements for Content Security Policy (CSP)
      */
@@ -55,4 +55,6 @@ export interface UseReactToPrintOptions {
     print?: (target: HTMLIFrameElement) => Promise<any>;
     /** When passed, prevents `console` logging of errors */
     suppressErrors?: boolean;
+    /** When passed, shadow root content will be copied */
+    copyShadowRoots?: boolean;
 }

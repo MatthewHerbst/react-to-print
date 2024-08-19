@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { Font } from "../types/Font";
+import { Font } from "../types/font";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 import { getContentNode } from "../utils/getContentNode";
 import { generatePrintWindow } from "../utils/generatePrintWindow";
@@ -70,7 +70,7 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
         const printWindow = generatePrintWindow();
 
         /**
-         * Keeps track of loaded resources, kicking off the actual print function once all 
+         * Keeps track of loaded resources, kicking off the actual print function once all
          * resources have been marked (loaded or failed)
          */
         const markLoaded = (resource: Element | Font | FontFace, errorMessages?: unknown[]) => {
@@ -106,6 +106,7 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
         };
 
         const data: HandlePrintWindowOnLoadData = {
+            contentNode,
             clonedContentNode,
             clonedImgNodes,
             clonedVideoNodes,

@@ -1,4 +1,4 @@
-import { Font } from "../types/Font";
+import { Font } from "../types/font";
 import { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 import { handlePrintWindowOnLoad, HandlePrintWindowOnLoadData } from "./handlePrintWindowOnLoad";
 
