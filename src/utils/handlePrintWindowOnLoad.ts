@@ -3,7 +3,7 @@ import { startPrint } from "./startPrint";
 import { Font } from "../types/Font";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 
-type HandlePrintWindowOnLoadData = {
+export type HandlePrintWindowOnLoadData = {
     clonedContentNode: Node;
     contentNode: Node;
     numResourcesToLoad: number;

@@ -5,17 +5,20 @@ import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 import { getContentNode } from "../utils/getContentNode";
 import { generatePrintWindow } from "../utils/generatePrintWindow";
 import { logMessages } from "../utils/logMessage";
-import { handleOnBeforePrint } from "../utils/handleOnBeforePrint";
 import { UseReactToPrintHookContent } from "../types/UseReactToPrintHookContent";
-import { handlePrintWindowOnLoad } from "../utils/handlePrintWindowOnLoad";
+import { HandlePrintWindowOnLoadData } from "../utils/handlePrintWindowOnLoad";
 import { removePrintIframe } from "../utils/removePrintIframe";
 import { UseReactToPrintFn } from "../types/UseReactToPrintFn";
+import { appendPrintWindow } from "../utils/appendPrintWindow";
+import { startPrint } from "../utils/startPrint";
 
 export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrintFn {
     const {
         contentRef,
         fonts,
         ignoreGlobalStyles,
+        onBeforePrint,
+        onPrintError,
         preserveAfterPrint,
         suppressErrors,
     } = options;
@@ -65,6 +68,10 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
 
         const printWindow = generatePrintWindow();
 
+        /**
+         * Keeps track of loaded resources, kicking off the actual print function once all 
+         * resources have been marked (loaded or failed)
+         */
         const markLoaded = (resource: Element | Font | FontFace, errorMessages?: unknown[]) => {
             if (resourcesLoaded.includes(resource)) {
                 logMessages({
@@ -93,27 +100,29 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
             const numResourcesManaged = resourcesLoaded.length + resourcesErrored.length;
 
             if (numResourcesManaged === numResourcesToLoad) {
-                handleOnBeforePrint(
-                    printWindow,
-                    options,
-                );
+                startPrint(printWindow, options);
             }
         };
 
-        printWindow.onload = () => handlePrintWindowOnLoad(
-            printWindow,
-            markLoaded,
-            {
-                clonedContentNode,
-                contentNode,
-                numResourcesToLoad,
-                renderComponentImgNodes,
-                renderComponentVideoNodes,
-            },
-            options
-        );
+        const data: HandlePrintWindowOnLoadData = {
+            clonedContentNode,
+            contentNode,
+            numResourcesToLoad,
+            renderComponentImgNodes,
+            renderComponentVideoNodes,
+        }
 
-        document.body.appendChild(printWindow);
+        // Ensure we run `onBeforePrint` before appending the print window, which kicks off loading
+        // needed resources once mounted
+        if (onBeforePrint) {
+            onBeforePrint()
+                .then(() => appendPrintWindow(printWindow, markLoaded, data, options))
+                .catch((error: Error) => {
+                    onPrintError?.("onBeforePrint", error);
+                });
+        } else {
+            appendPrintWindow(printWindow, markLoaded, data, options);
+        }
     }, [options]);
 
     return handlePrint;
