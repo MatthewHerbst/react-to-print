@@ -1,7 +1,7 @@
-import { logMessages } from "./logMessage";
-import { startPrint } from "./startPrint";
-import { Font } from "../types/font";
-import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
+import {logMessages} from "./logMessage";
+import {startPrint} from "./startPrint";
+import {Font} from "../types/font";
+import type {UseReactToPrintOptions} from "../types/UseReactToPrintOptions";
 import {cloneShadowRoots} from "./clone";
 
 type HandlePrintWindowOnLoadData = {
@@ -53,6 +53,7 @@ export function handlePrintWindowOnLoad(
         pageStyle,
         nonce,
         suppressErrors,
+        copyShadowRoots
     } = options;
 
     // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
@@ -63,7 +64,7 @@ export function handlePrintWindowOnLoad(
 
     if (domDoc) {
         const appendedContentNode = domDoc.body.appendChild(clonedContentNode);
-        if(options.copyShadowRoots) {
+        if (copyShadowRoots) {
             cloneShadowRoots(contentNode, appendedContentNode);
         }
 
@@ -73,7 +74,7 @@ export function handlePrintWindowOnLoad(
                     const fontFace = new FontFace(
                         font.family,
                         font.source,
-                        { weight: font.weight, style: font.style }
+                        {weight: font.weight, style: font.style}
                     );
                     printWindow.contentDocument!.fonts.add(fontFace);
                     fontFace.loaded
@@ -184,7 +185,7 @@ export function handlePrintWindowOnLoad(
         const copiedCRs = domDoc.querySelectorAll(checkedSelector);
         for (let i = 0; i < originalCRs.length; i++) {
             (copiedCRs[i] as HTMLInputElement).checked =
-            (originalCRs[i] as HTMLInputElement).checked;
+                (originalCRs[i] as HTMLInputElement).checked;
         }
 
         // Copy select states
