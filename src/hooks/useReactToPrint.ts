@@ -49,19 +49,20 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
             return;
         }
 
-        // React components can return a bare string as a valid JSX response
+        // NOTE: `canvas` elements do not have their painted images copied
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
         const clonedContentNode = contentNode.cloneNode(true);
 
         const globalLinkNodes = document.querySelectorAll("link[rel~='stylesheet'], link[as='style']");
-        const renderComponentImgNodes = (clonedContentNode as Element).querySelectorAll("img");
-        const renderComponentVideoNodes = (clonedContentNode as Element).querySelectorAll("video");
+        const clonedImgNodes = (clonedContentNode as Element).querySelectorAll("img");
+        const clonedVideoNodes = (clonedContentNode as Element).querySelectorAll("video");
 
         const numFonts = fonts ? fonts.length : 0;
 
         const numResourcesToLoad =
             (ignoreGlobalStyles ? 0 : globalLinkNodes.length) +
-            renderComponentImgNodes.length +
-            renderComponentVideoNodes.length +
+            clonedImgNodes.length +
+            clonedVideoNodes.length +
             numFonts;
         const resourcesLoaded: (Element | Font | FontFace)[] = [];
         const resourcesErrored: (Element | Font | FontFace)[] = [];
@@ -106,10 +107,10 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
 
         const data: HandlePrintWindowOnLoadData = {
             clonedContentNode,
-            contentNode,
+            clonedImgNodes,
+            clonedVideoNodes,
             numResourcesToLoad,
-            renderComponentImgNodes,
-            renderComponentVideoNodes,
+            originalCanvasNodes: (contentNode as Element).querySelectorAll("canvas")
         }
 
         // Ensure we run `onBeforePrint` before appending the print window, which kicks off loading

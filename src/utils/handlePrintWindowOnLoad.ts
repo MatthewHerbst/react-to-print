@@ -4,11 +4,16 @@ import { Font } from "../types/Font";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 
 export type HandlePrintWindowOnLoadData = {
+    /** The cloned content. This will be inserted into the print iframe */
     clonedContentNode: Node;
-    contentNode: Node;
+    /** Cloned image nodes. Used for pre-loading */
+    clonedImgNodes: never[] | NodeListOf<HTMLImageElement>;
+    /** Clones video nodes. User for pre-loading */
+    clonedVideoNodes: never[] | NodeListOf<HTMLVideoElement>;
+    /** The total number of resources to load. Printing will start once all have been loaded */
     numResourcesToLoad: number;
-    renderComponentImgNodes: never[] | NodeListOf<HTMLImageElement>;
-    renderComponentVideoNodes: never[] | NodeListOf<HTMLVideoElement>;
+    /** The original canvas nodes. Used to apply paints not copied when cloning the nodes */
+    originalCanvasNodes: never[] | NodeListOf<HTMLCanvasElement>;
 };
 type MarkLoaded = (resource: Element | Font | FontFace, errorMessages?: unknown[]) => void;
 
@@ -39,10 +44,10 @@ export function handlePrintWindowOnLoad(
 ) {
     const {
         clonedContentNode,
-        contentNode,
+        clonedImgNodes,
+        clonedVideoNodes,
         numResourcesToLoad,
-        renderComponentImgNodes,
-        renderComponentVideoNodes,
+        originalCanvasNodes,
     } = data;
 
     const {
@@ -105,15 +110,22 @@ export function handlePrintWindowOnLoad(
         }
 
         // Copy canvases
-        // NOTE: must use data from `contentNode` here as the canvass elements in
-        // `clonedContentNode` will not have been redrawn properly yet
-        const srcCanvasEls = (contentNode as Element).querySelectorAll("canvas");
         const targetCanvasEls = domDoc.querySelectorAll("canvas");
-
-        for (let i = 0; i < srcCanvasEls.length; ++i) {
-            const sourceCanvas = srcCanvasEls[i];
-
+        for (let i = 0; i < originalCanvasNodes.length; ++i) {
+            // NOTE: must use original data here as the canvass elements in `clonedContentNode` will
+            // not have had their painted images copied properly. This is specifically mentioned in
+            // the [`cloneNode` docs](https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode).
+            const sourceCanvas = originalCanvasNodes[i];
             const targetCanvas = targetCanvasEls[i];
+
+            if (targetCanvas === undefined) {
+                logMessages({
+                    messages: ["A canvas element could not be copied for printing, has it loaded? `onBeforePrint` likely resolved too early.", sourceCanvas],
+                    suppressErrors,
+                });
+                continue;
+            }
+            
             const targetCanvasContext = targetCanvas.getContext("2d");
 
             if (targetCanvasContext) {
@@ -122,12 +134,12 @@ export function handlePrintWindowOnLoad(
         }
 
         // Pre-load images
-        for (let i = 0; i < renderComponentImgNodes.length; i++) {
-            const imgNode = renderComponentImgNodes[i];
+        for (let i = 0; i < clonedImgNodes.length; i++) {
+            const imgNode = clonedImgNodes[i];
             const imgSrc = imgNode.getAttribute("src");
 
             if (!imgSrc) {
-                markLoaded(imgNode, ['Found an <img> tag with an empty "src" attribute. This prevents pre-loading it. The <img> is:', imgNode]);
+                markLoaded(imgNode, ['Found an <img> tag with an empty "src" attribute. This prevents pre-loading it.', imgNode]);
             } else {
                 // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                 const img = new Image();
@@ -138,8 +150,8 @@ export function handlePrintWindowOnLoad(
         }
 
         // Pre-load videos
-        for (let i = 0; i < renderComponentVideoNodes.length; i++) {
-            const videoNode = renderComponentVideoNodes[i];
+        for (let i = 0; i < clonedVideoNodes.length; i++) {
+            const videoNode = clonedVideoNodes[i];
             videoNode.preload = 'auto'; // Hint to the browser that it should load this resource
 
             const videoPoster = videoNode.getAttribute('poster')
@@ -163,32 +175,6 @@ export function handlePrintWindowOnLoad(
                     videoNode.onstalled = () => markLoaded(videoNode, ["Loading video stalled, skipping", videoNode]);
                 }
             }
-        }
-
-        // Copy input values
-        // This covers most input types, though some need additional work (further down)
-        const inputSelector = 'input';
-        const originalInputs = (contentNode as HTMLElement).querySelectorAll(inputSelector);
-        const copiedInputs = domDoc.querySelectorAll(inputSelector);
-        for (let i = 0; i < originalInputs.length; i++) {
-            copiedInputs[i].value = originalInputs[i].value;
-        }
-
-        // Copy checkbox, radio checks
-        const checkedSelector = 'input[type=checkbox],input[type=radio]';
-        const originalCRs = (contentNode as HTMLElement).querySelectorAll(checkedSelector);
-        const copiedCRs = domDoc.querySelectorAll(checkedSelector);
-        for (let i = 0; i < originalCRs.length; i++) {
-            (copiedCRs[i] as HTMLInputElement).checked =
-            (originalCRs[i] as HTMLInputElement).checked;
-        }
-
-        // Copy select states
-        const selectSelector = 'select';
-        const originalSelects = (contentNode as HTMLElement).querySelectorAll(selectSelector);
-        const copiedSelects = domDoc.querySelectorAll(selectSelector);
-        for (let i = 0; i < originalSelects.length; i++) {
-            copiedSelects[i].value = originalSelects[i].value;
         }
 
         if (!ignoreGlobalStyles) {

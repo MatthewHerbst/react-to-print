@@ -3,6 +3,7 @@ import { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 import { handlePrintWindowOnLoad, HandlePrintWindowOnLoadData } from "./handlePrintWindowOnLoad";
 
 export function appendPrintWindow(
+    /** The print iframe */
     printWindow: HTMLIFrameElement,
     markLoaded: (resource: Element | Font | FontFace, errorMessages?: unknown[]) => void,
     data: HandlePrintWindowOnLoadData,
