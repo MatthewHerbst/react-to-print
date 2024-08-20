@@ -2,11 +2,17 @@
 
 ## (BETA) 3.0.0 (Upcoming)
 
+### Beta Versions
+
+- `3.0.0-beta-3` (19 Aug 2024)
 - `3.0.0-beta-2` (19 Aug 2024)
 - `3.0.0-beta-1` (15 Jul 2024)
 
+### New
+
 - FEATURE [717](https://github.com/MatthewHerbst/react-to-print/pull/717): React 19 support + API modernization
 - FEATURE [707](https://github.com/MatthewHerbst/react-to-print/issues/707): Improved error handling when `canvas` elements have not properly loaded
+- FEATURE [723](https://github.com/MatthewHerbst/react-to-print/pull/723): Add new option, `copyShadowRoots`, to support copying [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot)s
 - CHORE: package size reduced by 18.7kb (34%)
 
 ### BREAKING CHANGES
