@@ -426,3 +426,7 @@ Set the container to `overflow: visible; height: fit-content` when printing, can
 ## Running locally
 
 *NOTE*: The library is tested and built locally using Node >= 20.
+
+## Related
+
+* [vue-to-print](https://github.com/siaikin/vue-to-print): vue3 version of react-to-print
