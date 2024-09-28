@@ -212,6 +212,7 @@ export function handlePrintWindowOnLoad(
                                 messages: [
                                     `A stylesheet could not be accessed. This is likely due to the stylesheet having cross-origin imports, and many browsers block script access to cross-origin stylesheets. See https://github.com/MatthewHerbst/react-to-print/issues/429 for details. You may be able to load the sheet by both marking the stylesheet with the cross \`crossorigin\` attribute, and setting the \`Access-Control-Allow-Origin\` header on the server serving the stylesheet. Alternatively, host the stylesheet on your domain to avoid this issue entirely.`, // eslint-disable-line max-len
                                     node,
+                                    `Original error: ${(error as Error)?.message}`,
                                 ],
                                 level: 'warning',
                             });
