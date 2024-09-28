@@ -1,19 +1,8 @@
 # CHANGELOG
 
-## (BETA) 3.0.0 (Upcoming)
+## 3.0.0 (September 28th, 2024)
 
-### Beta Versions
-
-- `3.0.0-beta-3` (19 Aug 2024)
-- `3.0.0-beta-2` (19 Aug 2024)
-- `3.0.0-beta-1` (15 Jul 2024)
-
-### New
-
-- FEATURE [717](https://github.com/MatthewHerbst/react-to-print/pull/717): React 19 support + API modernization
-- FEATURE [707](https://github.com/MatthewHerbst/react-to-print/issues/707): Improved error handling when `canvas` elements have not properly loaded
-- FEATURE [723](https://github.com/MatthewHerbst/react-to-print/pull/723): Add new option, `copyShadowRoots`, to support copying [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot)s
-- CHORE: package size reduced by 18.7kb (34%)
+v3.0.0 brings API modernization, React 19 support, a smaller package size, Shadow DOM support, and improved error handling.
 
 ### BREAKING CHANGES
 
@@ -28,7 +17,21 @@
 - Default package export removed, use named `useReactToPrint` export
 - Removed `event?: unknown` type from `useReactToPrint` callback. `optionalContent` is now the only (optional) argument
 - Build is now ES6 code. Previously it was ES5
-- No longer officially support IE11 (will still try but no promises)
+- No longer supporting IE11
+
+### New
+
+- FEATURE [717](https://github.com/MatthewHerbst/react-to-print/pull/717): React 19 support + API modernization
+- FEATURE [707](https://github.com/MatthewHerbst/react-to-print/issues/707): Improved error handling when `canvas` elements have not properly loaded
+- FEATURE [723](https://github.com/MatthewHerbst/react-to-print/pull/723): Add new option, `copyShadowRoots`, to support copying [`ShadowRoot`](https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot)s. Thanks [boehlke](https://github.com/boehlke)
+- CHORE: package size reduced by 18.7kb (34%)
+- CHORE: dev dependencies updated
+
+### Beta Versions
+
+- `3.0.0-beta-3` (19 Aug 2024)
+- `3.0.0-beta-2` (19 Aug 2024)
+- `3.0.0-beta-1` (15 Jul 2024)
 
 ## 2.15.1 (February 13th, 2024)
 
