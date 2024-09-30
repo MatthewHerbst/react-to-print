@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.1 (September 30th, 2024)
+
+- FIX [743](https://github.com/MatthewHerbst/react-to-print/pull/743) Allow passing the function returned from `useReactToPrint` directly to event handlers (this is primarily geared at non-typescript users who are not aware of the new v3 API that prefers the function be wrapped, by changing `onClick={printFn}` to `onClick={() => printFn()}`)
+
 ## 3.0.0 (September 28th, 2024)
 
 v3.0.0 brings API modernization, React 19 support, a smaller package size, Shadow DOM support, and improved error handling.
