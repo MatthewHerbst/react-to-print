@@ -18,7 +18,12 @@ export function getContentNode({ contentRef, optionalContent, suppressErrors }: 
             });
         }
 
-        return optionalContent();
+        // This check allows passing the callback from `useReactToPrint` directly into event
+        // handlers without having to wrap it in another function to capture the event
+        // See [#742](https://github.com/MatthewHerbst/react-to-print/issues/742) and [#724](https://github.com/MatthewHerbst/react-to-print/issues/724)
+        if (typeof optionalContent === "function")   {
+            return optionalContent();
+        }
     }
 
     if (contentRef) {

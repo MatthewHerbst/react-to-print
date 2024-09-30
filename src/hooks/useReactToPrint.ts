@@ -41,14 +41,6 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
             return;
         }
 
-        if (!contentNode) {
-            logMessages({
-                messages: ['"react-to-print" could not locate the DOM node corresponding with the `content` prop'],
-                suppressErrors,
-            });
-            return;
-        }
-
         // NOTE: `canvas` elements do not have their painted images copied
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
         const clonedContentNode = contentNode.cloneNode(true);

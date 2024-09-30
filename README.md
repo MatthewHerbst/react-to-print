@@ -23,11 +23,11 @@ Print the content of a React component.
 
 ```tsx
 const contentRef = useRef<HTMLDivElement>(null);
-const handlePrint = useReactToPrint({ contentRef });
+const reactToPrintFn = useReactToPrint({ contentRef });
 
 return (
   <div>
-    <button onClick={handlePrint}>Print</button>
+    <button onClick={reactToPrintFn}>Print</button>
     <div ref={contentRef}>Content to print</div>
   </div>
 );

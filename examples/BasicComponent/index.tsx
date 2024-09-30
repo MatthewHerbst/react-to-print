@@ -27,13 +27,10 @@ export const BasicComponent = () => {
     onBeforePrint: handleBeforePrint,
   }); 
 
-  const handleOnClick = React.useCallback(() => {
-    printFn();
-  }, [printFn]);
-
   return (
     <div>
-      <button onClick={handleOnClick}>Print</button>
+      {/* @ts-expect-error Works without lazy content wrapping */}
+      <button onClick={printFn}>Print</button>
       <ComponentToPrint ref={componentRef} />
     </div>
   );
