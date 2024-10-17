@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.0.2 (October 17th, 2024)
+
+- FIX [751](https://github.com/MatthewHerbst/react-to-print/issues/751) Ensure selected `<select>` option printed. Currently the first option is printed regardless of selection state
+- FIX [753](https://github.com/MatthewHerbst/react-to-print/pull/753) Fix incorrect ESLint config reference to tsconfig file
+
 ## 3.0.1 (September 30th, 2024)
 
 - FIX [743](https://github.com/MatthewHerbst/react-to-print/pull/743) Allow passing the function returned from `useReactToPrint` directly to event handlers (this is primarily geared at non-typescript users who are not aware of the new v3 API that prefers the function be wrapped, by changing `onClick={printFn}` to `onClick={() => printFn()}`)
