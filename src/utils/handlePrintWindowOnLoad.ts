@@ -185,6 +185,15 @@ export function handlePrintWindowOnLoad(
             }
         }
 
+        // Copy select states. Without this, the first select option is printed, regardless of
+        // selection state
+        const selectSelector = 'select';
+        const originalSelects = (contentNode as Element).querySelectorAll(selectSelector);
+        const copiedSelects = domDoc.querySelectorAll(selectSelector);
+        for (let i = 0; i < originalSelects.length; i++) {
+            copiedSelects[i].value = originalSelects[i].value;
+        }
+
         if (!ignoreGlobalStyles) {
             const styleAndLinkNodes = document.querySelectorAll("style, link[rel~='stylesheet'], link[as='style']");
 
