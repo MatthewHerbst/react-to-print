@@ -96,9 +96,35 @@ We are actively researching resolutions to this issue, but it likely requires ch
 
 ## FAQ
 
+### How can content be hidden/shown during printing?
+
+The simplest way to hide or show content during printing is to use a [CSS Media Query](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries).
+
+```css
+.printContent {
+  display: none;
+
+  @media print {
+    display: block;
+  }
+}
+```
+
+```tsx
+const contentRef = useRef<HTMLDivElement>(null);
+const reactToPrintFn = useReactToPrint({ contentRef });
+
+return (
+  <div>
+    <button onClick={reactToPrintFn}>Print</button>
+    <div className="printContent" ref={contentRef}>Content to print</div>
+  </div>
+);
+```
+
 ### Can `react-to-print` be used to download a PDF without using the Print Preview window?
 
-No. We aren't able to print a PDF as we lose control once the print preview window opens. However, it should be very easy to use `react-to-print` to take the information you need and pass it to a library that can generate a PDF.
+Not directly. We aren't able to print a PDF as we lose control once the print preview window opens. However, it is possible to use `react-to-print` to gather the content you want to print and pass it to a library that can generate a PDF.
 
 ```tsx
 const handlePrint = useReactToPrint({
@@ -170,7 +196,7 @@ Recall that setting state is asynchronous. As such, you need to pass a `Promise`
 
 ```tsx
 const [isPrinting, setIsPrinting] = useState(false);
-const printRef = useRef(null);
+const contentRef = useRef(null);
 
 // We store the resolve Promise being used in `onBeforePrint` here
 const promiseResolveRef = useRef(null);
@@ -184,7 +210,7 @@ useEffect(() => {
 }, [isPrinting]);
 
 const handlePrint = useReactToPrint({
-  content: () => printRef.current,
+  contentRef,
   onBeforePrint: () => {
     return new Promise((resolve) => {
       promiseResolveRef.current = resolve;
@@ -425,8 +451,12 @@ Set the container to `overflow: visible; height: fit-content` when printing, can
 
 ## Running locally
 
-*NOTE*: The library is tested and built locally using Node >= 20.
+*NOTE*: The library is built and tested locally using Node ^20.
 
-## Related
+- Clone the repo
+- `npm ci`
+- `npm start`
 
-* [vue-to-print](https://github.com/siaikin/vue-to-print): vue3 version of react-to-print
+## Related Packages
+
+- [vue-to-print](https://github.com/siaikin/vue-to-print): vue3 version of react-to-print
