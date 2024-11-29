@@ -9,12 +9,14 @@ export function appendPrintWindow(
     data: HandlePrintWindowOnLoadData,
     options: UseReactToPrintOptions,
 ) {
-    printWindow.onload = () => handlePrintWindowOnLoad(
-        printWindow,
-        markLoaded,
-        data,
-        options
-    );
+    printWindow.onload = () => {
+        handlePrintWindowOnLoad(
+            printWindow,
+            markLoaded,
+            data,
+            options
+        );
+    };
 
     document.body.appendChild(printWindow);
 }

@@ -11,6 +11,7 @@ import { removePrintIframe } from "../utils/removePrintIframe";
 import { UseReactToPrintFn } from "../types/UseReactToPrintFn";
 import { appendPrintWindow } from "../utils/appendPrintWindow";
 import { startPrint } from "../utils/startPrint";
+import { getErrorFromUnknown } from "../utils/getErrorMessage";
 
 export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrintFn {
     const {
@@ -110,9 +111,11 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
         // needed resources once mounted
         if (onBeforePrint) {
             onBeforePrint()
-                .then(() => appendPrintWindow(printWindow, markLoaded, data, options))
-                .catch((error: Error) => {
-                    onPrintError?.("onBeforePrint", error);
+                .then(() => {
+                    appendPrintWindow(printWindow, markLoaded, data, options);
+                })
+                .catch((error: unknown) => {
+                    onPrintError?.("onBeforePrint", getErrorFromUnknown(error));
                 });
         } else {
             appendPrintWindow(printWindow, markLoaded, data, options);

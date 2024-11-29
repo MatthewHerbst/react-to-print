@@ -1,6 +1,7 @@
 import { logMessages } from "./logMessage";
 import { removePrintIframe } from "./removePrintIframe";
 import type { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
+import { getErrorFromUnknown } from "./getErrorMessage";
 
 /**
  * Starts the main printing process. This includes determining if we are running the default
@@ -25,11 +26,15 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
 
             if (print) {
                 print(printWindow)
-                    .then(() => onAfterPrint?.())
-                    .then(() => removePrintIframe(preserveAfterPrint))
-                    .catch((error: Error) => {
+                    .then(() => {
+                        onAfterPrint?.();
+                    })
+                    .then(() => {
+                        removePrintIframe(preserveAfterPrint);
+                    })
+                    .catch((error: unknown) => {
                         if (onPrintError) {
-                            onPrintError('print', error);
+                            onPrintError('print', getErrorFromUnknown(error));
                         } else {
                             logMessages({
                                 messages: ["An error was thrown by the specified `print` function"],
@@ -38,6 +43,8 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                         }
                     });
             } else {
+                // Some browsers do not have a `.print` available, even though they should
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (printWindow.contentWindow.print) {
                     const tempContentDocumentTitle = printWindow.contentDocument?.title ?? '';
                     const tempOwnerDocumentTitle = printWindow.ownerDocument.title;
