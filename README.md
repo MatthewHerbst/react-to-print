@@ -9,50 +9,49 @@
 
 Print the content of a React component.
 
+`npm install --save react-to-print`
+
 ## Demo
 
 [![Run react-to-print](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rzdhd)
 
-## Install
-
-`npm install --save react-to-print`
-
-## API
-
-### Usage
+## Usage
 
 ```tsx
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
+
 const contentRef = useRef<HTMLDivElement>(null);
 const reactToPrintFn = useReactToPrint({ contentRef });
 
 return (
   <div>
-    <button onClick={reactToPrintFn}>Print</button>
+    <button onClick={() => reactToPrintFn()}>Print</button>
     <div ref={contentRef}>Content to print</div>
   </div>
 );
 ```
 
-### Options
+It is also possible to lazy set the ref if your content being printed is dynamic. See the [`LazyContent`](https://github.com/MatthewHerbst/react-to-print/blob/master/examples/LazyContent/index.tsx) example for more. This can also be useful for setting the ref in non-React code, such as util functions.
+
+## API
 
 | Option | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| **`bodyClass?`** | `string` | One or more class names to pass to the print window, separated by spaces |
-| **`contentRef?`** | `React.RefObject<Element \| Text>` | The ref pointing to the content to be printed. Alternatively, pass the ref directly to the callback returned by `useReactToPrint` |
-| **`documentTitle?`** | `string` | Set the title for printing when saving as a file. Ignored when passing a custom `print` option |
-| **`fonts?`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | A list of fonts to load into the printing iframe. This is useful if you are using custom fonts |
-| **`ignoreGlobalStyles?`** | `boolean` | Ignore all `<style>` and `<link type="stylesheet" />` tags from `<head>` |
-| **`nonce?`** | `string` | Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute for allow-listing script and style elements for Content Security Policy (CSP) |
-| **`onAfterPrint?`** | `() => void` | Callback function that triggers after the print dialog is closed _regardless of if the user selected to print or cancel_ |
-| **`onBeforePrint?`** | `() => Promise<void>` | Callback function that triggers before print. This can be used to change the content on the page before printing as an alternative to, or in conjunction with `@media print` queries |
-| **`onPrintError?`** | `(errorLocation: 'onBeforePrint' \| 'print', error: Error) => void` | Called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforePrint`, and `print`. Use this to attempt to print again. `errorLocation` will tell you where the Promise was rejected |
-| **`pageStyle?`** | `string` | `react-to-print` sets some basic styles to help improve page printing, notably, removing the header and footer that most browsers add. Use this to override these styles and provide your own |
-| **`preserveAfterPrint?`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
-| **`print?`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
-| **`suppressErrors?`** | `boolean` | When passed, prevents `console` logging of errors |
-| **`copyShadowRoots?`** | `boolean` | When passed, shadow root content will be copied to print window. WARNING: Use with care if you print large documents. TreeWalker's are used to traverse source and target documents. |
-
-The hook returns a function that will initiate the print process when called. This function can also be optionally passed the `content` when called, allowing for its use in conditional rendering logic (where hooks are not allowed) and/or in non-React code such as a util function. See the repo examples for more.
+| **`bodyClass`** | `string` | One or more class names to pass to the print window, separated by spaces |
+| **`contentRef`** | `React.RefObject<Element \| Text>` | The ref pointing to the content to be printed. Alternatively, pass the ref directly to the callback returned by `useReactToPrint` |
+| **`copyShadowRoots`** | `boolean` | Copy shadow root content into the print window. Warning: Use with care if you print large documents as traversing these can be slow. |
+| **`documentTitle`** | `string` | Set the title for printing when saving as a file |
+| **`fonts`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | A list of fonts to load into the printing iframe. This is useful if you are using custom fonts |
+| **`ignoreGlobalStyles`** | `boolean` | Ignore all `<style>` and `<link type="stylesheet" />` tags |
+| **`nonce`** | `string` | Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute for allow-listing script and style elements for Content Security Policy (CSP) |
+| **`onAfterPrint`** | `() => void` | Callback function that triggers after the print dialog is closed _regardless of if the user selected to print or cancel_ |
+| **`onBeforePrint`** | `() => Promise<void>` | Callback function that triggers before print. This can be used to change the content on the page before printing as an alternative to, or in conjunction with, `@media print` queries |
+| **`onPrintError`** | `(errorLocation: 'onBeforePrint' \| 'print', error: Error) => void` | Called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in `onBeforePrint`, and `print`. |
+| **`pageStyle`** | `string` | `react-to-print` sets some basic styles to help improve page printing, notably, removing the header and footer that most browsers add. Use this to override these styles and provide your own |
+| **`preserveAfterPrint`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
+| **`print`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
+| **`suppressErrors`** | `boolean` | When passed, prevents `console` logging of errors |
 
 ## Compatibility
 
@@ -225,7 +224,7 @@ const handlePrint = useReactToPrint({
 });
 ```
 
-Note: for Class components, just pass the `resolve` to the callback for `this.setState`: `this.setState({ isPrinting: false }, resolve)`
+Note: for Class components, pass the Promise `resolve` to the callback for `this.setState`: `this.setState({ isPrinting: false }, resolve)`
 
 ### Changing print settings in the print dialog
 
