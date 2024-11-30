@@ -1,4 +1,4 @@
-type LogMessagesArgs = {
+interface LogMessagesArgs {
     /** The console method to use when logging the messages. Default: 'error' */
     level?: 'error' | 'warning' | 'debug';
     /** The messages to log */
@@ -11,11 +11,11 @@ type LogMessagesArgs = {
 export function logMessages({ level = 'error', messages, suppressErrors = false }: LogMessagesArgs) {
     if (!suppressErrors) {
         if (level === 'error') {
-            console.error(messages); // eslint-disable-line no-console
+            console.error(messages);
         } else if (level === 'warning') {
-            console.warn(messages); // eslint-disable-line no-console
-        } else if (level === 'debug') {
-            console.debug(messages); // eslint-disable-line no-console
+            console.warn(messages);
+        } else {
+            console.debug(messages);
         }
     }
 }

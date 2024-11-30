@@ -3,8 +3,9 @@ import {startPrint} from "./startPrint";
 import {Font} from "../types/font";
 import type {UseReactToPrintOptions} from "../types/UseReactToPrintOptions";
 import { cloneShadowRoots } from "./clone";
+import { getErrorFromUnknown } from "./getErrorMessage";
 
-export type HandlePrintWindowOnLoadData = {
+export interface HandlePrintWindowOnLoadData {
     /** The content. */
     contentNode: Node,
     /** The cloned content. This will be inserted into the print iframe */
@@ -68,7 +69,7 @@ export function handlePrintWindowOnLoad(
     // `onload` callback. This ensures that it is only called once.
     printWindow.onload = null;
 
-    const domDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
+    const domDoc = printWindow.contentDocument ?? printWindow.contentWindow?.document;
 
     if (domDoc) {
         const appendedContentNode = domDoc.body.appendChild(clonedContentNode);
@@ -89,12 +90,15 @@ export function handlePrintWindowOnLoad(
                         .then(() => {
                             markLoaded(fontFace);
                         })
-                        .catch((error: Error) => {
-                            markLoaded(fontFace, ['Failed loading the font:', fontFace, 'Load error:', error]);
+                        .catch((error: unknown) => {
+                            markLoaded(fontFace, ['Failed loading the font:', fontFace, 'Load error:', getErrorFromUnknown(error)]);
                         });
                 });
             } else {
-                fonts.forEach(font => markLoaded(font)); // Pretend we loaded the fonts to allow printing to continue
+                // Pretend we loaded the fonts to allow printing to continue
+                fonts.forEach(font => {
+                    markLoaded(font)
+                });
                 logMessages({
                     messages: ['"react-to-print" is not able to load custom fonts because the browser does not support the FontFace API but will continue attempting to print the page'],
                     suppressErrors
@@ -126,6 +130,9 @@ export function handlePrintWindowOnLoad(
             const sourceCanvas = originalCanvasNodes[i];
             const targetCanvas = targetCanvasEls[i];
 
+            // The conditional here is necessary; there is no guarantee that the index exists
+            // Resolve this by changing to `.at` once we up browser requirements
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (targetCanvas === undefined) {
                 logMessages({
                     messages: ["A canvas element could not be copied for printing, has it loaded? `onBeforePrint` likely resolved too early.", sourceCanvas],
@@ -151,8 +158,12 @@ export function handlePrintWindowOnLoad(
             } else {
                 // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                 const img = new Image();
-                img.onload = () => markLoaded(imgNode);
-                img.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(imgNode, ["Error loading <img>", imgNode, "Error", error]);
+                img.onload = () => {
+                    markLoaded(imgNode);
+                };
+                img.onerror = (_event, _source, _lineno, _colno, error) => {
+                    markLoaded(imgNode, ["Error loading <img>", imgNode, "Error", error]);
+                };
                 img.src = imgSrc;
             }
         }
@@ -167,20 +178,30 @@ export function handlePrintWindowOnLoad(
                 // If the video has a poster, pre-load the poster image
                 // https://stackoverflow.com/questions/10240110/how-do-you-cache-an-image-in-javascript
                 const img = new Image();
-                img.onload = () => markLoaded(videoNode);
-                img.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(videoNode, ["Error loading video poster", videoPoster, "for video", videoNode, "Error:", error]);
+                img.onload = () => {
+                    markLoaded(videoNode);
+                };
+                img.onerror = (_event, _source, _lineno, _colno, error) => {
+                    markLoaded(videoNode, ["Error loading video poster", videoPoster, "for video", videoNode, "Error:", error]);
+                }
                 img.src = videoPoster;
             } else {
                 if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
                     markLoaded(videoNode);
                 } else {
-                    videoNode.onloadeddata = () => markLoaded(videoNode);
+                    videoNode.onloadeddata = () => {
+                        markLoaded(videoNode)
+                    };
 
                     // TODO: why do `onabort` and `onstalled` seem to fire all the time even if there is no issue?
                     // videoNode.onabort = () => markLoaded(videoNode, ["Loading video aborted", videoNode], suppressErrors);
-                    videoNode.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(videoNode, ["Error loading video", videoNode, "Error", error]);
+                    videoNode.onerror = (_event, _source, _lineno, _colno, error) => {
+                        markLoaded(videoNode, ["Error loading video", videoNode, "Error", error])
+                    };
                     // videoNode.onemptied = () => markLoaded(videoNode, ["Loading video emptied, skipping", videoNode]);
-                    videoNode.onstalled = () => markLoaded(videoNode, ["Loading video stalled, skipping", videoNode]);
+                    videoNode.onstalled = () => {
+                        markLoaded(videoNode, ["Loading video stalled, skipping", videoNode]);
+                    }
                 }
             }
         }
@@ -202,7 +223,7 @@ export function handlePrintWindowOnLoad(
 
                 if (node.tagName.toLowerCase() === 'style') { // <style> nodes
                     const newHeadEl = domDoc.createElement(node.tagName);
-                    const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
+                    const sheet = (node as HTMLStyleElement).sheet;
                     if (sheet) {
                         let styleCSS = "";
                         // NOTE: for-of is not supported by IE
@@ -216,12 +237,12 @@ export function handlePrintWindowOnLoad(
                                     styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
                                 }
                             }
-                        } catch (error) {
+                        } catch (error: unknown) {
                             logMessages({
                                 messages: [
                                     `A stylesheet could not be accessed. This is likely due to the stylesheet having cross-origin imports, and many browsers block script access to cross-origin stylesheets. See https://github.com/MatthewHerbst/react-to-print/issues/429 for details. You may be able to load the sheet by both marking the stylesheet with the cross \`crossorigin\` attribute, and setting the \`Access-Control-Allow-Origin\` header on the server serving the stylesheet. Alternatively, host the stylesheet on your domain to avoid this issue entirely.`, // eslint-disable-line max-len
                                     node,
-                                    `Original error: ${(error as Error)?.message}`,
+                                    `Original error: ${(getErrorFromUnknown(error)).message}`,
                                 ],
                                 level: 'warning',
                             });
@@ -259,13 +280,20 @@ export function handlePrintWindowOnLoad(
                             // and can be iterated only via direct [i] access
                             for (let j = 0, attrLen = node.attributes.length; j < attrLen; ++j) {
                                 const attr = node.attributes[j];
+                                // The conditional here is necessary; there is no guarantee that the index exists
+                                // Resolve this by changing to `.at` once we up browser requirements
+                                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                 if (attr) {
-                                    newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || "");
+                                    newHeadEl.setAttribute(attr.nodeName, attr.nodeValue ?? "");
                                 }
                             }
 
-                            newHeadEl.onload = () => markLoaded(newHeadEl);
-                            newHeadEl.onerror = (_event, _source, _lineno, _colno, error) => markLoaded(newHeadEl, ["Failed to load", newHeadEl, "Error:", error]);
+                            newHeadEl.onload = () => {
+                                markLoaded(newHeadEl);
+                            };
+                            newHeadEl.onerror = (_event, _source, _lineno, _colno, error) => {
+                                markLoaded(newHeadEl, ["Failed to load", newHeadEl, "Error:", error]);
+                            }
                             if (nonce) {
                                 newHeadEl.setAttribute("nonce", nonce);
                             }
