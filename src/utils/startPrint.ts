@@ -82,8 +82,19 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                     });
                 }
 
-                onAfterPrint?.();
-                removePrintIframe(preserveAfterPrint);
+                /**
+				 * Remove the print iframe after the print dialog closes that determined by the main
+				 * window is regaining focus after the print dialog closes. This workaround is applied
+				 * due to the lack of a reliable `afterprint` event in most browsers.
+				 */
+				window.addEventListener(
+					"focus",
+					() => {
+						onAfterPrint?.();
+						removePrintIframe(preserveAfterPrint);
+					},
+					{ once: true }
+				);
             }
         } else {
             logMessages({
