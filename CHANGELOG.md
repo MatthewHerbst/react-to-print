@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.3-beta-1 (December 16th, 2024)
+
+This is a beta release. Please report any issues in the issue below, thank you!
+
+- FIX [764](https://github.com/MatthewHerbst/react-to-print/pull/764) Ensure `onAfterPrint` is called, and print iframe is removed, after the print preview dialog has closed. Previously these would happen when the `afterprint` event was received which, as noted in the README, may occur immediately in some browsers, rather than when the print preview dialog closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
+
 ## 3.0.2 (October 17th, 2024)
 
 - FIX [751](https://github.com/MatthewHerbst/react-to-print/issues/751) Ensure selected `<select>` option printed. Currently the first option is printed regardless of selection state
