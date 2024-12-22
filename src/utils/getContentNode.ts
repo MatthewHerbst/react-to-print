@@ -27,7 +27,7 @@ export function getContentNode({ contentRef, optionalContent, suppressErrors }: 
     }
 
     if (contentRef) {
-        return contentRef.current
+        return contentRef.current;
     }
 
     logMessages({

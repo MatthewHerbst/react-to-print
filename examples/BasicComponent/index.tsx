@@ -8,7 +8,7 @@ import { useReactToPrint } from "../../src/hooks/useReactToPrint";
  * A basic printing example printing a component
  */
 export const BasicComponent = () => {
-  const componentRef = React.useRef(null);
+  const componentRef = React.useRef<HTMLDivElement>(null);
 
   const handleAfterPrint = React.useCallback(() => {
     console.log("`onAfterPrint` called"); // tslint:disable-line no-console

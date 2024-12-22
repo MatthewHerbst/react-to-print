@@ -1,5 +1,6 @@
 import { RefObject } from "react";
 import type { Font } from "./font";
+import { ContentNode } from "./ContentNode";
 
 /** Options for `useReactToPrint` */
 export interface UseReactToPrintOptions {
@@ -9,7 +10,7 @@ export interface UseReactToPrintOptions {
      * The ref pointing to the content to be printed. Alternatively, pass the ref directly to the
      * callback returned by `useReactToPrint`
      */
-    contentRef?: RefObject<Element | Text>;
+    contentRef?: RefObject<ContentNode>;
     /** Set the title for printing when saving as a file. Ignored when passing a custom `print` option */
     documentTitle?: string;
     /** A list of fonts to load into the printing iframe. This is useful if you are using custom fonts */

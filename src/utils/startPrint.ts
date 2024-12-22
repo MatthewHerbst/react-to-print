@@ -29,9 +29,6 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                     .then(() => {
                         onAfterPrint?.();
                     })
-                    .then(() => {
-                        removePrintIframe(preserveAfterPrint);
-                    })
                     .catch((error: unknown) => {
                         if (onPrintError) {
                             onPrintError('print', getErrorFromUnknown(error));
@@ -41,6 +38,9 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                                 suppressErrors,
                             });
                         }
+                    })
+                    .finally(() => {
+                        removePrintIframe(preserveAfterPrint);
                     });
             } else {
                 // Some browsers do not have a `.print` available, even though they should
@@ -83,9 +83,11 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                 }
 
                 /**
-				 * Remove the print iframe after the print dialog closes that determined by the main
-				 * window is regaining focus after the print dialog closes. This workaround is applied
-				 * due to the lack of a reliable `afterprint` event in most browsers.
+				 * Remove the print iframe after the print dialog closes. This is determined by the
+                 * main window regaining focus after the print dialog closes. This workaround is
+                 * used due to the unreliability and variation of behavior of the `afterprint`
+                 * event in most browsers. For example, some browsers will fire the `afterprint`
+                 * event immediately after opening the print dialog.
 				 */
 				window.addEventListener(
 					"focus",
@@ -93,7 +95,7 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
 						onAfterPrint?.();
 						removePrintIframe(preserveAfterPrint);
 					},
-					{ once: true }
+					{ once: true } // Clean up the listener after is it invoked
 				);
             }
         } else {
