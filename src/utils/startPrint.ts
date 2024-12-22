@@ -28,6 +28,7 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                 print(printWindow)
                     .then(() => {
                         onAfterPrint?.();
+                        removePrintIframe(preserveAfterPrint);
                     })
                     .catch((error: unknown) => {
                         if (onPrintError) {
@@ -38,9 +39,6 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                                 suppressErrors,
                             });
                         }
-                    })
-                    .finally(() => {
-                        removePrintIframe(preserveAfterPrint);
                     });
             } else {
                 // Some browsers do not have a `.print` available, even though they should
