@@ -188,7 +188,9 @@ export function handlePrintWindowOnLoad(
             } else {
                 if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
                     markLoaded(videoNode);
-                } else {
+                } else if (!videoNode.src) {
+                    markLoaded(videoNode, ["video src empty", videoNode, "Error"]);
+                } else{
                     videoNode.onloadeddata = () => {
                         markLoaded(videoNode)
                     };
