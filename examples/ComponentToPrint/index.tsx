@@ -173,6 +173,14 @@ export const ComponentToPrint = React.forwardRef<HTMLDivElement | null, Componen
               />
             </td>
           </tr>
+          <tr>
+            <td>Video: Without src</td>
+            <td>
+              <video
+                width="200"
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
       <div ref={shadowRootHostEl}/>

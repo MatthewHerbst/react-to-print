@@ -189,7 +189,8 @@ export function handlePrintWindowOnLoad(
                 if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
                     markLoaded(videoNode);
                 } else if (!videoNode.src) {
-                    markLoaded(videoNode, ["video src empty", videoNode, "Error"]);
+                    // There are scenarios where `src` can be empty, for example with lazy loading.
+                    markLoaded(videoNode, ["Error loading video, `src` is empty", videoNode]);
                 } else{
                     videoNode.onloadeddata = () => {
                         markLoaded(videoNode)
