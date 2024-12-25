@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.4 (December 24th, 2024)
+
+- FIX [772](https://github.com/MatthewHerbst/react-to-print/pull/772) Ensure that `video` elements with an empty `src` attribute do not prevent printing from continuing. Thanks [@Can-Chen](https://github.com/Can-Chen)
+
 ## 3.0.3 (December 22th, 2024)
 
 - FIX [764](https://github.com/MatthewHerbst/react-to-print/pull/764) Ensure `onAfterPrint` is called, and print iframe is removed, after the print preview dialog has closed. Previously these would happen when the `afterprint` event was received which, as noted in the README, may occur immediately in some browsers, rather than when the print preview dialog closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
