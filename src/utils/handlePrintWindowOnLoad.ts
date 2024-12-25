@@ -189,10 +189,7 @@ export function handlePrintWindowOnLoad(
                 if (videoNode.readyState >= 2) { // Check if the video has already loaded a frame
                     markLoaded(videoNode);
                 } else if (!videoNode.src) {
-                    // There are scenarios where `src` can be empty, for example, if it was defined
-                    // incorrectly or lazy loaded in some manner. This is unexpected, but we should
-                    // handle it to ensure printing can continue if this is encountered.
-                    // See https://github.com/MatthewHerbst/react-to-print/pull/772
+                    // There are scenarios where `src` can be empty, for example with lazy loading.
                     markLoaded(videoNode, ["Error loading video, `src` is empty", videoNode]);
                 } else{
                     videoNode.onloadeddata = () => {
