@@ -24,12 +24,14 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
         if (printWindow.contentWindow) {
             printWindow.contentWindow.focus(); // Needed for IE 11
 
+            function handleAfterPrint() {
+                onAfterPrint?.()
+                removePrintIframe(preserveAfterPrint)
+            }
+
             if (print) {
                 print(printWindow)
-                    .then(() => {
-                        onAfterPrint?.();
-                        removePrintIframe(preserveAfterPrint);
-                    })
+                    .then(handleAfterPrint)
                     .catch((error: unknown) => {
                         if (onPrintError) {
                             onPrintError('print', getErrorFromUnknown(error));
@@ -81,20 +83,18 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                 }
 
                 /**
-				 * Remove the print iframe after the print dialog closes. This is determined by the
-                 * main window regaining focus after the print dialog closes. This workaround is
-                 * used due to the unreliability and variation of behavior of the `afterprint`
-                 * event in most browsers. For example, some browsers will fire the `afterprint`
-                 * event immediately after opening the print dialog.
-				 */
-				window.addEventListener(
-					"focus",
-					() => {
-						onAfterPrint?.();
-						removePrintIframe(preserveAfterPrint);
-					},
-					{ once: true } // Clean up the listener after is it invoked
-				);
+                 * This workaround is implemented to prevent a bug on mobile browsers where `handleAfterPrint` 
+                 * is called immediately, even before the print dialog opens. This issue is described in #187.
+                 *
+                 * On mobile devices, a delay is introduced using `setTimeout` to ensure the dialog has time to open.
+                 * 
+                 * @see [Stack Overflow Reference](https://stackoverflow.com/q/77215077/4899926)
+                 */
+                if (isMobileBrowser()) {
+                    setTimeout(handleAfterPrint, 500)
+                } else {
+                    handleAfterPrint()
+                }
             }
         } else {
             logMessages({
@@ -103,4 +103,39 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
             });
         }
     }, 500);
+}
+
+/**
+ * Determines if the current browser is a mobile browser by checking the `navigator.userAgent` 
+ * against a predefined list of common mobile browser identifiers.
+ * 
+ * Note: This function is not exhaustive and may not detect all mobile browsers, 
+ * as it is designed to remain simple and lightweight.
+ * 
+ * @see [Stack Overflow Reference](https://stackoverflow.com/a/11381730/4899926)
+ */
+function isMobileBrowser() {
+    const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+    ];
+
+    return toMatch.some(toMatchItem => {
+        return (
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            navigator.userAgent ??
+
+            // Retained for compatibility with browsers that use `navigator.vendor` to identify the browser.
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
+            navigator.vendor ??
+
+            // Retained for compatibility with older versions of Opera that use `window.opera`.
+            ('opera' in window && window.opera)
+        ).match(toMatchItem)
+    })
 }
