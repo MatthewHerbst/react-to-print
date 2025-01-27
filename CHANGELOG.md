@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.5 (January 27th, 2025)
+
+- FIX [https://github.com/MatthewHerbst/react-to-print/issues/779] Fix a bug causing `onAfterPrint` to not always fire when the print window closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
+
 ## 3.0.4 (December 24th, 2024)
 
 - FIX [772](https://github.com/MatthewHerbst/react-to-print/pull/772) Ensure that `video` elements with an empty `src` attribute do not prevent printing from continuing. Thanks [@Can-Chen](https://github.com/Can-Chen)
