@@ -52,6 +52,7 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 | **`preserveAfterPrint`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
 | **`print`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
 | **`suppressErrors`** | `boolean` | When passed, prevents `console` logging of errors |
+| **`iframeBodyId`** | `string` | Set custom id to iframe body |
 
 ## Compatibility
 
