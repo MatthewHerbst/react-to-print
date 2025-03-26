@@ -13,18 +13,39 @@ import { appendPrintWindow } from "../utils/appendPrintWindow";
 import { startPrint } from "../utils/startPrint";
 import { getErrorFromUnknown } from "../utils/getErrorMessage";
 
-export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrintFn {
-    const {
-        contentRef,
-        fonts,
-        ignoreGlobalStyles,
-        onBeforePrint,
-        onPrintError,
-        preserveAfterPrint,
-        suppressErrors,
-    } = options;
-
+export function useReactToPrint({
+    bodyClass,
+    contentRef,
+    documentTitle,
+    fonts,
+    ignoreGlobalStyles,
+    nonce,
+    onAfterPrint,
+    onBeforePrint,
+    onPrintError,
+    pageStyle,
+    print,
+    preserveAfterPrint,
+    suppressErrors,
+    copyShadowRoots,
+}: UseReactToPrintOptions): UseReactToPrintFn {
     const handlePrint = useCallback((optionalContent?: UseReactToPrintHookContent) => {
+        const options = {
+            bodyClass,
+            contentRef,
+            documentTitle,
+            fonts,
+            ignoreGlobalStyles,
+            nonce,
+            onAfterPrint,
+            onBeforePrint,
+            onPrintError,
+            pageStyle,
+            print,
+            preserveAfterPrint,
+            suppressErrors,
+            copyShadowRoots,
+          };
         // Ensure we remove any pre-existing print windows before adding a new one
         removePrintIframe(preserveAfterPrint, true);
 
@@ -120,7 +141,22 @@ export function useReactToPrint(options: UseReactToPrintOptions): UseReactToPrin
         } else {
             appendPrintWindow(printWindow, markLoaded, data, options);
         }
-    }, [options]);
+    }, [
+        bodyClass,
+        contentRef,
+        documentTitle,
+        fonts,
+        ignoreGlobalStyles,
+        nonce,
+        onAfterPrint,
+        onBeforePrint,
+        onPrintError,
+        pageStyle,
+        print,
+        preserveAfterPrint,
+        suppressErrors,
+        copyShadowRoots,
+      ]);
 
     return handlePrint;
 }

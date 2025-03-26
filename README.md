@@ -36,6 +36,8 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 
 ## API
 
+The `useReactToPrint` hook is designed to maintain stability across re-renders. The returned print function will only change when the input options actually change, preventing unnecessary re-renders in components that depend on it. Note that non-primitive values (objects, arrays, functions) passed as options must be stabilized by the user (using `useMemo` or `useCallback`) to prevent unnecessary changes.
+
 | Option | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **`bodyClass`** | `string` | One or more class names to pass to the print window, separated by spaces |
@@ -74,6 +76,20 @@ We are actively researching resolutions to this issue, but it likely requires ch
 - ([401](https://github.com/MatthewHerbst/react-to-print/issues/401)): TypeScript errors such as `Type 'undefined' is not assignable to type 'ReactInstance | null'.`. You likely need to set your ref to initially be `null`: `useRef(null)`
 
 ## Common Pitfalls
+
+- Non-primitive values (objects, arrays, functions) passed to `useReactToPrint` should be stabilized using `useMemo` or `useCallback` to prevent unnecessary re-renders. For example:
+  ```tsx
+  // Bad: Creates new function on every render
+  const printFn = useReactToPrint({
+    onBeforePrint: () => console.log('printing'),
+  });
+
+  // Good: Function is stable across renders
+  const onBeforePrint = useCallback(() => console.log('printing'), []);
+  const printFn = useReactToPrint({
+    onBeforePrint,
+  });
+  ```
 
 - `documentTitle` will not work if `react-to-print` is run within an `iframe`. If `react-to-print` is run within an `iframe` and your script has access to the parent document, you may be able to manually set and then restore the parent document's `title` during the print. This can be done by leveraging the `onBeforePrint` and `onAfterPrint` callbacks.
 
@@ -346,7 +362,7 @@ Define a page-break class to apply to elements which could be sensibly split int
       <div className="page-break" />
       <div>{yourContent}</div>
     </>
-  )}
+  ))}
 </div>
 ```
 
