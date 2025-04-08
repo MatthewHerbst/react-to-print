@@ -16,6 +16,7 @@ import { getErrorFromUnknown } from "../utils/getErrorMessage";
 export function useReactToPrint({
     bodyClass,
     contentRef,
+    copyShadowRoots,
     documentTitle,
     fonts,
     ignoreGlobalStyles,
@@ -24,15 +25,15 @@ export function useReactToPrint({
     onBeforePrint,
     onPrintError,
     pageStyle,
-    print,
     preserveAfterPrint,
+    print,
     suppressErrors,
-    copyShadowRoots,
 }: UseReactToPrintOptions): UseReactToPrintFn {
     const handlePrint = useCallback((optionalContent?: UseReactToPrintHookContent) => {
         const options = {
             bodyClass,
             contentRef,
+            copyShadowRoots,
             documentTitle,
             fonts,
             ignoreGlobalStyles,
@@ -41,10 +42,9 @@ export function useReactToPrint({
             onBeforePrint,
             onPrintError,
             pageStyle,
-            print,
             preserveAfterPrint,
+            print,
             suppressErrors,
-            copyShadowRoots,
           };
         // Ensure we remove any pre-existing print windows before adding a new one
         removePrintIframe(preserveAfterPrint, true);
@@ -144,6 +144,7 @@ export function useReactToPrint({
     }, [
         bodyClass,
         contentRef,
+        copyShadowRoots,
         documentTitle,
         fonts,
         ignoreGlobalStyles,
@@ -152,10 +153,9 @@ export function useReactToPrint({
         onBeforePrint,
         onPrintError,
         pageStyle,
-        print,
         preserveAfterPrint,
+        print,
         suppressErrors,
-        copyShadowRoots,
       ]);
 
     return handlePrint;
