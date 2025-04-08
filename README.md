@@ -75,20 +75,6 @@ We are actively researching resolutions to this issue, but it likely requires ch
 
 ## Common Pitfalls
 
-- Non-primitive values (objects, arrays, functions) passed to `useReactToPrint` should be stabilized using `useMemo` or `useCallback` to prevent unnecessary re-renders. For example:
-  ```tsx
-  // Bad: Creates new function on every render
-  const printFn = useReactToPrint({
-    onBeforePrint: () => console.log('printing'),
-  });
-
-  // Good: Function is stable across renders
-  const onBeforePrint = useCallback(() => console.log('printing'), []);
-  const printFn = useReactToPrint({
-    onBeforePrint,
-  });
-  ```
-
 - `documentTitle` will not work if `react-to-print` is run within an `iframe`. If `react-to-print` is run within an `iframe` and your script has access to the parent document, you may be able to manually set and then restore the parent document's `title` during the print. This can be done by leveraging the `onBeforePrint` and `onAfterPrint` callbacks.
 
 - When printing, only styles that directly target the printed nodes will be applied as the parent nodes of the printed nodes will not exist in the print DOM. For example, in the code below, if the `<p>` tag is the root of the `ComponentToPrint` then the red styling will *not* be applied. Be sure to target all printed content directly and not from unprinted parents.
