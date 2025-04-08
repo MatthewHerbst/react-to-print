@@ -36,8 +36,6 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 
 ## API
 
-The `useReactToPrint` hook is designed to maintain stability across re-renders. The returned print function will only change when the input options actually change, preventing unnecessary re-renders in components that depend on it. Note that non-primitive values (objects, arrays, functions) passed as options must be stabilized by the user (using `useMemo` or `useCallback`) to prevent unnecessary changes.
-
 | Option | Type | Description |
 | :-------------------: | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | **`bodyClass`** | `string` | One or more class names to pass to the print window, separated by spaces |
