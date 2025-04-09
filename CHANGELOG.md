@@ -1,17 +1,21 @@
 # CHANGELOG
 
+## 3.0.6 (April 28th, 2025)
+
+- CHORE [794](https://github.com/MatthewHerbst/react-to-print/pull/794): Improve memoization of options passed to `react-to-print`. Thanks [FatahChan](https://github.com/FatahChan)
+
 ## 3.0.5 (January 27th, 2025)
 
-- FIX [https://github.com/MatthewHerbst/react-to-print/issues/779] Fix a bug causing `onAfterPrint` to not always fire when the print window closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
+- FIX [779](https://github.com/MatthewHerbst/react-to-print/issues/779): Fix a bug causing `onAfterPrint` to not always fire when the print window closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
 
 ## 3.0.4 (December 24th, 2024)
 
-- FIX [772](https://github.com/MatthewHerbst/react-to-print/pull/772) Ensure that `video` elements with an empty `src` attribute do not prevent printing from continuing. Thanks [@Can-Chen](https://github.com/Can-Chen)
+- FIX [772](https://github.com/MatthewHerbst/react-to-print/pull/772): Ensure that `video` elements with an empty `src` attribute do not prevent printing from continuing. Thanks [@Can-Chen](https://github.com/Can-Chen)
 
 ## 3.0.3 (December 22th, 2024)
 
-- FIX [764](https://github.com/MatthewHerbst/react-to-print/pull/764) Ensure `onAfterPrint` is called, and print iframe is removed, after the print preview dialog has closed. Previously these would happen when the `afterprint` event was received which, as noted in the README, may occur immediately in some browsers, rather than when the print preview dialog closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
-- FIX [768](https://github.com/MatthewHerbst/react-to-print/issues/768) React 19 made a small change to the typing for Refs which requires explicitly handling `null`/`undefined` initial types
+- FIX [764](https://github.com/MatthewHerbst/react-to-print/pull/764): Ensure `onAfterPrint` is called, and print iframe is removed, after the print preview dialog has closed. Previously these would happen when the `afterprint` event was received which, as noted in the README, may occur immediately in some browsers, rather than when the print preview dialog closes. Thanks [sensasi-delight](https://github.com/sensasi-delight)
+- FIX [768](https://github.com/MatthewHerbst/react-to-print/issues/768): React 19 made a small change to the typing for Refs which requires explicitly handling `null`/`undefined` initial types
 - CHORE: Minor code cleanup and comments
 - CHORE: Updated `devDependencies` to latest, including now using React 19 for our examples
 - DOCS: README updates, including a link to using the lazy method of providing content
@@ -22,12 +26,12 @@
 
 ## 3.0.2 (October 17th, 2024)
 
-- FIX [751](https://github.com/MatthewHerbst/react-to-print/issues/751) Ensure selected `<select>` option printed. Currently the first option is printed regardless of selection state
-- FIX [753](https://github.com/MatthewHerbst/react-to-print/pull/753) Fix incorrect ESLint config reference to tsconfig file
+- FIX [751](https://github.com/MatthewHerbst/react-to-print/issues/751): Ensure selected `<select>` option printed. Currently the first option is printed regardless of selection state
+- FIX [753](https://github.com/MatthewHerbst/react-to-print/pull/753): Fix incorrect ESLint config reference to tsconfig file
 
 ## 3.0.1 (September 30th, 2024)
 
-- FIX [743](https://github.com/MatthewHerbst/react-to-print/pull/743) Allow passing the function returned from `useReactToPrint` directly to event handlers (this is primarily geared at non-typescript users who are not aware of the new v3 API that prefers the function be wrapped, by changing `onClick={printFn}` to `onClick={() => printFn()}`)
+- FIX [743](https://github.com/MatthewHerbst/react-to-print/pull/743): Allow passing the function returned from `useReactToPrint` directly to event handlers (this is primarily geared at non-typescript users who are not aware of the new v3 API that prefers the function be wrapped, by changing `onClick={printFn}` to `onClick={() => printFn()}`)
 
 ## 3.0.0 (September 28th, 2024)
 
