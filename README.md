@@ -346,7 +346,7 @@ Define a page-break class to apply to elements which could be sensibly split int
       <div className="page-break" />
       <div>{yourContent}</div>
     </>
-  )}
+  ))}
 </div>
 ```
 
