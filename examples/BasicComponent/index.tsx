@@ -29,7 +29,6 @@ export const BasicComponent = () => {
 
   return (
     <div>
-      {/* @ts-expect-error Works without lazy content wrapping */}
       <button onClick={printFn}>Print</button>
       <ComponentToPrint ref={componentRef} />
     </div>
