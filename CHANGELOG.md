@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## 3.0.6 (April 28th, 2025)
+## 3.1.0 (April 27th, 2025)
+
+- FIX [804](https://github.com/MatthewHerbst/react-to-print/pull/804): Correct issues with `onBeforePrint`
+- FEAT [803](https://github.com/MatthewHerbst/react-to-print/pull/803): Allow passing the `useReactToPrint` callback directly to event handlers
+
+## 3.0.6 (March 28th, 2025)
 
 - CHORE [794](https://github.com/MatthewHerbst/react-to-print/pull/794): Improve memoization of options passed to `react-to-print`. Thanks [FatahChan](https://github.com/FatahChan)
 
