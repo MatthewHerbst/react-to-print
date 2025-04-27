@@ -13,7 +13,7 @@ export const OnBeforePrint = () => {
   const onBeforePrintResolve = React.useRef<(() => void) | null>(null);
 
   const [loading, setLoading] = React.useState(false);
-  const [text, setText] = React.useState("Some cool text from the parent");
+  const [text, setText] = React.useState("Some cool original text");
 
   const handleOnAfterPrint = React.useCallback(() => {
     console.log("`onAfterPrint` called"); // tslint:disable-line no-console
@@ -32,7 +32,6 @@ export const OnBeforePrint = () => {
       setTimeout(() => {
         setLoading(false);
         setText("New, Updated Text!");
-        resolve();
       }, 2000);
     });
   }, [setLoading, setText]);
@@ -41,6 +40,7 @@ export const OnBeforePrint = () => {
     if (text === "New, Updated Text!" && typeof onBeforePrintResolve.current === "function") {
       console.log("State update applied, resolving the promise for `onBeforePrint`"); // tslint:disable-line no-console
       onBeforePrintResolve.current();
+      onBeforePrintResolve.current = null;
     }
   }, [onBeforePrintResolve.current, text]);
 
