@@ -52,13 +52,9 @@ export const OnBeforePrint = () => {
     onBeforePrint: handleOnBeforePrint,
   }); 
 
-  const handleOnClick = React.useCallback(() => {
-    printFn();
-  }, [printFn]);
-
   return (
     <div>
-      <button onClick={handleOnClick}>Print</button>
+      <button onClick={printFn}>Print</button>
       {loading && <p className="indicator">onBeforePrint: Loading...</p>}
       <ComponentToPrint ref={componentRef} text={text} />
     </div>

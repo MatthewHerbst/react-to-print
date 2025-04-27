@@ -22,13 +22,9 @@ export const CopyShadowRootContent = () => {
     copyShadowRoots: true
   });
 
-  const handleOnClick = React.useCallback(() => {
-    printFn();
-  }, [printFn]);
-
   return (
     <div>
-      <button onClick={handleOnClick}>Print</button>
+      <button onClick={printFn}>Print</button>
       <ComponentToPrint ref={componentRef} />
     </div>
   );

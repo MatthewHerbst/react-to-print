@@ -25,14 +25,10 @@ export const CustomPrint = () => {
     },
   }); 
 
-  const handleOnClick = React.useCallback(() => {
-    printFn();
-  }, [printFn]);
-
   return (
     <div>
       <h3>See console for output: print window will not open</h3>
-      <button onClick={handleOnClick}>Print</button>
+      <button onClick={printFn}>Print</button>
       <ComponentToPrint ref={componentRef} />
     </div>
   );
