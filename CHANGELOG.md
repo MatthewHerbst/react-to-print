@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.1.1 (June 30th, 2025)
+
+- FIX [812](https://github.com/MatthewHerbst/react-to-print/pull/812): Better detect optional lazy content versus `Event`
+- CHORE [813](https://github.com/MatthewHerbst/react-to-print/pull/813): Upgrade all `devDependencies`
+
 ## 3.1.0 (April 27th, 2025)
 
 - FIX [804](https://github.com/MatthewHerbst/react-to-print/pull/804): Correct issues with `onBeforePrint`
