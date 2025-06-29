@@ -12,18 +12,16 @@ interface GetContentNodesArgs {
 export function getContentNode({ contentRef, optionalContent, suppressErrors }: GetContentNodesArgs): ContentNode {
     // This `Event` check allows passing the callback from `useReactToPrint` directly into event
     // handlers without having to wrap it in another function to capture the event
-    if (optionalContent && !(optionalContent instanceof Event)) {
+    if (optionalContent && typeof optionalContent === "function") {
         if (contentRef) {
             logMessages({
                 level: "warning",
-                messages: ['"react-to-print" received a `contentRef` option and a optional-content param passed to its callback. The `contentRef` option will be ignored.'],
+                messages: ['"react-to-print" received a `contentRef` option and an optional-content param passed to its callback. The `contentRef` option will be ignored.'],
             });
         }
 
         // See [#742](https://github.com/MatthewHerbst/react-to-print/issues/742) and [#724](https://github.com/MatthewHerbst/react-to-print/issues/724)
-        if (typeof optionalContent === "function")   {
-            return optionalContent();
-        }
+        return optionalContent();
     }
 
     if (contentRef) {
