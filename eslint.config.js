@@ -46,6 +46,7 @@ module.exports = [
             "@typescript-eslint/no-non-null-assertion": "off",
             "@typescript-eslint/non-nullable-type-assertion-style": "off",
             "@typescript-eslint/prefer-for-of": "off",
+            "@typescript-eslint/prefer-nullish-coalescing": "off",
             "@typescript-eslint/restrict-template-expressions": ["error", {
                 allowNumber: true,
             }],

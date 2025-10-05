@@ -1,3 +1,4 @@
+import type { IframeHTMLAttributes } from "react";
 import { RefObject } from "react";
 import type { Font } from "./font";
 import { ContentNode } from "./ContentNode";
@@ -54,6 +55,14 @@ export interface UseReactToPrintOptions {
      * this to print in non-browser environments such as Electron
      */
     print?: (target: HTMLIFrameElement) => Promise<any>;
+    /**
+     * Allows setting some security specific props on the iframe used for printing
+     */
+    printIframeProps?: {
+        allow?: IframeHTMLAttributes<HTMLIFrameElement>["allow"],
+        referrerPolicy?: IframeHTMLAttributes<HTMLIFrameElement>["referrerPolicy"],
+        sandbox?: IframeHTMLAttributes<HTMLIFrameElement>["sandbox"],
+    };
     /** When passed, prevents `console` logging of errors */
     suppressErrors?: boolean;
     /** When passed, shadow root content will be copied */

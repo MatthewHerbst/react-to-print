@@ -25,6 +25,7 @@ export function useReactToPrint({
     pageStyle,
     preserveAfterPrint,
     print,
+    printIframeProps,
     suppressErrors,
 }: UseReactToPrintOptions): UseReactToPrintFn {
     const handlePrint = useCallback((optionalContent?: UseReactToPrintHookContent) => {
@@ -46,10 +47,11 @@ export function useReactToPrint({
                 pageStyle,
                 preserveAfterPrint,
                 print,
+                printIframeProps,
                 suppressErrors,
             };
             
-            const printWindow = generatePrintWindow();
+            const printWindow = generatePrintWindow(printIframeProps);
             const data = getPrintData(optionalContent, options);
 
             if (!data) {
