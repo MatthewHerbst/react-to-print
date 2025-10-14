@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.2.0 (October 14th, 2025)
+
+- FEAR [820](https://github.com/MatthewHerbst/react-to-print/pull/820): Add `printIframeProps` prop to allow setting certain print iframe props for privacy & security
+- CHORE [815](https://github.com/MatthewHerbst/react-to-print/pull/815): Update dependencies 
+
 ## 3.1.1 (June 30th, 2025)
 
 - FIX [812](https://github.com/MatthewHerbst/react-to-print/pull/812): Better detect optional lazy content versus `Event`
