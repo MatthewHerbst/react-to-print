@@ -67,4 +67,6 @@ export interface UseReactToPrintOptions {
     suppressErrors?: boolean;
     /** When passed, shadow root content will be copied */
     copyShadowRoots?: boolean;
+    /** Add custom id to iframe body id */
+    iframeBodyId?: string;
 }

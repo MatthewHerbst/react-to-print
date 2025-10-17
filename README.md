@@ -53,6 +53,7 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 | **`print`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
 | **`printIframeProps`** | `{ allow?: string, referrerPolicy?: HTMLAttributeReferrerPolicy, sandbox?: string }` | Allows setting certain properties of the print iframe, primarily for privacy and security policies |
 | **`suppressErrors`** | `boolean` | When passed, prevents `console` logging of errors |
+| **`iframeBodyId`** | `string` | Set custom id to iframe body |
 
 ## Compatibility
 
