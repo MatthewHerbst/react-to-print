@@ -12,8 +12,12 @@ export interface UseReactToPrintOptions {
      * callback returned by `useReactToPrint`
      */
     contentRef?: RefObject<ContentNode>;
-    /** Set the title for printing when saving as a file. Ignored when passing a custom `print` option */
-    documentTitle?: string;
+    /** 
+     * Set the title for printing when saving as a file. 
+     * Can be a static string or a function that returns a string (evaluated at print time).
+     * Ignored when passing a custom `print` option 
+     */
+    documentTitle?: string | (() => string);
     /** A list of fonts to load into the printing iframe. This is useful if you are using custom fonts */
     fonts?: Font[];
     /** Ignore all `<style>` and `<link type="stylesheet" />` tags from `<head>` */

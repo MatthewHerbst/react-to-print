@@ -49,24 +49,28 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                     const tempContentDocumentTitle = printWindow.contentDocument?.title ?? '';
                     const tempOwnerDocumentTitle = printWindow.ownerDocument.title;
 
+                    const resolvedTitle = typeof documentTitle === 'function' 
+                        ? documentTitle() 
+                        : documentTitle;
+
                     // Override page and various target content titles during print
                     // NOTE: some browsers seem to take the print title from the highest level
                     // title, while others take it from the lowest level title. So, we set the title
                     // in a few places and hope the current browser takes one of them :pray:
-                    if (documentTitle) {
+                    if (resolvedTitle) {
                         // Print filename in Chrome
-                        printWindow.ownerDocument.title = documentTitle;
+                        printWindow.ownerDocument.title = resolvedTitle;
 
                         // Print filename in Firefox, Safari
                         if (printWindow.contentDocument) {
-                            printWindow.contentDocument.title = documentTitle;
+                            printWindow.contentDocument.title = resolvedTitle;
                         }
                     }
 
                     printWindow.contentWindow.print();
 
                     // Restore the page's original title information
-                    if (documentTitle) {
+                    if (resolvedTitle) {
                         printWindow.ownerDocument.title = tempOwnerDocumentTitle;
 
                         if (printWindow.contentDocument) {

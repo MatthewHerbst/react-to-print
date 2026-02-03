@@ -33,11 +33,15 @@ export function useReactToPrint({
         removePrintIframe(preserveAfterPrint, true);
 
         function beginPrint() {
+            const resolvedDocumentTitle: string | undefined = typeof documentTitle === 'function' 
+                ? documentTitle() 
+                : documentTitle;
+            
             const options: UseReactToPrintOptions = {
                 bodyClass,
                 contentRef,
                 copyShadowRoots,
-                documentTitle,
+                documentTitle: resolvedDocumentTitle,
                 fonts,
                 ignoreGlobalStyles,
                 nonce,

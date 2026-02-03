@@ -41,7 +41,7 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 | **`bodyClass`** | `string` | One or more class names to pass to the print window, separated by spaces |
 | **`contentRef`** | `React.RefObject<Element \| Text>` | The ref pointing to the content to be printed. Alternatively, pass the ref directly to the callback returned by `useReactToPrint` |
 | **`copyShadowRoots`** | `boolean` | Copy shadow root content into the print window. Warning: Use with care if you print large documents as traversing these can be slow. |
-| **`documentTitle`** | `string` | Set the title for printing when saving as a file |
+| **`documentTitle`** | `string \| (() => string)` | Set the title for printing when saving as a file. Can be a static string or a function that returns a string, which will be evaluated at print time. This is useful for including dynamic data like timestamps. Ignored when passing a custom `print` option |
 | **`fonts`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | A list of fonts to load into the printing iframe. This is useful if you are using custom fonts |
 | **`ignoreGlobalStyles`** | `boolean` | Ignore all `<style>` and `<link type="stylesheet" />` tags |
 | **`nonce`** | `string` | Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute for allow-listing script and style elements for Content Security Policy (CSP) |
@@ -95,6 +95,19 @@ We are actively researching resolutions to this issue, but it likely requires ch
 - When rendering multiple components to print, ensure each is passed a unique ref. Then, either use a unique `useReactToPrint` call for each component, or, using a single `useReactToPrint` call pass the refs at print-time to the printing function returned by the hook. If you share refs across components only the last component will be printed. See [323](https://github.com/MatthewHerbst/react-to-print/issues/323) for more.
 
 ## FAQ
+
+### How can I use dynamic content in `documentTitle`?
+
+You can pass a function to `documentTitle` that returns a string. This function will be evaluated at print time, allowing you to include dynamic data like timestamps or user information.
+
+```tsx
+const printFn = useReactToPrint({
+  contentRef: componentRef,
+  documentTitle: () => `Invoice_${new Date().toISOString().split('T')[0]}`,
+});
+```
+
+This will generate filenames like `Invoice_2026-02-03.pdf` with the current date when printing.
 
 ### How can content be hidden/shown during printing?
 

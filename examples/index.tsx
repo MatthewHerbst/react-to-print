@@ -8,7 +8,8 @@ import { CustomPrint } from "./CustomPrint";
 import { LazyContent } from "./LazyContent/index";
 import "./styles/index.css";
 import { OnBeforePrint } from './OnBeforePrint';
-import {CopyShadowRootContent} from "./CopyShadowRootContent";
+import { CopyShadowRootContent } from "./CopyShadowRootContent";
+import { DynamicDocumentTitle } from "./DynamicDocumentTitle";
 
 function Example() {
   return (
@@ -21,12 +22,14 @@ function Example() {
           <Tab>Lazy Content</Tab>
           <Tab>On Before Print</Tab>
           <Tab>Copy Shadow Root Content</Tab>
+          <Tab>Dynamic Document Title</Tab>
         </TabList>
         <TabPanel><BasicComponent /></TabPanel>
         <TabPanel><CustomPrint /></TabPanel>
         <TabPanel><LazyContent /></TabPanel>
         <TabPanel><OnBeforePrint /></TabPanel>
         <TabPanel><CopyShadowRootContent /></TabPanel>
+        <TabPanel><DynamicDocumentTitle /></TabPanel>
       </Tabs>
     </div>
   );
