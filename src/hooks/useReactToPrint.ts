@@ -9,7 +9,6 @@ import { UseReactToPrintFn } from "../types/UseReactToPrintFn";
 import { appendPrintWindow } from "../utils/appendPrintWindow";
 import { getErrorFromUnknown } from "../utils/getErrorMessage";
 import { getPrintData } from "../utils/getPrintData";
-import { getMarkedLoaded } from "../utils/getMarkedLoaded";
 
 export function useReactToPrint({
     bodyClass,
@@ -62,8 +61,7 @@ export function useReactToPrint({
                 return;
             }
 
-            const markLoaded = getMarkedLoaded(options, data.numResourcesToLoad, printWindow);
-            appendPrintWindow(printWindow, markLoaded, data, options);
+            appendPrintWindow(printWindow, data, options);
         }
 
         // Ensure we run `onBeforePrint` before appending the print window, which kicks off loading
