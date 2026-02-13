@@ -31,6 +31,10 @@
     "noUnusedLocals": true, // Report errors on unused local variables.
     "noUnusedParameters": true, // Report errors on unused parameters in functions
   },
+  "exclude": [
+    "vite.config.dev.ts",
+    "vite.config.ts"
+  ],
   "include": [
     "./src",
     "*.ts"
