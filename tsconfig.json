@@ -15,12 +15,13 @@
     "outDir": "dist",
     "removeComments": true, // Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space
     "target": "ES2020",
+    "skipLibCheck": true,
 
     // Strict Checks
-    "strict": true,
-    "alwaysStrict": true, // Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.
     "allowUnreachableCode": false, // Pick up dead code paths
+    "alwaysStrict": true, // Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.
     "noImplicitAny": true, // In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type.
+    "strict": true,
     "strictNullChecks": true, // When strictNullChecks is true, null and undefined have their own distinct types and you’ll get a type error if you try to use them where a concrete value is expected.
   
     // Linter Checks
