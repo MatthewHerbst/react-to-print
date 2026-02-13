@@ -19,8 +19,8 @@ module.exports = [
     {
         name: "react-to-print/base",
         files: [
-            "**/*.ts",
-            "**/*.tsx",
+            "src/**/*.ts",
+            "src/**/*.tsx",
         ],
         languageOptions: {
             ecmaVersion: 5,

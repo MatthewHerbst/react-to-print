@@ -3,16 +3,19 @@
   "compilerOptions": {
     // Project options
     "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true, // Required for Vite
     "jsx": "react",
     "lib": [
-      "ES6",
-      "dom"
-    ], // Specifies which default set of type definitions to use ("DOM", "ES6", etc)
-    "moduleResolution": "node",
-    "outDir": "lib", // .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.,
+      "ES2020",
+      "DOM"
+    ],
+    "module": "ESNext", // Required for Vite
+    "moduleResolution": "bundler",
+    "outDir": "dist",
     "removeComments": true, // Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space
-    "target": "ES6", // Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)
-    
+    "target": "ES2020",
+
     // Strict Checks
     "strict": true,
     "alwaysStrict": true, // Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.
@@ -29,6 +32,7 @@
     "noUnusedParameters": true, // Report errors on unused parameters in functions
   },
   "include": [
-    "./src"
+    "./src",
+    "*.ts"
   ]
 }
