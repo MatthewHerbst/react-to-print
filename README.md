@@ -41,7 +41,7 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 | **`bodyClass`** | `string` | One or more class names to pass to the print window, separated by spaces |
 | **`contentRef`** | `React.RefObject<Element \| Text>` | The ref pointing to the content to be printed. Alternatively, pass the ref directly to the callback returned by `useReactToPrint` |
 | **`copyShadowRoots`** | `boolean` | Copy shadow root content into the print window. Warning: Use with care if you print large documents as traversing these can be slow. |
-| **`documentTitle`** | `string \| (() => string)` | Set the title for printing when saving as a file. Can be a static string or a function that returns a string, which will be evaluated at print time. This is useful for including dynamic data like timestamps. Ignored when passing a custom `print` option |
+| **`documentTitle`** | `string \| (() => string)` | Set the title for printing when saving as a file. This is useful for including dynamic data like timestamps. Ignored when passing a custom `print` option |
 | **`fonts`** | `{ family: string, source: string; weight?: string; style?: string; }[]` | A list of fonts to load into the printing iframe. This is useful if you are using custom fonts |
 | **`ignoreGlobalStyles`** | `boolean` | Ignore all `<style>` and `<link type="stylesheet" />` tags |
 | **`nonce`** | `string` | Set the [`nonce`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute for allow-listing script and style elements for Content Security Policy (CSP) |
