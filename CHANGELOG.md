@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.3.0 (February 22nd, 2025)
+## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies
 - FEAT [837](https://github.com/MatthewHerbst/react-to-print/pull/837): Support dynamic `documentTitle`. Thanks [Henry-G-H-Huang](https://github.com/Henry-G-H-Huang)
