@@ -1,8 +1,15 @@
 # CHANGELOG
 
+## 3.3.0 (February 22nd, 2025)
+
+- CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies
+- FEAT [837](https://github.com/MatthewHerbst/react-to-print/pull/837): Support dynamic `documentTitle`. Thanks [Henry-G-H-Huang](https://github.com/Henry-G-H-Huang)
+- FEAT [836](https://github.com/MatthewHerbst/react-to-print/pull/836): Add ESM dual build, switch to Vite. Thanks [andrew8er](https://github.com/andrew8er)
+- CHORE [835](https://github.com/MatthewHerbst/react-to-print/pull/835): Simplify marking resources as loaded
+
 ## 3.2.0 (October 14th, 2025)
 
-- FEAR [820](https://github.com/MatthewHerbst/react-to-print/pull/820): Add `printIframeProps` prop to allow setting certain print iframe props for privacy & security
+- FEAT [820](https://github.com/MatthewHerbst/react-to-print/pull/820): Add `printIframeProps` prop to allow setting certain print iframe props for privacy & security
 - CHORE [815](https://github.com/MatthewHerbst/react-to-print/pull/815): Update dependencies 
 
 ## 3.1.1 (June 30th, 2025)
