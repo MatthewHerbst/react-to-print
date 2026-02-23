@@ -92,6 +92,7 @@ export function useReactToPrint({
         onPrintError,
         pageStyle,
         preserveAfterPrint,
+        printIframeProps,
         print,
         suppressErrors,
     ]);

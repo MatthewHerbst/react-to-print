@@ -41,3 +41,6 @@ lib
 
 # MacOS
 .DS_Store
+
+# LLMs
+.claude

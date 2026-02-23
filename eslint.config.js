@@ -1,5 +1,6 @@
 const eslintJs = require("@eslint/js");
 const eslintPluginReact = require("eslint-plugin-react");
+const eslintPluginReactHooks = require("eslint-plugin-react-hooks");
 const globals = require("globals");
 const typescriptEslint = require("typescript-eslint");
 
@@ -9,11 +10,13 @@ module.exports = [
     {
         settings: {
             react: {
-                version: "18.3.1",
+                version: "19.2.4",
             },
         },
         ...eslintPluginReact.configs.flat.recommended,
     },
+    eslintPluginReact.configs.flat.recommended,
+    eslintPluginReactHooks.configs.flat.recommended,
     ...typescriptEslint.configs.strictTypeChecked,
     ...typescriptEslint.configs.stylisticTypeChecked,
     {
@@ -29,7 +32,6 @@ module.exports = [
             },
             parser: typescriptEslint.parser,
             parserOptions: {
-                project: "tsconfig.json",
                 projectService: true,
             },
             sourceType: "module",
