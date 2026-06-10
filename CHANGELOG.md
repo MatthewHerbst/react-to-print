@@ -3,6 +3,9 @@
 ## Unreleased
 
 - FEAT [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Allow specifying the print iframe's `width` and `height` via `printIframeProps` ([826](https://github.com/MatthewHerbst/react-to-print/issues/826))
+- CHORE [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Minify the build with terser, shrinking the ESM (`.mjs`) bundle ~28% raw / ~18% gzipped
+- CHORE [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Scope the `lint-staged` glob to `src/`, fixing a pre-commit crash when staging root config files
+- DOCS [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Add README guidance on dark mode ([816](https://github.com/MatthewHerbst/react-to-print/issues/816)), Tailwind CSS ([784](https://github.com/MatthewHerbst/react-to-print/issues/784)), and content not wrapping to the next page ([819](https://github.com/MatthewHerbst/react-to-print/issues/819))
 
 ## 3.3.0 (February 22nd, 2026)
 
