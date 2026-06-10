@@ -69,13 +69,25 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
 
                     printWindow.contentWindow.print();
 
-                    // Restore the page's original title information
-                    if (resolvedTitle) {
-                        printWindow.ownerDocument.title = tempOwnerDocumentTitle;
+                    // Restore the page's original title information.
+                    // NOTE: on mobile browsers the print dialog reads the document title
+                    // asynchronously, after `print()` returns. Restoring the title synchronously
+                    // reverts it before the dialog captures it, so the `documentTitle` is ignored.
+                    // Defer the restore on mobile until after the dialog has had time to open. See #791.
+                    function restoreTitle() {
+                        if (resolvedTitle) {
+                            printWindow.ownerDocument.title = tempOwnerDocumentTitle;
 
-                        if (printWindow.contentDocument) {
-                            printWindow.contentDocument.title = tempContentDocumentTitle;
+                            if (printWindow.contentDocument) {
+                                printWindow.contentDocument.title = tempContentDocumentTitle;
+                            }
                         }
+                    }
+
+                    if (isMobileBrowser()) {
+                        setTimeout(restoreTitle, 500);
+                    } else {
+                        restoreTitle();
                     }
                 } else {
                     // Some browsers, such as Firefox Android, do not support printing at all
