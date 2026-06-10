@@ -51,7 +51,7 @@ It is also possible to lazy set the ref if your content being printed is dynamic
 | **`pageStyle`** | `string` | `react-to-print` sets some basic styles to help improve page printing, notably, removing the header and footer that most browsers add. Use this to override these styles and provide your own |
 | **`preserveAfterPrint`** | `boolean` | Preserve the print iframe after printing. This can be useful for debugging by inspecting the print iframe |
 | **`print`** | `(iframe: HTMLIFrameElement) => Promise<void>` | If passed, this function will be used instead of `window.print` to print the content. Use this to print in non-browser environments such as Electron |
-| **`printIframeProps`** | `{ allow?: string, referrerPolicy?: HTMLAttributeReferrerPolicy, sandbox?: string }` | Allows setting certain properties of the print iframe, primarily for privacy and security policies |
+| **`printIframeProps`** | `{ allow?: string, referrerPolicy?: HTMLAttributeReferrerPolicy, sandbox?: string, width?: string \| number, height?: string \| number }` | Allows setting certain properties of the print iframe, primarily for privacy and security policies. `width`/`height` set the iframe's size (defaulting to the document's client size); some content, particularly responsive layouts, may render differently depending on the iframe size |
 | **`suppressErrors`** | `boolean` | When passed, prevents `console` logging of errors |
 
 ## Compatibility

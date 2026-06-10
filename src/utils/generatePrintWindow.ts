@@ -3,8 +3,12 @@ import { UseReactToPrintOptions } from "../types/UseReactToPrintOptions";
 
 export function generatePrintWindow(printIframeProps: UseReactToPrintOptions["printIframeProps"]): HTMLIFrameElement {
     const printWindow = document.createElement("iframe");
-    printWindow.width = `${document.documentElement.clientWidth}px`;
-    printWindow.height = `${document.documentElement.clientHeight}px`;
+    printWindow.width = printIframeProps?.width !== undefined
+        ? `${printIframeProps.width}`
+        : `${document.documentElement.clientWidth}px`;
+    printWindow.height = printIframeProps?.height !== undefined
+        ? `${printIframeProps.height}`
+        : `${document.documentElement.clientHeight}px`;
     printWindow.style.position = "absolute";
     printWindow.style.top = `-${document.documentElement.clientHeight + 100}px`;
     printWindow.style.left = `-${document.documentElement.clientWidth + 100}px`;
