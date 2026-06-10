@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- DOCS [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Add README guidance on dark mode ([816](https://github.com/MatthewHerbst/react-to-print/issues/816)), Tailwind CSS ([784](https://github.com/MatthewHerbst/react-to-print/issues/784)), and content not wrapping to the next page ([819](https://github.com/MatthewHerbst/react-to-print/issues/819))
+
 ## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies
