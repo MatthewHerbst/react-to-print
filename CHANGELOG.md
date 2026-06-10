@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- FIX [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Poll for the print iframe's `contentWindow` instead of relying on a single fixed timeout. This fixes spurious "contentWindow of the print iframe did not load" failures on slow connections, mobile browsers, and throttled background tabs ([384](https://github.com/MatthewHerbst/react-to-print/issues/384), [827](https://github.com/MatthewHerbst/react-to-print/issues/827), [821](https://github.com/MatthewHerbst/react-to-print/issues/821), [745](https://github.com/MatthewHerbst/react-to-print/issues/745))
+
 ## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies
