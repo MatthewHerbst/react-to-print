@@ -341,6 +341,51 @@ Another thing to try, especially if you are seeing this issue on mobile browsers
 
 We often ([#327](https://github.com/MatthewHerbst/react-to-print/issues/327), [#343](https://github.com/MatthewHerbst/react-to-print/issues/343), [#382](https://github.com/MatthewHerbst/react-to-print/issues/382)) see issues reported where the developer is using Bootstrap or a similar grid system, and everything works great until the user goes to print and suddenly it seems the styles are off. We've found that often the issue is the grid library uses the smallest sized columns during printing, such as the `xs` size on Bootstrap's grid, a size developers often don't plan for. The simplest solution is to ensure your grid will adapt to this size appropriately, though this may not be acceptable since you may want the large view to print rather than the smaller view. Another solution is to [override the grid column definition](https://stackoverflow.com/questions/22199429/bootstrap-grid-for-printing/28152320). Some newer versions of libraries have specific tools for dealing with printing, for example, [Bootstrap 4's Display property](https://getbootstrap.com/docs/4.3/utilities/display/).
 
+### Dark mode prints in light/dark unexpectedly ([#816](https://github.com/MatthewHerbst/react-to-print/issues/816))
+
+The print iframe is a fresh document, so it picks up the user's/system `prefers-color-scheme` rather than whatever theme your app had applied at print time. If your styles are driven by `@media (prefers-color-scheme: dark)`, the print output reflects the *system* preference, which may not match what was on screen.
+
+`react-to-print` does enable printing of background colors by default (via `print-color-adjust: exact`), but it cannot know which theme you intended to print. To force a specific theme in the print output, target `@media print` explicitly and set your colors there rather than relying on `prefers-color-scheme`:
+
+```css
+@media print {
+  .my-content {
+    background: #fff;
+    color: #000;
+  }
+}
+```
+
+If you instead want the dark theme to print, set the dark colors inside `@media print` and remember background colors only print when `print-color-adjust: exact` is set (which `react-to-print` applies by default unless you override `pageStyle`).
+
+### Tailwind CSS styles not applied ([#784](https://github.com/MatthewHerbst/react-to-print/issues/784))
+
+Tailwind works with `react-to-print`, but two things commonly trip people up:
+
+- **Global styles must be reachable.** `react-to-print` copies `<style>` and `<link rel="stylesheet">` tags from the main document's `<head>`. Ensure your Tailwind stylesheet is loaded there and that you have *not* set `ignoreGlobalStyles: true`.
+- **Print-only utilities use the `print:` variant.** Tailwind ships a [`print` variant](https://tailwindcss.com/docs/hover-focus-and-other-states#print-styles) for print-specific styling, e.g. `class="hidden print:block"`. Use it the same way you would `@media print`.
+
+If only *some* styles are missing, confirm they target the printed nodes directly — see the note under [Common Pitfalls](#common-pitfalls) about styles on unprinted parent elements not being applied.
+
+### Content cut off / not wrapping to the next page ([#819](https://github.com/MatthewHerbst/react-to-print/issues/819))
+
+If text or other content at the bottom of a page is cut off rather than flowing onto the next page, the usual culprit is a containing style that prevents the browser from paginating. Common offenders:
+
+- `overflow: hidden`/`overflow: scroll` on a container — clips content instead of breaking it across pages. Use `overflow: visible` for print.
+- A fixed `height` (e.g. `height: 100vh`) on `html`/`body` or a wrapper — constrains content to a single page. Prefer `height: auto`/`initial` for print.
+- `position: absolute` or `display: flex` on wrappers can interfere with pagination; try `display: block` for print.
+
+```css
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+```
+
+See also the [Page Breaks](#page-breaks) section below for controlling where content breaks.
+
 ### Page Breaks
 
 What to know:
