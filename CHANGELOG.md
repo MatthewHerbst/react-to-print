@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- CHORE [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Minify the build with terser, shrinking the ESM (`.mjs`) bundle ~28% raw / ~18% gzipped
+- CHORE [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Scope the `lint-staged` glob to `src/`, fixing a pre-commit crash when staging root config files
+
 ## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies
