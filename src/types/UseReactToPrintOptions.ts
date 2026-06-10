@@ -50,6 +50,13 @@ export interface UseReactToPrintOptions {
      */
     pageStyle?: string;
     /**
+     * The delay, in milliseconds, between the print content being ready and the print dialog being
+     * triggered. Some browsers, notably Safari, do not behave well without a short delay here.
+     * Increase this if printing is unreliable on slower devices or with heavier content; set it
+     * lower if the default delay feels sluggish. Defaults to `500`
+     */
+    printDelay?: number;
+    /**
      * Preserve the print iframe after printing. This can be useful for debugging by inspecting the
      * print iframe
      */

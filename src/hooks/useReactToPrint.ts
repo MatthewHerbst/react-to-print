@@ -24,6 +24,7 @@ export function useReactToPrint({
     pageStyle,
     preserveAfterPrint,
     print,
+    printDelay,
     printIframeProps,
     suppressErrors,
 }: UseReactToPrintOptions): UseReactToPrintFn {
@@ -46,6 +47,7 @@ export function useReactToPrint({
                 pageStyle,
                 preserveAfterPrint,
                 print,
+                printDelay,
                 printIframeProps,
                 suppressErrors,
             };
@@ -92,6 +94,7 @@ export function useReactToPrint({
         onPrintError,
         pageStyle,
         preserveAfterPrint,
+        printDelay,
         printIframeProps,
         print,
         suppressErrors,

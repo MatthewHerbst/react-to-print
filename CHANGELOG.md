@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- FEAT [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Add `printDelay` option to configure the delay before the print dialog is triggered (previously hardcoded to 500ms) ([792](https://github.com/MatthewHerbst/react-to-print/issues/792))
+
 ## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies

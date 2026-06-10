@@ -16,6 +16,7 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
         onPrintError,
         preserveAfterPrint,
         print,
+        printDelay,
         suppressErrors,
     } = options;
 
@@ -106,7 +107,7 @@ export function startPrint(printWindow: HTMLIFrameElement, options: UseReactToPr
                 suppressErrors,
             });
         }
-    }, 500);
+    }, printDelay ?? 500);
 }
 
 /**
