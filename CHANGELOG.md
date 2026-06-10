@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- FEAT [TBD](https://github.com/MatthewHerbst/react-to-print/pull/TBD): Allow specifying the print iframe's `width` and `height` via `printIframeProps` ([826](https://github.com/MatthewHerbst/react-to-print/issues/826))
+
 ## 3.3.0 (February 22nd, 2026)
 
 - CHORE [838](https://github.com/MatthewHerbst/react-to-print/pull/838): Update most dev dependencies

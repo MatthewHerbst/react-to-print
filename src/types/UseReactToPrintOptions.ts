@@ -66,6 +66,18 @@ export interface UseReactToPrintOptions {
         allow?: IframeHTMLAttributes<HTMLIFrameElement>["allow"],
         referrerPolicy?: IframeHTMLAttributes<HTMLIFrameElement>["referrerPolicy"],
         sandbox?: IframeHTMLAttributes<HTMLIFrameElement>["sandbox"],
+        /**
+         * The width of the print iframe. Accepts any valid value for the iframe `width` attribute
+         * (e.g. a pixel count like `"800"`). Defaults to the document's client width. Some content,
+         * particularly responsive layouts, may render differently depending on the iframe size
+         */
+        width?: IframeHTMLAttributes<HTMLIFrameElement>["width"],
+        /**
+         * The height of the print iframe. Accepts any valid value for the iframe `height` attribute
+         * (e.g. a pixel count like `"600"`). Defaults to the document's client height. Some content,
+         * particularly responsive layouts, may render differently depending on the iframe size
+         */
+        height?: IframeHTMLAttributes<HTMLIFrameElement>["height"],
     };
     /** When passed, prevents `console` logging of errors */
     suppressErrors?: boolean;
