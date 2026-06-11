@@ -515,6 +515,14 @@ Set the container to `overflow: visible; height: fit-content` when printing, can
 - `npm ci`
 - `npm start`
 
+### Testing
+
+- `npm test` — run the unit/integration tests (Vitest + jsdom)
+- `npm run test:watch` — run the unit tests in watch mode
+- `npm run test:e2e` — run the real-browser smoke tests (Playwright). The first run requires the browser binaries: `npx playwright install chromium`
+
+Unit tests live alongside the source as `*.test.ts(x)` files and cover the pure utilities and the hook's wiring. The Playwright tests under `e2e/` exercise the full print flow in a real browser (iframe creation, style copying, `documentTitle`, `onAfterPrint`), which jsdom cannot fully emulate.
+
 ## Related Packages
 
 - [vue-to-print](https://github.com/siaikin/vue-to-print): vue3 version of react-to-print
