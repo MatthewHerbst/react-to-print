@@ -256,7 +256,7 @@ There is a fully-working example of how to use `react-to-print` with Electron av
 
 ### `link` elements not displaying styles properly
 
-Some frameworks such as Ruby on Rails will set `media="screen"` on `<link>` elements that don't have `screen` set. This can cause styles to appear incorrectly when printing. To fix, explicitly set `media="screen"` on your `<link>` elements. For `<link>` elements meant to apply only when printing, set `media="print"`.
+Stylesheets linked with `media="screen"` apply only to screens, so their styles will not apply when printing. If a stylesheet should apply both on screen and when printing, explicitly set `media="all"` on its `<link>` element. For stylesheets meant to apply only when printing, set `media="print"`. Check the rendered `<link>` elements if your framework sets the `media` attribute automatically.
 
 ## Helpful Style Tips
 
