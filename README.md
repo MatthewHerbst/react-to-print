@@ -465,7 +465,7 @@ If you need to print the content of a scrolling container, you may encounter the
 To solve these problems, you need to modify the properties of the scrolling container when printing. You can pass a function to the `print` property, which will be called when printing. In this function, you can use the DOM API to query the scrolling container that needs to be modified, and then modify its properties to **control the scroll position**.
 
 ```javascript
-const customToPrint = (printWindow) => {
+const customToPrint = async (printWindow) => {
   const printContent = printWindow.contentDocument || printWindow.contentWindow?.document;
   const printedScrollContainer = printContent.querySelector('.scroll-container');
 
