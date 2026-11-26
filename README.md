@@ -142,7 +142,7 @@ Not directly. We aren't able to print a PDF as we lose control once the print pr
 ```tsx
 const handlePrint = useReactToPrint({
   ...,
-  print: async (printIframe: HTMLIframeElement) => {
+  print: async (printIframe: HTMLIFrameElement) => {
     // Do whatever you want here, including asynchronous work
     await generateAndSavePDF(printIframe);
   },
@@ -170,7 +170,7 @@ class ComponentToPrint extends Component {
   }
 }
 
-function App {
+function App() {
   const contentRef = useRef(null);
   const handlePrint = useReactToPrint({ contentRef });
 
